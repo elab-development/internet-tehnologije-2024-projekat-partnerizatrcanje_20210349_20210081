@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -35,23 +34,18 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * Relacija: User ima više postova.
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
 
-     // Relacija: User ima više postova
-     public function posts(): HasMany
-     {
-         return $this->hasMany(Post::class);
-     }
- 
-     // Relacija: User ima više komentara
-     public function comments(): HasMany
-     {
-         return $this->hasMany(Comment::class);
-     }
+    /**
+     * Relacija: User ima više komentara.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
