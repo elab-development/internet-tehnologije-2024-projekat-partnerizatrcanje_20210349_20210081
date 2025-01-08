@@ -48,4 +48,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function joinedPlans()
+{
+    return $this->belongsToMany(Post::class, 'post_user');
+}
+
 }

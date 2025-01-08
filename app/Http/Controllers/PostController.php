@@ -3,80 +3,96 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
-    // Prikaz svih postova
-    public function index()
-    {
-        $posts = Post::with('user', 'category')->get(); // Uključivanje povezanih korisnika i kategorija
-        return response()->json($posts, 200);
-    }
-
-    // Prikaz jednog posta po ID-u
-    public function show($id)
-    {
-        $post = Post::with('user', 'category')->find($id);
-        if ($post) {
-            return response()->json($post, 200);
-        }
-        return response()->json(['message' => 'Post not found'], 404);
-    }
-
-    // Kreiranje novog posta
-    public function store(Request $request)
+    // Metoda za kreiranje plana trčanja
+    public function createRunningPlan(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'body' => 'required|string',
+            'content' => 'required|string',
+            'duration' => 'required|integer',
+            'frequency' => 'required|integer',
+            'distance' => 'required|numeric',
+            'max_participants' => 'required|integer|min:1',
             'user_id' => 'required|exists:users,id',
-            'category_id' => 'required|exists:categories,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
 
-        $post = Post::create($request->all());
-        return response()->json(['message' => 'Post created successfully', 'post' => $post], 201);
+        $runningPlan = Post::create($request->all());
+        return response()->json(['message' => 'Running plan created successfully', 'plan' => $runningPlan], 201);
     }
 
-    // Ažuriranje postojećeg posta
-    public function update(Request $request, $id)
+    // Metoda za pridruživanje korisnika planu trčanja
+    public function joinRunningPlan(Request $request, $id)
     {
-        $post = Post::find($id);
-
-        if (!$post) {
-            return response()->json(['message' => 'Post not found'], 404);
+        $plan = Post::find($id);
+        if (!$plan) {
+            return response()->json(['message' => 'Plan not found'], 404);
         }
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'sometimes|string|max:255',
-            'body' => 'sometimes|string',
-            'user_id' => 'sometimes|exists:users,id',
-            'category_id' => 'sometimes|exists:categories,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+        if ($plan->current_participants >= $plan->max_participants) {
+            return response()->json(['message' => 'Plan is full'], 400);
         }
 
-        $post->update($request->all());
-        return response()->json(['message' => 'Post updated successfully', 'post' => $post], 200);
+        $userId = $request->input('user_id');
+        if (!$userId || !User::find($userId)) {
+            return response()->json(['message' => 'Invalid user'], 400);
+        }
+
+        if ($plan->participants()->where('user_id', $userId)->exists()) {
+            return response()->json(['message' => 'User already joined this plan'], 400);
+        }
+
+        $plan->participants()->attach($userId);
+        $plan->increment('current_participants');
+        return response()->json(['message' => 'User successfully joined the plan'], 200);
     }
 
-    // Brisanje posta
-    public function destroy($id)
+    // Metoda za filtriranje planova trčanja
+    public function filterRunningPlans(Request $request)
     {
-        $post = Post::find($id);
+        $query = Post::query();
 
-        if (!$post) {
-            return response()->json(['message' => 'Post not found'], 404);
+        if ($request->filled('duration')) {
+            $query->where('duration', $request->input('duration'));
+        }
+        if ($request->filled('distance')) {
+            $query->where('distance', '>=', $request->input('distance'));
+        }
+        if ($request->filled('frequency')) {
+            $query->where('frequency', $request->input('frequency'));
+        }
+        if ($request->filled('max_participants')) {
+            $query->where('max_participants', '>=', $request->input('max_participants'));
         }
 
-        $post->delete();
-        return response()->json(['message' => 'Post deleted successfully'], 200);
+        $filteredPlans = $query->with('user')->get();
+        return response()->json($filteredPlans, 200);
     }
+
+    //Metoda za brisanje postova
+    // Brisanje plana trčanja
+    public function deleteRunningPlan($id)
+    {
+        $plan = Post::find($id);
+
+        if (!$plan) {
+            return response()->json(['message' => 'Plan not found'], 404);
+        }
+
+        $plan->participants()->detach(); // Uklanja sve poveznice sa učesnicima
+        $plan->delete(); // Briše plan
+
+        return response()->json(['message' => 'Running plan deleted successfully'], 200);
+    }
+
 }
+
