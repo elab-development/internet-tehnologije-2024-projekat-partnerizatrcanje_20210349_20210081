@@ -12,17 +12,28 @@ return new class extends Migration
      * @return void
      */
     public function up()
-{
-    Schema::table('posts', function (Blueprint $table) {
-        $table->string('title'); // Naslov plana
-        $table->integer('duration')->nullable(); // Trajanje plana u minutama
-        $table->integer('frequency')->nullable(); // Broj treninga nedeljno
-        $table->float('distance')->nullable(); // Udaljenost u km
-        $table->integer('max_participants')->default(0); // Maksimalan broj učesnika
-        $table->integer('current_participants')->default(0); // Trenutni broj učesnika
-    });
-}
-
+    {
+        Schema::table('posts', function (Blueprint $table) {
+            if (!Schema::hasColumn('posts', 'title')) { // Proveri da li kolona 'title' postoji
+                $table->string('title'); // Naslov plana
+            }
+            if (!Schema::hasColumn('posts', 'duration')) { // Proveri da li kolona 'duration' postoji
+                $table->integer('duration')->nullable(); // Trajanje plana u minutama
+            }
+            if (!Schema::hasColumn('posts', 'frequency')) { // Proveri da li kolona 'frequency' postoji
+                $table->integer('frequency')->nullable(); // Broj treninga nedeljno
+            }
+            if (!Schema::hasColumn('posts', 'distance')) { // Proveri da li kolona 'distance' postoji
+                $table->float('distance')->nullable(); // Udaljenost u km
+            }
+            if (!Schema::hasColumn('posts', 'max_participants')) { // Proveri da li kolona 'max_participants' postoji
+                $table->integer('max_participants')->default(0); // Maksimalan broj učesnika
+            }
+            if (!Schema::hasColumn('posts', 'current_participants')) { // Proveri da li kolona 'current_participants' postoji
+                $table->integer('current_participants')->default(0); // Trenutni broj učesnika
+            }
+        });
+    }
 
     /**
      * Reverse the migrations.
@@ -30,27 +41,26 @@ return new class extends Migration
      * @return void
      */
     public function down()
-{
-    Schema::table('posts', function (Blueprint $table) {
-        if (Schema::hasColumn('posts', 'title')) { //Briše kolonu 'title'
-            $table->dropColumn('title');
-        }
-        if (Schema::hasColumn('posts', 'duration')) { //Briše kolonu 'duration'
-            $table->dropColumn('duration');
-        }
-        if (Schema::hasColumn('posts', 'frequency')) {
-            $table->dropColumn('frequency');
-        } // Briše kolonu 'frequency'
-        if (Schema::hasColumn('posts', 'distance')) {
-            $table->dropColumn('distance');
-        } // Briše kolonu 'distance'
-        if (Schema::hasColumn('posts', 'max_participants')) {
-            $table->dropColumn('duration');
-        } // Briše kolonu 'max_participants'
-        if (Schema::hasColumn('posts', 'current_participants')) {
-            $table->dropColumn('current_participants');
-        } // Briše kolonu 'current_participants'
-    });
-}
-
+    {
+        Schema::table('posts', function (Blueprint $table) {
+            if (Schema::hasColumn('posts', 'title')) { // Briše kolonu 'title'
+                $table->dropColumn('title');
+            }
+            if (Schema::hasColumn('posts', 'duration')) { // Briše kolonu 'duration'
+                $table->dropColumn('duration');
+            }
+            if (Schema::hasColumn('posts', 'frequency')) { // Briše kolonu 'frequency'
+                $table->dropColumn('frequency');
+            }
+            if (Schema::hasColumn('posts', 'distance')) { // Briše kolonu 'distance'
+                $table->dropColumn('distance');
+            }
+            if (Schema::hasColumn('posts', 'max_participants')) { // Briše kolonu 'max_participants'
+                $table->dropColumn('max_participants');
+            }
+            if (Schema::hasColumn('posts', 'current_participants')) { // Briše kolonu 'current_participants'
+                $table->dropColumn('current_participants');
+            }
+        });
+    }
 };
