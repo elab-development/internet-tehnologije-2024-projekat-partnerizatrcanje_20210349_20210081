@@ -32,12 +32,24 @@ return new class extends Migration
     public function down()
 {
     Schema::table('posts', function (Blueprint $table) {
-        $table->dropColumn('title'); // Briše kolonu 'title'
-        $table->dropColumn('duration'); // Briše kolonu 'duration'
-        $table->dropColumn('frequency'); // Briše kolonu 'frequency'
-        $table->dropColumn('distance'); // Briše kolonu 'distance'
-        $table->dropColumn('max_participants'); // Briše kolonu 'max_participants'
-        $table->dropColumn('current_participants'); // Briše kolonu 'current_participants'
+        if (Schema::hasColumn('posts', 'title')) { //Briše kolonu 'title'
+            $table->dropColumn('title');
+        }
+        if (Schema::hasColumn('posts', 'duration')) { //Briše kolonu 'duration'
+            $table->dropColumn('duration');
+        }
+        if (Schema::hasColumn('posts', 'frequency')) {
+            $table->dropColumn('frequency');
+        } // Briše kolonu 'frequency'
+        if (Schema::hasColumn('posts', 'distance')) {
+            $table->dropColumn('distance');
+        } // Briše kolonu 'distance'
+        if (Schema::hasColumn('posts', 'max_participants')) {
+            $table->dropColumn('duration');
+        } // Briše kolonu 'max_participants'
+        if (Schema::hasColumn('posts', 'current_participants')) {
+            $table->dropColumn('current_participants');
+        } // Briše kolonu 'current_participants'
     });
 }
 
