@@ -18,11 +18,15 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'name' => $this->faker->firstName(),  // Generiše ime
+            'surname' => $this->faker->lastName(),  // Generiše prezime
+            'email' => $this->faker->unique()->safeEmail(),  // Generiše jedinstven email
+            'password' => bcrypt('password123'),  // Postavlja šifru kao bcrypt
+            'running_stats' => json_encode([  // Ovo je primer generisanja podataka za 'running_stats'
+                'total_distance' => $this->faker->randomFloat(2, 5, 100),  // Ukupna pretrčana udaljenost
+                'total_time' => $this->faker->randomFloat(2, 30, 300),  // Ukupno vreme provedeno u trčanju
+                'average_speed' => $this->faker->randomFloat(2, 5, 12)  // Prosečna brzina
+            ]),
         ];
     }
 
