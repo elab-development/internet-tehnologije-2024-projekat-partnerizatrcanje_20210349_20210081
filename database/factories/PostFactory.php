@@ -17,7 +17,7 @@ class PostFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence,  // Generiše naslov posta
-            'content' => $this->faker->paragraph,  // Generiše sadržaj posta
+            'body' => $this->faker->text, // Generiše telo posta
             'duration' => $this->faker->numberBetween(30, 120),  // Trajanje plana (u minutima)
             'frequency' => $this->faker->numberBetween(1, 7),  // Broj treninga nedeljno
             'distance' => $this->faker->randomFloat(2, 5, 100),  // Udaljenost u km

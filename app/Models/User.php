@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany; // Dodaj ovo  
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
@@ -54,6 +55,16 @@ class User extends Authenticatable
     public function joinedPlans()
 {
     return $this->belongsToMany(Post::class, 'post_user');
+}
+
+public function races(): BelongsToMany
+{
+    return $this->belongsToMany(Race::class, 'user_race')->withTimestamps();
+}
+
+public function challenges(): BelongsToMany
+{
+    return $this->belongsToMany(Challenge::class, 'user_challenge')->withTimestamps();
 }
 
 }
