@@ -32,6 +32,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/posts/{id}', [PostController::class, 'destroy']);
     // Dodajte ovde druge zaštićene rute po potrebi.
 });
+use App\Http\Controllers\RaceController;
+use App\Http\Controllers\ChallengeController;
+use App\Http\Controllers\UserRaceController;
+
+// Trke
+Route::post('/races', [RaceController::class, 'store']);
+
+// Izazovi
+Route::post('/challenges', [ChallengeController::class, 'store']);
+
+// Pridruživanje trci
+Route::post('/races/{race}/join', [UserRaceController::class, 'joinRace']);
 
 
 Route::apiResource('users', UserController::class);
