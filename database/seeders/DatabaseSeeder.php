@@ -22,6 +22,13 @@ class DatabaseSeeder extends Seeder
         // Generiši 10 postova (ako želiš povezivanje sa korisnicima, koristi ovo)
         Post::factory(10)->create();
     
+
+        $this->call([
+            RunningStatsSeeder::class,
+        ]);
+
     }
+
+    
     
 }
