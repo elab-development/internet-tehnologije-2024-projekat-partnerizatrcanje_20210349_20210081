@@ -70,9 +70,13 @@ class User extends Authenticatable
     /**
      * Relacija: User ima više statističkih podataka o trčanju.
      */
-    public function runningStats(): HasMany
+  
+
+    public function runningStats()
     {
-        return $this->hasMany(RunningStat::class);
+        return $this->hasOne(RunningStats::class);
     }
+    
+
 }
 
