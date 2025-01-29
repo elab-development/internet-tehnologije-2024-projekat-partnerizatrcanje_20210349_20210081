@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany; // Dodaj ovo  
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
@@ -22,8 +22,7 @@ class User extends Authenticatable
         'name',
         'surname',
         'email',
-        'password',
-        'running_stats'
+        'password'
     ];
 
     /**
@@ -52,19 +51,28 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function joinedPlans()
-{
-    return $this->belongsToMany(Post::class, 'post_user');
+    /**
+     * Relacija: User učestvuje u više trka.
+     */
+    public function races(): BelongsToMany
+    {
+        return $this->belongsToMany(Race::class, 'user_race')->withTimestamps();
+    }
+
+    /**
+     * Relacija: User učestvuje u više izazova.
+     */
+    public function challenges(): BelongsToMany
+    {
+        return $this->belongsToMany(Challenge::class, 'user_challenge')->withTimestamps();
+    }
+
+    /**
+     * Relacija: User ima više statističkih podataka o trčanju.
+     */
+    public function runningStats(): HasMany
+    {
+        return $this->hasMany(RunningStat::class);
+    }
 }
 
-public function races(): BelongsToMany
-{
-    return $this->belongsToMany(Race::class, 'user_race')->withTimestamps();
-}
-
-public function challenges(): BelongsToMany
-{
-    return $this->belongsToMany(Challenge::class, 'user_challenge')->withTimestamps();
-}
-
-}
