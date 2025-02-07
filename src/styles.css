@@ -9,6 +9,11 @@ body {
     height: 100vh;
   }
   
+  /* Sakrij Navbar na Login i Register stranici */
+.hide-navbar {
+    display: none;
+  }
+  
   .auth-container {
     background: white;
     padding: 2rem;
@@ -46,4 +51,51 @@ body {
     color: #007bff;
     cursor: pointer;
   }
+
+  .auth-container button:hover {
+    background: #0056b3;
+  }
+  
+  .auth-container span:hover {
+    text-decoration: underline;
+  }
+  
+  .auth-container input {
+    margin-bottom: 1.5rem; /* Povećaj razmak između input polja */
+  }
+  
+  .auth-container button {
+    margin-top: 1rem; /* Dodaj razmak između input polja i dugmeta */
+  }
+  
+  .auth-container {
+    max-width: 400px; /* Postavi maksimalnu širinu za formu */
+    width: 100%;
+  }
+  
+  @media (max-width: 600px) {
+    .auth-container {
+      padding: 1rem;
+    }
+  
+    .auth-container input,
+    .auth-container button {
+      padding: 0.5rem;
+    }
+  }
+
+  .auth-container button {
+    transition: background-color 0.3s ease;
+  }
+  
+  .auth-container span {
+    transition: color 0.3s ease;
+  }
+  
+  .auth-container .error-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+  }
+  
   

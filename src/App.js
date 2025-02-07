@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -7,24 +7,65 @@ import CreatePlan from "./pages/CreatePlan";
 import MyPlans from "./pages/MyPlans";
 import Races from "./pages/Races";
 import Navbar from "./components/Navbar";
+import './styles.css';
 
 function App() {
   return (
     <Router>
-      <Navbar />
+      {/* Prikazivanje Navbar-a samo ako nismo na login/register stranici */}
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/create-plan" element={<CreatePlan />} />
-        <Route path="/my-plans" element={<MyPlans />} />
-        <Route path="/races" element={<Races />} /> 
+        
+        {/* Ostale stranice gde Navbar treba da se prikazuje */}
+        <Route
+          path="/"
+          element={
+            <>
+              <Navbar />
+              <Home />
+            </>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <>
+              <Navbar />
+              <Profile />
+            </>
+          }
+        />
+        <Route
+          path="/create-plan"
+          element={
+            <>
+              <Navbar />
+              <CreatePlan />
+            </>
+          }
+        />
+        <Route
+          path="/my-plans"
+          element={
+            <>
+              <Navbar />
+              <MyPlans />
+            </>
+          }
+        />
+        <Route
+          path="/races"
+          element={
+            <>
+              <Navbar />
+              <Races />
+            </>
+          }
+        />
       </Routes>
     </Router>
   );
 }
 
 export default App;
-

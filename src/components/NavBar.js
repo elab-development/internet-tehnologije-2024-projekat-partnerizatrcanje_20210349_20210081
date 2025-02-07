@@ -5,7 +5,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <ul>
-        <li><Link to="/">Početna</Link></li>
+        <li><Link to="/home">Početna</Link></li>
         <li><Link to="/create-plan">Kreiraj Plan</Link></li>
         <li><Link to="/my-plans">Moji Planovi</Link></li>
         <li><Link to="/races">Virtuelne Trke</Link></li> {/* NOVO */}
