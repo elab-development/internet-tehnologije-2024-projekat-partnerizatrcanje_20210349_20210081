@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -12,14 +12,16 @@ import './styles.css';
 function App() {
   return (
     <Router>
-      {/* Prikazivanje Navbar-a samo ako nismo na login/register stranici */}
       <Routes>
+        {/* Početna stranica preusmerava na login */}
+        <Route path="/" element={<Navigate to="/login" />} />
+        
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         
-        {/* Ostale stranice gde Navbar treba da se prikazuje */}
+        {/* Ostale stranice sa Navbar-om */}
         <Route
-          path="/"
+          path="/home"
           element={
             <>
               <NavBar />
