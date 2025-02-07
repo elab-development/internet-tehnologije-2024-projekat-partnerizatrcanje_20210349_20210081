@@ -9,6 +9,21 @@ body {
     height: 100vh;
   }
   
+  .home-container {
+    margin: 0 auto;
+    padding: 2rem;
+    max-width: 1200px;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  h1, .feed, .post, .comment-section, .running-plan-card {
+    margin-bottom: 2rem;
+  }
+  
+
   /* Sakrij Navbar na Login i Register stranici */
 .hide-navbar {
     display: none;
