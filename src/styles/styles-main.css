@@ -24,7 +24,7 @@ body {
   }
   
   .auth-container {
-    background: white;
+    background: #E5D0AC;
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -48,7 +48,7 @@ body {
   }
   
   .auth-container button {
-    background: #007bff;
+    background: #FF9D23;
     color: white;
     border: none;
     padding: 0.7rem;
@@ -57,7 +57,7 @@ body {
   }
   
   .auth-container span {
-    color: #007bff;
+    color: #C14600;
     cursor: pointer;
   }
 
