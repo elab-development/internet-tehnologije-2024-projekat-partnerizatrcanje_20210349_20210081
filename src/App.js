@@ -6,8 +6,8 @@ import Profile from "./pages/Profile";
 import CreatePlan from "./pages/CreatePlan";
 import MyPlans from "./pages/MyPlans";
 import Races from "./pages/Races";
-import NavBar from "./components/NavBar";
-import './styles.css';
+import Navbar from "./components/Navbar";
+import './styles/styles-main.css';
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
           path="/home"
           element={
             <>
-              <NavBar />
+              <Navbar />
               <Home />
             </>
           }
@@ -33,7 +33,7 @@ function App() {
           path="/profile"
           element={
             <>
-              <NavBar />
+              <Navbar />
               <Profile />
             </>
           }
@@ -42,7 +42,7 @@ function App() {
           path="/create-plan"
           element={
             <>
-              <NavBar />
+              <Navbar />
               <CreatePlan />
             </>
           }
@@ -51,7 +51,7 @@ function App() {
           path="/my-plans"
           element={
             <>
-              <NavBar />
+              <Navbar />
               <MyPlans />
             </>
           }
@@ -60,7 +60,7 @@ function App() {
           path="/races"
           element={
             <>
-              <NavBar />
+              <Navbar />
               <Races />
             </>
           }
