@@ -16,58 +16,45 @@ function App() {
         {/* Početna stranica preusmerava na login */}
         <Route path="/" element={<Navigate to="/login" />} />
         
+        {/* Login i Register stranice bez Navbar-a */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         
         {/* Ostale stranice sa Navbar-om */}
-        <Route
-          path="/home"
-          element={
-            <>
-              <Navbar />
-              <Home />
-            </>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <>
-              <Navbar />
-              <Profile />
-            </>
-          }
-        />
-        <Route
-          path="/create-plan"
-          element={
-            <>
-              <Navbar />
-              <CreatePlan />
-            </>
-          }
-        />
-        <Route
-          path="/my-plans"
-          element={
-            <>
-              <Navbar />
-              <MyPlans />
-            </>
-          }
-        />
-        <Route
-          path="/races"
-          element={
-            <>
-              <Navbar />
-              <Races />
-            </>
-          }
-        />
+        <Route path="/home" element={
+          <>
+            <Navbar />
+            <Home />
+          </>
+        } />
+        <Route path="/profile" element={
+          <>
+            <Navbar />
+            <Profile />
+          </>
+        } />
+        <Route path="/create-plan" element={
+          <>
+            <Navbar />
+            <CreatePlan />
+          </>
+        } />
+        <Route path="/my-plans" element={
+          <>
+            <Navbar />
+            <MyPlans />
+          </>
+        } />
+        <Route path="/races" element={
+          <>
+            <Navbar />
+            <Races />
+          </>
+        } />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+

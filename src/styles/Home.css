@@ -1,0 +1,40 @@
+/* home.css */
+
+.home-container {
+  display: flex;
+  width: 800px;;
+  justify-content: center; /* Centriranje Feed-a */
+  align-items: flex-start;
+  padding-top: 275px; /* Veći razmak sa vrha (potrebno za navbar) */
+  min-height: 100vh; /* Osiguraj da se sadržaj proteže na celu visinu ekrana */
+  background-color: #E5D0AC; /* Svetla pozadina */
+  padding-bottom: 2rem; /* Razmak na dnu */
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Razmak između postova */
+  width: 80%; /* Dati širinu sadržaju */
+  max-width: 1000px; /* Maksimalna širina */
+  margin: 20px 0; /* Dodaj margine sa strane */
+}
+
+.post {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.comment-section {
+  max-height: 400px;
+  overflow-y: auto; /* Omogućava skrolovanje samo unutar komentara */
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+
+  

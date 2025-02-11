@@ -9,12 +9,6 @@ body {
     height: 100vh;
   }
   
-  .home-container {
-    margin: 0 auto;
-    padding: 2rem;
-    max-width: 1200px;
-  }
-  
   h1 {
     text-align: center;
   }
