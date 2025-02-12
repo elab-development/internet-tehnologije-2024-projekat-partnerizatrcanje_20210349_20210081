@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import CommentSection from './CommentSection'; // Assuming you're using it
-import Post from './Post';  // Assuming you're using it
+import Post from './Post';  // Uvozimo Post komponentu
 
 const Feed = () => {
   const mockPosts = [
@@ -28,16 +27,7 @@ const Feed = () => {
   return (
     <div className="feed">
       {posts.map(post => (
-        <div key={post.id} className="post">
-          <p>{post.content}</p>
-          <div className="comment-section">
-            {post.comments.map(comment => (
-              <div key={comment.id} className="comment">
-                {comment.content}
-              </div>
-            ))}
-          </div>
-        </div>
+        <Post key={post.id} content={post.content} comments={post.comments} />
       ))}
     </div>
   );

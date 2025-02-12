@@ -1,110 +1,133 @@
+/* Globalne postavke */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #FEF9E1;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  h1 {
-    text-align: center;
-  }
-  
-  h1, .feed, .post, .comment-section, .running-plan-card {
-    margin-bottom: 2rem;
-  }
-  
+  font-family: 'Roboto', sans-serif; /* Moderniji font */
+  background-color: #F4E1C1; /* Svetla pozadina */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #333; /* Tamna boja za tekst */
+}
 
-  /* Sakrij Navbar na Login i Register stranici */
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  color: #C14600; /* Narandžasta boja */
+  margin-bottom: 1.5rem;
+}
+
+h1, .feed, .post, .comment-section, .running-plan-card {
+  margin-bottom: 2rem;
+}
+
+/* Sakrij Navbar na Login i Register stranici */
 .hide-navbar {
-    display: none;
-  }
-  
+  display: none;
+}
+
+/* Kontener za autentifikaciju */
+.auth-container {
+  background: #FFF4D6; /* Svetlo žuta pozadina za moderniji izgled */
+  padding: 2rem;
+  border-radius: 12px; /* Zaobljeni ivici */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Suptilna senka za dubinu */
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.auth-container:hover {
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15); /* Efekat senke pri hoveru */
+}
+
+.auth-container h2 {
+  margin-bottom: 1.5rem;
+  color: #C14600; /* Narandžasta boja za tekst */
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Forma za unos */
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Razmak između input polja */
+}
+
+/* Input polja */
+.auth-container input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.auth-container input:focus {
+  border-color: #FF9D23; /* Narandžasta boja fokusa */
+  outline: none;
+}
+
+/* Dugme */
+.auth-container button {
+  background: #FF9D23;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.auth-container button:hover {
+  background: #FF7F11; /* Tamnija narandžasta boja pri hoveru */
+  transform: translateY(-4px); /* Efekat podizanja pri hoveru */
+}
+
+/* Link za zaboravljeni password */
+.auth-container span {
+  color: #C14600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.auth-container span:hover {
+  text-decoration: underline;
+  color: #FF9D23;
+}
+
+/* Maksimalna širina i razmak između polja */
+.auth-container input {
+  margin-bottom: 1.5rem; /* Povećaj razmak između input polja */
+}
+
+.auth-container button {
+  margin-top: 1rem; /* Dodaj razmak između input polja i dugmeta */
+}
+
+/* Poruka o grešci */
+.auth-container .error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+/* Responsivni dizajn za mobilne uređaje */
+@media (max-width: 600px) {
   .auth-container {
-    background: #E5D0AC;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .auth-container h2 {
-    margin-bottom: 1rem;
-  }
-  
-  .auth-container form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .auth-container input {
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .auth-container button {
-    background: #FF9D23;
-    color: white;
-    border: none;
-    padding: 0.7rem;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .auth-container span {
-    color: #C14600;
-    cursor: pointer;
+    padding: 1rem;
   }
 
-  .auth-container button:hover {
-    background: #0056b3;
-  }
-  
-  .auth-container span:hover {
-    text-decoration: underline;
-  }
-  
-  .auth-container input {
-    margin-bottom: 1.5rem; /* Povećaj razmak između input polja */
-  }
-  
+  .auth-container input,
   .auth-container button {
-    margin-top: 1rem; /* Dodaj razmak između input polja i dugmeta */
-  }
-  
-  .auth-container {
-    max-width: 400px; /* Postavi maksimalnu širinu za formu */
-    width: 100%;
-  }
-  
-  @media (max-width: 600px) {
-    .auth-container {
-      padding: 1rem;
-    }
-  
-    .auth-container input,
-    .auth-container button {
-      padding: 0.5rem;
-    }
+    padding: 0.8rem;
   }
 
-  .auth-container button {
-    transition: background-color 0.3s ease;
+  h1 {
+    font-size: 1.5rem;
   }
-  
-  .auth-container span {
-    transition: color 0.3s ease;
-  }
-  
-  .auth-container .error-message {
-    color: red;
-    font-size: 0.875rem;
-    margin-top: 1rem;
-  }
-  
-  
+}

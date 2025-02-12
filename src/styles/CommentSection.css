@@ -1,0 +1,25 @@
+/* CommentSection.css */
+.comment-section {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 3px solid #FF9D23; /* Narandžasta linija sa leve strane */
+  }
+  
+  .comment {
+    background-color: #F4E1C1;
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .comment:hover {
+    background-color: #FF9D23;
+    color: white;
+  }
+  
+  .comment p {
+    font-size: 1rem;
+    color: #333;
+  }
+  

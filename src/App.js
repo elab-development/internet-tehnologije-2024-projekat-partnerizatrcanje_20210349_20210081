@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import CreatePlan from "./pages/CreatePlan";
-import MyPlans from "./pages/MyPlans";
+import Challenges from "./pages/Challenges";
 import Races from "./pages/Races";
 import Navbar from "./components/Navbar";
 import './styles/styles-main.css';
@@ -39,10 +39,10 @@ function App() {
             <CreatePlan />
           </>
         } />
-        <Route path="/my-plans" element={
+        <Route path="/challenges" element={
           <>
             <Navbar />
-            <MyPlans />
+            <Challenges />
           </>
         } />
         <Route path="/races" element={

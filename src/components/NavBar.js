@@ -11,7 +11,7 @@ const Navbar = () => {
         <ul className="nav-links">
           <li><Link to="/home">Početna</Link></li>
           <li><Link to="/create-plan">Planovi trčanja</Link></li>
-          <li><Link to="/my-plans">Moji Planovi</Link></li>
+          <li><Link to="/challenges">Izazovi</Link></li>
           <li><Link to="/Races">Virtuelne trke</Link></li>
           <li><Link to="/profile">Profil</Link></li>
         </ul>

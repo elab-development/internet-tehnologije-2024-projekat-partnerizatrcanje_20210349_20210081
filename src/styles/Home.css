@@ -9,6 +9,7 @@
   min-height: 100vh; /* Osiguraj da se sadržaj proteže na celu visinu ekrana */
   background-color: #E5D0AC; /* Svetla pozadina */
   padding-bottom: 2rem; /* Razmak na dnu */
+  margin-top: 100px;
 }
 
 .feed {
