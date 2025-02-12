@@ -13,6 +13,7 @@ export default function Profile() {
     description: "Strastveni trkač i ljubitelj tehnologije."
   });
   const [editingField, setEditingField] = useState(null);
+  const [imageChanged, setImageChanged] = useState(false); // Dodajemo state za promenu slike
 
   const handleDoubleClick = (field) => {
     setEditingField(field);
@@ -32,6 +33,7 @@ export default function Profile() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setUser({ ...user, profileImage: reader.result });
+        setImageChanged(true); // Postavljamo da je slika promenjena
       };
       reader.readAsDataURL(file);
     }
@@ -52,8 +54,11 @@ export default function Profile() {
             className="hidden-input"
             onChange={handleImageChange}
           />
-          <button className="profile-image-button" onClick={() => document.getElementById('profileImage').click()}>
-            Dodaj sliku
+          <button
+            className="profile-image-button"
+            onClick={() => document.getElementById('profileImage').click()}
+          >
+            {imageChanged ? "Izmeni sliku" : "Dodaj sliku"}
           </button>
         </div>
         <div className="profile-description" onDoubleClick={() => handleDoubleClick("description")}> 
@@ -72,28 +77,26 @@ export default function Profile() {
         </div>
       </div>
       <div className="profile-info">
-        {[
-          { label: "Ime i Prezime", field: "name" },
-          { label: "E-mail", field: "email" }
-        ].map(({ label, field }) => (
-          <div key={field} className="profile-field">
-            <strong>{label}:</strong>
-            <div className="profile-editable" onDoubleClick={() => handleDoubleClick(field)}>
-              {editingField === field ? (
-                <input
-                  type="text"
-                  className="profile-input"
-                  value={user[field]}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  autoFocus
-                />
-              ) : (
-                <p>{user[field]}</p>
-              )}
+        {[{ label: "Ime i Prezime", field: "name" }, { label: "E-mail", field: "email" }]
+          .map(({ label, field }) => (
+            <div key={field} className="profile-field">
+              <strong>{label}:</strong>
+              <div className="profile-editable" onDoubleClick={() => handleDoubleClick(field)}>
+                {editingField === field ? (
+                  <input
+                    type="text"
+                    className="profile-input"
+                    value={user[field]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    autoFocus
+                  />
+                ) : (
+                  <p>{user[field]}</p>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         <div className="profile-field">
           <strong>Visina / Kilaža:</strong>
           <p>{user.height} cm / {user.weight} kg</p>
