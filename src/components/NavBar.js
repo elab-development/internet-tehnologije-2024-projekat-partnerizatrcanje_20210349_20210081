@@ -10,7 +10,7 @@ const Navbar = () => {
         <img src={logo} alt="SprintLink Logo" className="logo" /> {/* Dodajte logo sliku */}
         <ul className="nav-links">
           <li><Link to="/home">Početna</Link></li>
-          <li><Link to="/running-plans">Planovi trčanja</Link></li>
+          <li><Link to="/create-plan">Planovi trčanja</Link></li>
           <li><Link to="/my-plans">Moji Planovi</Link></li>
           <li><Link to="/Races">Virtuelne trke</Link></li>
           <li><Link to="/profile">Profil</Link></li>
