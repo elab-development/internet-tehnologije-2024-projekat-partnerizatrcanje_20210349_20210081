@@ -25,7 +25,7 @@ const Races = () => {
   };
 
   return (
-    <div className="races-container" style={{ marginTop: '80px' }}>
+    <div className="races-container">
       {/* Dostupne trke */}
       <div className="races-section">
         <h2>Virtuelne trke</h2>

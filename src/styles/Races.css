@@ -6,7 +6,7 @@
     padding: 20px;
     background-color: #FEF9E1;
     min-height: 100vh;
-    margin-top: 60px; /* Spuštanje ispod menija */
+    margin-top: 100px; /* Spuštanje ispod menija */
   }
   
   .races-section, .joined-races-section {
