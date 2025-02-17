@@ -13,7 +13,7 @@ export default function Profile() {
     description: "Strastveni trkač i ljubitelj tehnologije."
   });
   const [editingField, setEditingField] = useState(null);
-  const [imageChanged, setImageChanged] = useState(false); // Dodajemo state za promenu slike
+  const [imageChanged, setImageChanged] = useState(false);
 
   const handleDoubleClick = (field) => {
     setEditingField(field);
@@ -33,7 +33,7 @@ export default function Profile() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setUser({ ...user, profileImage: reader.result });
-        setImageChanged(true); // Postavljamo da je slika promenjena
+        setImageChanged(true);
       };
       reader.readAsDataURL(file);
     }

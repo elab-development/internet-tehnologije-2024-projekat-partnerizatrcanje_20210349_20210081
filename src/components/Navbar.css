@@ -51,6 +51,12 @@
   transition: background-color 0.3s ease;
 }
 
+/* Stil za aktivne linkove */
+.navbar a.active {
+  background-color: #C14600; /* Drugačija boja za aktivni link */
+  pointer-events: none; /* Onemogućavanje klika na aktivni link */
+}
+
 .navbar a:hover {
   background-color: rgba(0, 0, 0, 0.2); /* Blago tamnija boja na hover */
 }
