@@ -1,0 +1,21 @@
+.feed {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding-top: 50px;
+    background-color: #FEF9E1; /* Vrlo svetla žuta pozadina */
+  }
+  
+  .feed h2 {
+    font-size: 2rem;
+    text-align: center;
+    color: #C14600; /* Narandžasta boja za naslov feed-a */
+  }
+  
+  .feed .post {
+    margin-bottom: 20px;
+  }
+  

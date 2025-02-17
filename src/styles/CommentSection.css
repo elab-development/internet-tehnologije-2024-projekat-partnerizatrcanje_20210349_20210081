@@ -1,25 +1,26 @@
-/* CommentSection.css */
 .comment-section {
-    margin-top: 1rem;
-    padding-left: 1rem;
-    border-left: 3px solid #FF9D23; /* Narandžasta linija sa leve strane */
-  }
-  
-  .comment {
-    background-color: #F4E1C1;
-    padding: 0.8rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .comment:hover {
-    background-color: #FF9D23;
-    color: white;
-  }
-  
-  .comment p {
-    font-size: 1rem;
-    color: #333;
-  }
+  background-color: #E5D0AC; /* Bež pozadina za sekciju komentara */
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.comment {
+  background-color: #ffffff; /* Bela pozadina za komentare */
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 0.95rem;
+  color: #333333; /* Tamno siva boja za tekst */
+}
+
+.comment:hover {
+  background-color: #FF9D23; /* Svetla narandžasta pri hover-u */
+  color: white; /* Menja boju teksta na beli */
+}
+
+
   
