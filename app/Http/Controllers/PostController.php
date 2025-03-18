@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class PostController extends Controller
 {
     // Metoda za kreiranje plana trčanja
-    public function createRunningPlan(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
