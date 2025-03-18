@@ -3,42 +3,48 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition()
     {
+        $role = $this->faker->randomElement(['user', 'admin']);
+
         return [
-            'name' => $this->faker->firstName(),  // Generiše ime
-            'surname' => $this->faker->lastName(),  // Generiše prezime
-            'email' => $this->faker->unique()->safeEmail(),  // Generiše jedinstven email
-            'password' => bcrypt('password123'),  // Postavlja šifru kao bcrypt
-            'running_stats' => json_encode([  // Ovo je primer generisanja podataka za 'running_stats'
-                'total_distance' => $this->faker->randomFloat(2, 5, 100),  // Ukupna pretrčana udaljenost
-                'total_time' => $this->faker->randomFloat(2, 30, 300),  // Ukupno vreme provedeno u trčanju
-                'average_speed' => $this->faker->randomFloat(2, 5, 12)  // Prosečna brzina
+            'name' => $this->faker->firstName(),
+            'surname' => $this->faker->lastName(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'password' => Hash::make('password123'),
+            'role' => $role,
+            'running_stats' => json_encode([
+                'total_distance' => $this->faker->randomFloat(2, 5, 100),
+                'total_time' => $this->faker->randomFloat(2, 30, 300),
+                'average_speed' => $this->faker->randomFloat(2, 5, 12)
             ]),
+            'is_active' => true,
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return static
-     */
-    public function unverified()
+    public function guest()
     {
         return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
+            'role' => 'guest',
+            'name' => null,
+            'surname' => null,
+            'email' => null,
+            'password' => null,
+            'running_stats' => null,
+            'is_active' => false,
+        ]);
+    }
+
+    public function admin()
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('adminpassword'),
         ]);
     }
 }

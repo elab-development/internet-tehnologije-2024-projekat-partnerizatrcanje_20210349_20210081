@@ -30,10 +30,10 @@ class Post extends Model
     }
 
     // Učesnici plana trčanja
-    public function participants(): BelongsToMany
+    public function participants()
     {
-        return $this->belongsToMany(User::class, 'post_user', 'post_id', 'user_id')
-                    ->withTimestamps();
+        return $this->belongsToMany(User::class, 'post_user', 'post_id', 'user_id');
     }
+
 }
 

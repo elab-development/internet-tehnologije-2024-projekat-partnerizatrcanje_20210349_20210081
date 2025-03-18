@@ -22,7 +22,9 @@ class User extends Authenticatable
         'name',
         'surname',
         'email',
-        'password'
+        'password',
+        'role',
+        'is_active',
     ];
 
     /**
@@ -77,6 +79,20 @@ class User extends Authenticatable
         return $this->hasOne(RunningStats::class);
     }
     
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isUser()
+    {
+        return $this->role === 'user';
+    }
+
+    public function isGuest()
+    {
+        return $this->role === 'guest';
+    }
 
 }
 

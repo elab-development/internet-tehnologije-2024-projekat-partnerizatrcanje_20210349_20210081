@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -27,14 +29,33 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/guest-login', function () {
+    // Kreiraj korisnika sa 'guest' rolom
+    $guest = User::create([
+        'name' => 'Gost', // Možeš promeniti ako želiš
+        'surname' => 'Korisnik',
+        'email' => 'guest_' . uniqid() . '@example.com', // Generišemo jedinstveni email
+        'password' => bcrypt('guest123'), // Može ostati nebitan jer se ne koristi za login
+        'role' => 'guest',
+    ]);
+
+    // Prijavi korisnika automatski
+    Auth::login($guest);
+
+    return response()->json([
+        'message' => 'Uspešno ste prijavljeni kao gost!',
+        'user' => $guest
+    ]);
+});
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/posts', [PostController::class, 'createRunningPlan']);
-    Route::put('/posts/{id}', [PostController::class, 'updateRunningPlan']); // Update method
-    Route::delete('/posts/{id}', [PostController::class, 'deleteRunningPlan']); // Delete method
+    Route::post('/posts', [PostController::class, 'store']);
+    Route::delete('/posts/{id}', [PostController::class, 'deleteRunningPlan']);
+    Route::post('/posts/{id}/join', [PostController::class, 'joinRunningPlan']);
+    Route::get('/posts/filter', [PostController::class, 'filterRunningPlans']);
 });
 
 

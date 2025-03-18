@@ -16,10 +16,18 @@ class RaceController extends Controller
             'end_date' => 'required|date|after:start_date',
             'distance' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'rewards' => 'nullable|string',
+            'prize' => 'nullable|numeric|min:0',
         ]);
 
-        $race = Race::create($request->all());
+        $race = Race::create([
+            'name' => $request->name,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'distance' => $request->distance,
+            'description' => $request->description,
+            'prize' => $request->prize, // ispravljeno
+            'organizer_id' => auth()->id(), // organizator je autentifikovani korisnik
+        ]);
 
         return response()->json([
             'message' => 'Virtuelna trka je uspešno kreirana.',
