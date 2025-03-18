@@ -73,3 +73,52 @@
     gap: 1rem;
   }
 }
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.logout-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.handprint {
+  height: 80px; /* Podesi veličinu šake */
+  margin-right: 10px; /* Razmak između šake i logotipa */
+}
+
+.logo {
+  height: 175px; /* Podesi veličinu logotipa */
+  margin: 0;
+}

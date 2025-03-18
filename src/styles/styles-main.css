@@ -172,3 +172,22 @@ h1, .feed, .post, .comment-section, .running-plan-card {
 .close-modal:hover {
   background: #E63939;
 }
+
+/* Dugme za prijavu kao gost */
+.auth-container .guest-button {
+  background: #FF9D23;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.auth-container .guest-button:hover {
+  background: #FF7F11;
+  transform: translateY(-4px);
+}

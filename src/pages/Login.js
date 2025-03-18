@@ -14,6 +14,11 @@ const Login = () => {
     navigate("/home");
   };
 
+  const handleGuestLogin = () => {
+    console.log("Ulogovan kao gost");
+    navigate("/home"); // Preusmeravanje na home stranicu
+  };
+
   const handlePasswordReset = (e) => {
     e.preventDefault();
     console.log("Zahtev za reset lozinke poslat za:", resetEmail);
@@ -48,6 +53,10 @@ const Login = () => {
         <span onClick={() => setShowModal(true)}>Zaboravili ste lozinku?</span>
       </p>
 
+      <p>
+        <button onClick={handleGuestLogin} className="guest-button">Prijavi se kao gost</button>
+      </p>
+
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -71,3 +80,4 @@ const Login = () => {
 };
 
 export default Login;
+

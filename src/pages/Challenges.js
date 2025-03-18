@@ -28,21 +28,27 @@ const Challenges = () => {
       <div className="all-challenges">
         <h2>Izazovi</h2>
         <div className="challenge-list">
-          {allChallenges.map((challenge) => (
-            <div className="challenge-card" key={challenge.id}>
-              <h3>{challenge.name}</h3>
-              <p>{challenge.description}</p>
-              <button
-                onClick={() => handleJoinChallenge(challenge.id)}
-                className="join-button"
-              >
-                Pridruži se
-              </button>
-            </div>
-          ))}
+          {allChallenges.map((challenge) => {
+            // Provera da li je izazov već izabran
+            const isAlreadyJoined = joinedChallenges.some(joinedChallenge => joinedChallenge.id === challenge.id);
+            
+            return (
+              <div className="challenge-card" key={challenge.id}>
+                <h3>{challenge.name}</h3>
+                <p>{challenge.description}</p>
+                <button
+                  onClick={() => handleJoinChallenge(challenge.id)}
+                  className={`join-button ${isAlreadyJoined ? 'disabled' : ''}`}
+                  disabled={isAlreadyJoined}
+                >
+                  {isAlreadyJoined ? 'Pridružen' : 'Pridruži se'}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
-      
+     
       {/* Izazovi na koje je korisnik prijavljen */}
       <div className="joined-challenges">
         <h2>Pridruženi izazovi</h2>

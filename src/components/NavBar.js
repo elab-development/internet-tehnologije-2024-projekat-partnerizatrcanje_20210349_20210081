@@ -1,15 +1,26 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import './Navbar.css'; // Uvezi CSS fajl za stilizaciju
-import logo from '../assets/Logo1.png'; // Importujte sliku
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import './NavBar.css'; // Uvezi CSS fajl za stilizaciju
+import logo from '../assets/Logo1.png'; // Importuj logo
+import handprint from '../assets/handprint.png'; // Importuj sliku crvene šake
 
 const Navbar = () => {
-  const location = useLocation(); // Koristimo useLocation za praćenje trenutne stranice
+  const location = useLocation(); 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <img src={logo} alt="SprintLink Logo" className="logo" /> {/* Dodajte logo sliku */}
+        <div className="logo-container">
+          <img src={handprint} alt="Crvena Šaka" className="handprint" />
+          <img src={logo} alt="SprintLink Logo" className="logo" />
+        </div>
         <ul className="nav-links">
           <li>
             <Link to="/home" className={location.pathname === '/home' ? 'active' : ''}>
@@ -28,7 +39,7 @@ const Navbar = () => {
           </li>
           <li>
             <Link to="/Races" className={location.pathname === '/Races' ? 'active' : ''}>
-              Virtuelne trke
+              Biznis trke
             </Link>
           </li>
           <li>
@@ -37,12 +48,12 @@ const Navbar = () => {
             </Link>
           </li>
         </ul>
+        <button className="logout-button" onClick={handleLogout}>
+          Izloguj se
+        </button>
       </div>
     </nav>
   );
 };
 
 export default Navbar;
-
-
-
