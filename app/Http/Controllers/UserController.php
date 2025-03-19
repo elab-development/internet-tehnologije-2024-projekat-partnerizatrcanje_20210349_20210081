@@ -86,8 +86,6 @@ class UserController extends Controller
     }
 
     $validatedData = $request->validate([
-        'name' => 'sometimes|string|max:255',
-        'surname' => 'sometimes|string|max:255',
         'email' => 'sometimes|email|unique:users,email,' . $user->id,
         'current_password' => 'required_with:password|string',
         'password' => 'sometimes|string|min:8|confirmed',
