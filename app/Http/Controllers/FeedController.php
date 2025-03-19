@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Post;
 
 class FeedController extends Controller
 {
     public function index()
     {
-        $posts = Post::with(['user', 'comments'])->latest()->get();
+        $posts = Post::with(['user', 'comments'])->latest()->paginate(15);
 
         if ($posts->isEmpty()) {
             return response()->json(['message' => 'Trenutno nema objava.'], 200);

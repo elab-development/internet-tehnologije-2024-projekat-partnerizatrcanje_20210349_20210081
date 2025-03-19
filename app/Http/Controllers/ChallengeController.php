@@ -14,9 +14,8 @@ class ChallengeController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'duration' => 'required|integer|min:1',
-            'requirements' => 'nullable|string',
-            'rewards' => 'nullable|string',
-            'company_id' => 'required|exists:companies,id',
+            'distance' => 'nullable|string',
+            'prize' => 'nullable|string',
         ]);
 
         $challenge = Challenge::create($request->all());

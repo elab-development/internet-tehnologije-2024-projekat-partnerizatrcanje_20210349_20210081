@@ -10,13 +10,13 @@ class Comment extends Model
 {
     use HasFactory;
 
-    // Relacija: Comment pripada korisniku
+    protected $fillable = ['content', 'post_id', 'user_id']; // Omogućava masovno punjenje ovih polja
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relacija: Comment pripada postu
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);

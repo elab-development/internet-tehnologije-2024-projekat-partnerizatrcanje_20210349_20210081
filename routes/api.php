@@ -12,7 +12,6 @@ use App\Http\Controllers\RaceController;
 use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\UserRaceController;
 use App\Http\Controllers\FeedController;
-use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\RunningStatsController;
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +50,8 @@ Route::post('/guest-login', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+//Rute za postove
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/posts', [PostController::class, 'store']);
     Route::delete('/posts/{id}', [PostController::class, 'deleteRunningPlan']);
@@ -66,7 +67,7 @@ Route::post('/races', [RaceController::class, 'store']);
 Route::post('/challenges', [ChallengeController::class, 'store']);
 
 // Pridruživanje trci
-Route::post('/races/{race}/join', [UserRaceController::class, 'joinRace']);
+Route::middleware('auth:sanctum')->post('/races/{raceId}/join', [UserRaceController::class, 'joinRace']);
 
 
 Route::apiResource('users', UserController::class);
@@ -74,6 +75,10 @@ Route::apiResource('posts', PostController::class);
 Route::apiResource('comments', CommentController::class);
 
 Route::get('/feed', [FeedController::class, 'index']);
-Route::post('/reaction', [ReactionController::class, 'addReaction']);
-Route::post('/comment', [ReactionController::class, 'addComment']);
-Route::get('/stats/{user_id}', [RunningStatsController::class, 'getStats']);
+
+// Rute za komentare
+Route::get('/posts/{post_id}/comments', [CommentController::class, 'getCommentsByPost']); // Svi komentari za određeni post
+Route::post('/comments', [CommentController::class, 'store']); // Kreiranje komentara
+Route::get('/comments/{id}', [CommentController::class, 'show']); // Prikaz jednog komentara
+Route::put('/comments/{id}', [CommentController::class, 'update']); // Ažuriranje komentara
+Route::delete('/comments/{id}', [CommentController::class, 'destroy']); // Brisanje komentara

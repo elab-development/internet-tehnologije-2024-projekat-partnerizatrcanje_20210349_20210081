@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Challenge extends Model
 {
@@ -15,9 +14,8 @@ class Challenge extends Model
         'name',
         'description',
         'duration',
-        'conditions',
+        'distance',
         'prize',
-        'company_id'
     ];
 
     public function participants(): BelongsToMany
@@ -25,9 +23,5 @@ class Challenge extends Model
         return $this->belongsToMany(User::class, 'user_challenge')->withTimestamps();
     }
 
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class, 'company_id');
-    }
 }
 

@@ -30,4 +30,10 @@ class Race extends Model
     {
         return $this->belongsTo(User::class, 'organizer_id');
     }
+
+
+     public function hasParticipant($userId): bool
+    {
+        return $this->participants()->where('user_id', $userId)->exists();
+    }
 }

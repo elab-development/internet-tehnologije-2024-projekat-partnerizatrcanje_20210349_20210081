@@ -65,15 +65,16 @@ class UserController extends Controller
 
     // Prikaz pojedinačnog korisnika
     public function show($id)
-    {
-        $user = User::find($id);
+{
+    $user = User::with('runningStats')->find($id);
 
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-
-        return response()->json($user, 200);
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
     }
+
+    return response()->json($user, 200);
+}
+
 
     // Ažuriranje korisnika
     public function update(Request $request, $id)

@@ -8,23 +8,29 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
     // Dohvatanje svih komentara
-    public function index()
-    {
-        return response()->json(Comment::all(), 200);
-    }
+    public function getCommentsByPost($post_id)
+{
+    $comments = Comment::where('post_id', $post_id)->get();
+    return response()->json($comments, 200);
+}
 
     // Kreiranje novog komentara
     public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'content' => 'required|string',
-            'post_id' => 'required|exists:posts,id', // Veza sa Post modelom
-        ]);
+{
+    $validatedData = $request->validate([
+        'content' => 'required|string',
+        'post_id' => 'required|exists:posts,id', // Veza sa Post modelom
+    ]);
 
-        $comment = Comment::create($validatedData);
+    $comment = Comment::create([
+        'content' => $validatedData['content'],
+        'post_id' => $validatedData['post_id'],
+        'user_id' => auth()->id(), // Automatski postavlja ID trenutnog korisnika
+    ]);
 
-        return response()->json($comment, 201);
-    }
+    return response()->json($comment, 201);
+}
+
 
     // Prikazivanje jednog komentara
     public function show($id)
