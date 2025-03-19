@@ -50,6 +50,9 @@ Route::post('/guest-login', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');
+Route::put('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');
+
 
 //Rute za postove
 Route::middleware('auth:sanctum')->group(function () {

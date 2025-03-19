@@ -110,22 +110,23 @@ class UserController extends Controller
 
     // Brisanje korisnika
     public function destroy(Request $request, $id)
-    {
-        $user = User::find($id);
-    
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-    
-        // Proverite administratorske privilegije
-        if (!$request->user()->is_admin) {
-            return response()->json(['error' => 'Nemate dozvolu za brisanje ovog naloga.'], 403);
-        }
-    
-        $user->delete();
-    
-        return response()->json(['message' => 'User deleted successfully'], 200);
+{
+    $user = User::find($id);
+
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
     }
+
+    // Dozvoli brisanje ako je korisnik admin ili ako briše svoj nalog
+    if (!$request->user() || ($request->user()->id !== $user->id && !$request->user()->isAdmin())) {
+        return response()->json(['error' => 'Nemate dozvolu za brisanje ovog naloga.'], 403);
+    }
+
+    $user->delete();
+
+    return response()->json(['message' => 'User deleted successfully'], 200);
+}
+
     
 
     // Prikaz statistika korisnika
