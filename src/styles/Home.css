@@ -5,7 +5,7 @@
   width: 800px;;
   justify-content: center; /* Centriranje Feed-a */
   align-items: flex-start;
-  padding-top: 275px; /* Veći razmak sa vrha (potrebno za navbar) */
+  padding-top: 200px; /* Veći razmak sa vrha (potrebno za navbar) */
   min-height: 100vh; /* Osiguraj da se sadržaj proteže na celu visinu ekrana */
   background-color: #E5D0AC; /* Svetla pozadina */
   padding-bottom: 2rem; /* Razmak na dnu */

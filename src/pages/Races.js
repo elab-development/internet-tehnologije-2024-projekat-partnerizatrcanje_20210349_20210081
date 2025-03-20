@@ -24,6 +24,11 @@ const Races = () => {
     setJoinedRaces(updatedRaces);
   };
 
+  // Check if race is already joined
+  const isRaceJoined = (raceId) => {
+    return joinedRaces.some((race) => race.id === raceId);
+  };
+
   return (
     <div className="races-container">
       {/* Dostupne trke */}
@@ -34,17 +39,25 @@ const Races = () => {
             <div className="race-card" key={race.id}>
               <h3>{race.name}</h3>
               <p>{race.description}</p>
-              <button
-                onClick={() => handleJoinRace(race.id)}
-                className="join-button"
-              >
-                Pridruži se
-              </button>
+              {isRaceJoined(race.id) ? (
+                <button
+                  className="join-button joined"
+                  disabled
+                >
+                  Pridružen
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleJoinRace(race.id)}
+                  className="join-button"
+                >
+                  Pridruži se
+                </button>
+              )}
             </div>
           ))}
         </div>
       </div>
-
       {/* Pridružene trke */}
       <div className="joined-races-section">
         <h2>Pridružene trke</h2>
