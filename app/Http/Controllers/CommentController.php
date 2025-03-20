@@ -28,7 +28,11 @@ class CommentController extends Controller
         'user_id' => auth()->id(), // Automatski postavlja ID trenutnog korisnika
     ]);
 
-    return response()->json($comment, 201);
+    return response()->json([
+        'message' => 'Komentar uspešno kreiran',
+        'comment' => $comment
+    ], 201);
+    
 }
 
 

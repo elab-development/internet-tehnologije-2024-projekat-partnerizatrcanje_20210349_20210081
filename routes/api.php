@@ -24,6 +24,10 @@ use App\Http\Controllers\RunningStatsController;
 |
 */
 
+Route::middleware('auth:sanctum')->get('/test-auth', function (Request $request) {
+    return response()->json(['user' => $request->user(), 'message' => 'Uspešno autentifikovano']);
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -50,8 +54,12 @@ Route::post('/guest-login', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');
 Route::put('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');
+Route::get('/users/{id}/stats', [UserController::class, 'stats']);
+
 
 
 //Rute za postove
@@ -64,7 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 // Trke
-Route::post('/races', [RaceController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/races', [RaceController::class, 'store']);
 
 // Izazovi
 Route::post('/challenges', [ChallengeController::class, 'store']);
@@ -81,7 +89,7 @@ Route::get('/feed', [FeedController::class, 'index']);
 
 // Rute za komentare
 Route::get('/posts/{post_id}/comments', [CommentController::class, 'getCommentsByPost']); // Svi komentari za određeni post
-Route::post('/comments', [CommentController::class, 'store']); // Kreiranje komentara
+Route::middleware('auth:sanctum')->post('/comments', [CommentController::class, 'store']); // Kreiranje komentara
 Route::get('/comments/{id}', [CommentController::class, 'show']); // Prikaz jednog komentara
 Route::put('/comments/{id}', [CommentController::class, 'update']); // Ažuriranje komentara
 Route::delete('/comments/{id}', [CommentController::class, 'destroy']); // Brisanje komentara

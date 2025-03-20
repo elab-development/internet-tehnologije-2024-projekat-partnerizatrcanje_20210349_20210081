@@ -41,27 +41,6 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
-    //Login user
-    public function login(Request $request)
-{
-    $credentials = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string',
-    ]);
-
-    $user = User::where('email', $credentials['email'])->first();
-
-    if (!$user || !Hash::check($credentials['password'], $user->password)) {
-        return response()->json(['error' => 'Pogrešni kredencijali'], 401);
-    }
-
-    if (!$user->is_active) {
-        return response()->json(['error' => 'Vaš nalog je deaktiviran.'], 403);
-    }
-
-    return response()->json(['message' => 'Uspešna prijava', 'user' => $user], 200);
-}
-
 
     // Prikaz pojedinačnog korisnika
     public function show($id)
@@ -110,22 +89,30 @@ class UserController extends Controller
 
     // Brisanje korisnika
     public function destroy(Request $request, $id)
-{
-    $user = User::find($id);
+    {
 
-    if (!$user) {
-        return response()->json(['error' => 'User not found'], 404);
+        // Pronalazi korisnika koji treba da bude obrisan
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'Korisnik nije pronađen.'], 404);
+        }
+
+        // Provera da li je korisnik autentifikovan
+        if (!$request->user()) {
+            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+        }
+
+        // Dozvoli brisanje ako je korisnik admin ili briše svoj nalog
+        if ($request->user()->id !== $user->id && !$request->user()->isAdmin()) {
+            return response()->json(['error' => 'Nemate dozvolu za brisanje ovog naloga.'], 403);
+        }
+
+        // Brisanje korisnika
+        $user->delete();
+
+        return response()->json(['message' => 'Korisnik je uspešno obrisan.'], 200);
     }
-
-    // Dozvoli brisanje ako je korisnik admin ili ako briše svoj nalog
-    if (!$request->user() || ($request->user()->id !== $user->id && !$request->user()->isAdmin())) {
-        return response()->json(['error' => 'Nemate dozvolu za brisanje ovog naloga.'], 403);
-    }
-
-    $user->delete();
-
-    return response()->json(['message' => 'User deleted successfully'], 200);
-}
 
     
 
