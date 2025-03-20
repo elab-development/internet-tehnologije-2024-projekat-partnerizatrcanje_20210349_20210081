@@ -28,6 +28,10 @@ Route::middleware('auth:sanctum')->get('/test-auth', function (Request $request)
     return response()->json(['user' => $request->user(), 'message' => 'Uspešno autentifikovano']);
 });
 
+Route::get('/test-status', function() {
+    return response()->json(['message' => 'Testing status code'], 201);
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -51,7 +55,7 @@ Route::post('/guest-login', function () {
     ]);
 });
 
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register'])->middleware('api');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
