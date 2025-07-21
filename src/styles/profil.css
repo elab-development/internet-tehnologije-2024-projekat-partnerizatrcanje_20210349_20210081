@@ -408,6 +408,18 @@
   opacity: 1;
 }
 
+.confirmation-modal{
+  color: white;
+}
+
+.confirmation-actions{
+
+display: flex;
+gap: 20px;
+align-items:center;
+justify-content: center;
+}
+
 /* Media queries za responzivnost */
 @media (max-width: 576px) {
   .profile-header {
@@ -423,4 +435,5 @@
   .profile-container {
     padding: 20px 15px;
   }
+
 }

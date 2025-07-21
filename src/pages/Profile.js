@@ -15,43 +15,43 @@ export default function Profile() {
   const [editingField, setEditingField] = useState(null);
   const [imageChanged, setImageChanged] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [settingsForm, setSettingsForm] = useState({
     email: user.email,
     currentPassword: "",
     newPassword: "",
     confirmPassword: ""
   });
-  
-  // Podaci o bedževima - redizajnirani za trke
+
   const [badges, setBadges] = useState([
-    { 
-      id: 1, 
-      name: "Maraton", 
-      icon: "🏅", 
+    {
+      id: 1,
+      name: "Maraton",
+      icon: "🏅",
       description: "Završio maraton ispod 4h",
       type: "distance",
       event: "Belgrade Marathon 2024"
     },
-    { 
-      id: 2, 
-      name: "Polumaraton", 
-      icon: "🥈", 
+    {
+      id: 2,
+      name: "Polumaraton",
+      icon: "🥈",
       description: "Završio polumaraton ispod 2h",
       type: "distance",
       event: "Fruškogorski polumaraton"
     },
-    { 
-      id: 3, 
-      name: "10km Trka", 
-      icon: "🥉", 
+    {
+      id: 3,
+      name: "10km Trka",
+      icon: "🥉",
       description: "Završio 10km trku",
       type: "distance",
       event: "Nike 10K Belgrade"
     },
-    { 
-      id: 4, 
-      name: "5km Sprint", 
-      icon: "🎖️", 
+    {
+      id: 4,
+      name: "5km Sprint",
+      icon: "🎖️",
       description: "5km lični rekord",
       type: "achievement",
       event: "Adidas 5K Challenge"
@@ -59,14 +59,19 @@ export default function Profile() {
   ]);
 
   const handleDoubleClick = (field) => {
-    // Dozvoljavamo uređivanje samo za opis
-    if (field === "description") {
+    if (["description", "height", "weight"].includes(field)) {
       setEditingField(field);
     }
   };
 
   const handleChange = (e) => {
-    setUser({ ...user, [editingField]: e.target.value });
+    const value = e.target.value;
+    const updatedValue =
+      editingField === "height" || editingField === "weight"
+        ? Number(value)
+        : value;
+
+    setUser({ ...user, [editingField]: updatedValue });
   };
 
   const handleBlur = () => {
@@ -84,25 +89,36 @@ export default function Profile() {
       reader.readAsDataURL(file);
     }
   };
-  
+
   const handleSettingsChange = (e) => {
     const { name, value } = e.target;
     setSettingsForm({ ...settingsForm, [name]: value });
   };
-  
+
   const handleSettingsSubmit = (e) => {
     e.preventDefault();
-    
-    // Validacija lozinki
+
     if (settingsForm.newPassword !== settingsForm.confirmPassword) {
       alert("Lozinke se ne poklapaju!");
       return;
     }
-    
-    // Simulacija uspešne promene - sada dozvoljavamo promenu email-a kroz podešavanja
+
     setUser({ ...user, email: settingsForm.email });
     alert("Podešavanja uspešno sačuvana!");
     setShowSettingsModal(false);
+  };
+
+  const handleDeleteProfile = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const confirmDeleteProfile = () => {
+    alert("Profil je uspešno obrisan!");
+    navigate("/");
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirmation(false);
   };
 
   return (
@@ -138,6 +154,7 @@ export default function Profile() {
           )}
         </div>
       </div>
+
       <div className="profile-info">
         {[{ label: "Ime i Prezime", field: "name" }, { label: "E-mail", field: "email" }]
           .map(({ label, field }) => (
@@ -148,13 +165,45 @@ export default function Profile() {
               </div>
             </div>
           ))}
-        <div className="profile-field">
-          <strong>Visina / Kilaža:</strong>
-          <p>{user.height} cm / {user.weight} kg</p>
+        <div
+          className="profile-field"
+          onDoubleClick={() => handleDoubleClick("height")}
+        >
+          <strong>Visina:</strong>
+          {editingField === "height" ? (
+            <input
+              type="number"
+              value={user.height}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className="profile-input"
+              autoFocus
+            />
+          ) : (
+            <p>{user.height} cm</p>
+          )}
+        </div>
+
+        <div
+          className="profile-field"
+          onDoubleClick={() => handleDoubleClick("weight")}
+        >
+          <strong>Kilaža:</strong>
+          {editingField === "weight" ? (
+            <input
+              type="number"
+              value={user.weight}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className="profile-input"
+              autoFocus
+            />
+          ) : (
+            <p>{user.weight} kg</p>
+          )}
         </div>
       </div>
-      
-      {/* Sekcija sa bedževima - redizajnirana kao medalje */}
+
       <div className="badges-section">
         <h3 className="badges-title">Moja Dostignuća</h3>
         <div className="badges-container">
@@ -163,19 +212,18 @@ export default function Profile() {
               <div className="badge-icon">{badge.icon}</div>
               <div className="badge-name">{badge.name}</div>
               <div className="badge-tooltip">
-                {badge.description}<br/>
+                {badge.description}<br />
                 <strong>{badge.event}</strong>
               </div>
             </div>
           ))}
         </div>
       </div>
-      
+
       <button className="profile-button" onClick={() => setShowSettingsModal(true)}>
         Podešavanja
       </button>
-      
-      {/* Unapređeni modal za podešavanja */}
+
       {showSettingsModal && (
         <div className="modal-overlay">
           <div className="settings-modal">
@@ -193,7 +241,7 @@ export default function Profile() {
                   required
                 />
               </div>
-              
+
               <div className="modal-group">
                 <label htmlFor="currentPassword">Trenutna lozinka:</label>
                 <input
@@ -206,7 +254,7 @@ export default function Profile() {
                   required
                 />
               </div>
-              
+
               <div className="modal-group">
                 <label htmlFor="newPassword">Nova lozinka:</label>
                 <input
@@ -219,7 +267,7 @@ export default function Profile() {
                   minLength="8"
                 />
               </div>
-              
+
               <div className="modal-group">
                 <label htmlFor="confirmPassword">Potvrdi novu lozinku:</label>
                 <input
@@ -232,7 +280,7 @@ export default function Profile() {
                   minLength="8"
                 />
               </div>
-              
+
               <div className="modal-actions">
                 <button type="button" className="cancel-button" onClick={() => setShowSettingsModal(false)}>
                   Otkaži
@@ -241,10 +289,35 @@ export default function Profile() {
                   Sačuvaj promene
                 </button>
               </div>
+
+              <div className="delete-button-only">
+                <button type="button" className="delete-profile-button" onClick={handleDeleteProfile}>
+                  Obriši profil
+                </button>
+              </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showDeleteConfirmation && (
+        <div className="modal-overlay">
+          <div className="confirmation-modal">
+            <h2>Da li ste sigurni?</h2>
+            <p>Ova akcija će trajno obrisati vaš profil i sve povezane podatke. Ova akcija se ne može poništiti.</p>
+            <div className="confirmation-actions">
+              <button className="cancel-delete-button" onClick={cancelDelete}>
+                Odustani
+              </button>
+              <button className="confirm-delete-button" onClick={confirmDeleteProfile}>
+                DA, obriši profil
+              </button>
+            </div>
           </div>
         </div>
       )}
     </div>
   );
+
+  
 }

@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [ime, setIme] = useState("");
+  const [prezime, setPrezime] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
     // Ovde ide logika za registraciju
-    console.log("Registrovan:", name, email);
+    console.log("Registrovan:", ime, prezime, email);
     navigate("/login"); // Preusmeravanje nakon registracije
   };
 
@@ -20,9 +21,16 @@ const Register = () => {
       <form onSubmit={handleRegister}>
         <input
           type="text"
-          placeholder="Ime i Prezime"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="Ime"
+          value={ime}
+          onChange={(e) => setIme(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Prezime"
+          value={prezime}
+          onChange={(e) => setPrezime(e.target.value)}
           required
         />
         <input
