@@ -11,76 +11,124 @@ class AuthController extends Controller
 {
     //Register metoda
     public function register(Request $request)
-{
-    try {
-        Log::info('Registration attempt', $request->all());
-        
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-        
-        Log::info('Validation passed');
-        
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-        
-        Log::info('User created', ['user_id' => $user->id]);
-        
-        $token = $user->createToken('auth_token')->plainTextToken;
-        
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ], 201);
-    } catch (\Exception $e) {
-        Log::error('Registration failed', [
-            'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        
-        return response()->json([
-            'error' => 'Registration failed',
-            'message' => $e->getMessage()
-        ], 500);
+    {
+        try {
+            Log::info('Registration attempt', $request->all());
+            
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'surname' => 'nullable|string|max:255', // Added surname validation
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+            
+            Log::info('Validation passed');
+            
+            $user = User::create([
+                'name' => $validated['name'],
+                'surname' => $validated['surname'] ?? null, // Handle optional surname
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'user', // FIX: Set role to 'user'
+                'is_active' => true, // FIX: Set user as active
+            ]);
+            
+            Log::info('User created', ['user_id' => $user->id, 'role' => $user->role]);
+            
+            $token = $user->createToken('auth_token')->plainTextToken;
+            
+            return response()->json([
+                'user' => $user,
+                'token' => $token,
+                'message' => 'Registration successful'
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error('Registration failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'error' => 'Registration failed',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
-}
 
     //Login metoda
     public function login(Request $request)
-{
-    $validated = $request->validate([
-        'email' => 'required|string|email',
-        'password' => 'required|string',
-    ]);
+    {
+        try {
+            $validated = $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+            ]);
 
-    $user = User::where('email', $validated['email'])->first();
+            $user = User::where('email', $validated['email'])->first();
 
-    if (!$user || !Hash::check($validated['password'], $user->password)) {
-        return response()->json(['message' => 'Invalid credentials'], 401);
+            // Check if user exists
+            if (!$user) {
+                Log::warning('Login attempt with non-existent email', ['email' => $validated['email']]);
+                return response()->json(['message' => 'Invalid credentials'], 401);
+            }
+
+            // Check if user is active
+            if (!$user->is_active) {
+                Log::warning('Login attempt with inactive account', ['user_id' => $user->id]);
+                return response()->json(['message' => 'Account is deactivated'], 401);
+            }
+
+            // Check password
+            if (!Hash::check($validated['password'], $user->password)) {
+                Log::warning('Login attempt with wrong password', ['user_id' => $user->id]);
+                return response()->json(['message' => 'Invalid credentials'], 401);
+            }
+
+            // Delete old tokens (optional - for single session)
+            // $user->tokens()->delete();
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            Log::info('Successful login', ['user_id' => $user->id, 'role' => $user->role]);
+
+            return response()->json([
+                'user' => $user,
+                'token' => $token,
+                'message' => 'Login successful'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Login failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'error' => 'Login failed',
+                'message' => 'An error occurred during login'
+            ], 500);
+        }
     }
-
-    $token = $user->createToken('auth_token')->plainTextToken;
-
-    return response()->json([
-        'user' => $user,
-        'token' => $token,
-    ], 200);
-}
 
     //Log-Out metoda
     public function logout(Request $request)
-{
-    $request->user()->tokens()->delete();
+    {
+        try {
+            $user = $request->user();
+            $user->tokens()->delete();
 
-    return response()->json([
-        'message' => 'Logged out successfully',
-    ], 200);
+            Log::info('User logged out', ['user_id' => $user->id]);
+
+            return response()->json([
+                'message' => 'Logged out successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Logout failed', [
+                'message' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'error' => 'Logout failed'
+            ], 500);
+        }
+    }
 }
-
-}
-

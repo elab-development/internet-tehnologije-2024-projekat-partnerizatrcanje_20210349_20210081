@@ -13,118 +13,122 @@ use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\UserRaceController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\RunningStatsController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
 */
 
-Route::middleware(['auth:sanctum', 'not.guest'])->get('/protected', function () {
-    return response()->json(['message' => 'Access granted']);
-});
-
-
-Route::get('/test-auth', function () {
-    return response()->json([
-        'auth_check' => Auth::check(),
-        'user' => Auth::user()
-    ]);
-});
-
-
-// Javne rute (bez autentifikacije)
-Route::post('/register', [AuthController::class, 'register'])->middleware('api');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/guest-login', function () {
-    // Kreiraj korisnika sa 'guest' rolom
-    $guest = User::create([
-        'name' => 'Gost',
-        'surname' => 'Korisnik',
-        'email' => 'guest_' . uniqid() . '@example.com',
-        'password' => bcrypt('guest123'),
-        'role' => 'guest',
-    ]);
-
-    // Prijavi korisnika automatski
-    Auth::login($guest);
-
-    return response()->json([
-        'message' => 'Uspešno ste prijavljeni kao gost!',
-        'user' => $guest
-    ]);
-});
-
+// Test routes
 Route::get('/test-status', function() {
     return response()->json(['message' => 'Testing status code'], 201);
 });
 
-// Rute dostupne svim autentificiranim korisnicima (uključujući goste) - samo za pregled
+// Public routes (no authentication required)
+Route::post('/register', [AuthController::class, 'register'])->name('api.register');
+Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+
+// Fixed guest login route - now uses token-based auth like other routes
+Route::post('/guest-login', function () {
+    try {
+        // Create guest user
+        $guest = User::create([
+            'name' => 'Gost',
+            'surname' => 'Korisnik',
+            'email' => 'guest_' . uniqid() . '@example.com',
+            'password' => bcrypt('guest123'),
+            'role' => 'guest',
+            'is_active' => true,
+        ]);
+
+        // Create token instead of using Auth::login()
+        $token = $guest->createToken('guest_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Uspešno ste prijavljeni kao gost!',
+            'user' => $guest,
+            'token' => $token
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to create guest user',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+})->name('api.guest-login');
+
+// Routes for all authenticated users (including guests) - read-only
 Route::middleware('auth:sanctum')->group(function () {
-    // Test ruta
+    // Auth test routes
     Route::get('/test-auth', function (Request $request) {
-        return response()->json(['user' => $request->user(), 'message' => 'Uspešno autentifikovano']);
-    });
+        return response()->json([
+            'user' => $request->user(), 
+            'message' => 'Uspešno autentifikovano'
+        ]);
+    })->name('api.test-auth');
     
-    // Korisnički podaci
+    // User data
     Route::get('/user', function (Request $request) {
         return $request->user();
-    });
-    Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/{id}', [UserController::class, 'show']);
-    Route::get('/users/{id}/stats', [UserController::class, 'stats']);
+    })->name('api.user');
+    
+    Route::get('/users', [UserController::class, 'index'])->name('api.users.index');
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('api.users.show');
+    Route::get('/users/{id}/stats', [UserController::class, 'stats'])->name('api.users.stats');
     
     // Feed
-    Route::get('/feed', [FeedController::class, 'index']);
+    Route::get('/feed', [FeedController::class, 'index'])->name('api.feed');
     
-    // Pregled postova
-    Route::get('/posts', [PostController::class, 'index']);
-    Route::get('/posts/{id}', [PostController::class, 'show']);
-    Route::get('/posts/filter', [PostController::class, 'filterRunningPlans']);
+    // Posts (read-only)F
+    Route::get('/posts', [PostController::class, 'index'])->name('api.posts.index');
+    Route::get('/posts/filter', [PostController::class, 'filterRunningPlans'])->name('api.posts.filter'); // BEFORE {id}
+    Route::get('/posts/{id}', [PostController::class, 'show'])->name('api.posts.show');
     
-    // Pregled komentara
-    Route::get('/posts/{post_id}/comments', [CommentController::class, 'getCommentsByPost']);
-    Route::get('/comments/{id}', [CommentController::class, 'show']);
+    // Comments (read-only)
+    Route::get('/posts/{post_id}/comments', [CommentController::class, 'getCommentsByPost'])->name('api.posts.comments');
+    Route::get('/comments/{id}', [CommentController::class, 'show'])->name('api.comments.show');
     
-    // Pregled trka i izazova
-    Route::get('/races', [RaceController::class, 'index']);
-    Route::get('/races/{id}', [RaceController::class, 'show']);
-    Route::get('/challenges', [ChallengeController::class, 'index']);
-    Route::get('/challenges/{id}', [ChallengeController::class, 'show']);
+    // Races and challenges (read-only)
+    Route::get('/races', [RaceController::class, 'index'])->name('api.races.index');
+    Route::get('/races/{id}', [RaceController::class, 'show'])->name('api.races.show');
+    Route::get('/challenges', [ChallengeController::class, 'index'])->name('api.challenges.index');
+    Route::get('/challenges/{id}', [ChallengeController::class, 'show'])->name('api.challenges.show');
     
-    // Odjava
-    Route::post('/logout', [AuthController::class, 'logout']);
+    // Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
 });
 
-// Rute dostupne samo registriranim korisnicima (ne i gostima) - za izmjene podataka
+// Routes for registered users only (not guests) - write operations
 Route::middleware(['auth:sanctum', 'not.guest'])->group(function () {
-    // Upravljanje korisničkim profilom
-    Route::put('/user/{id}', [UserController::class, 'update']);
-    Route::delete('/user/{id}', [UserController::class, 'destroy']);
+    // User profile management
+    Route::put('/user/{id}', [UserController::class, 'update'])->name('api.users.update');
+    Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('api.users.destroy');
     
-    // Upravljanje postovima
-    Route::post('/posts', [PostController::class, 'store']);
-    Route::put('/posts/{id}', [PostController::class, 'update']);
-    Route::delete('/posts/{id}', [PostController::class, 'deleteRunningPlan']);
-    Route::post('/posts/{id}/join', [PostController::class, 'joinRunningPlan']);
+    // Posts management
+    Route::post('/posts', [PostController::class, 'store'])->name('api.posts.store');
+    Route::put('/posts/{id}', [PostController::class, 'update'])->name('api.posts.update');
+    Route::delete('/posts/{id}', [PostController::class, 'deleteRunningPlan'])->name('api.posts.destroy');
+    Route::post('/posts/{id}/join', [PostController::class, 'joinRunningPlan'])->name('api.posts.join');
     
-    // Upravljanje komentarima
-    Route::post('/comments', [CommentController::class, 'store']);
-    Route::put('/comments/{id}', [CommentController::class, 'update']);
-    Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
+    // Comments management
+    Route::post('/comments', [CommentController::class, 'store'])->name('api.comments.store');
+    Route::put('/comments/{id}', [CommentController::class, 'update'])->name('api.comments.update');
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('api.comments.destroy');
     
-    // Upravljanje trkama
-    Route::post('/races', [RaceController::class, 'store']);
-    Route::put('/races/{id}', [RaceController::class, 'update']);
-    Route::delete('/races/{id}', [RaceController::class, 'destroy']);
-    Route::post('/races/{raceId}/join', [UserRaceController::class, 'joinRace']);
+    // Races management
+    Route::post('/races', [RaceController::class, 'store'])->name('api.races.store');
+    Route::put('/races/{id}', [RaceController::class, 'update'])->name('api.races.update');
+    Route::delete('/races/{id}', [RaceController::class, 'destroy'])->name('api.races.destroy');
+    Route::post('/races/{raceId}/join', [UserRaceController::class, 'joinRace'])->name('api.races.join');
     
-    // Upravljanje izazovima
-    Route::post('/challenges', [ChallengeController::class, 'store']);
-    Route::put('/challenges/{id}', [ChallengeController::class, 'update']);
-    Route::delete('/challenges/{id}', [ChallengeController::class, 'destroy']);
+    // Challenges management
+    Route::post('/challenges', [ChallengeController::class, 'store'])->name('api.challenges.store');
+    Route::put('/challenges/{id}', [ChallengeController::class, 'update'])->name('api.challenges.update');
+    Route::delete('/challenges/{id}', [ChallengeController::class, 'destroy'])->name('api.challenges.destroy');
 });
+
+// Protected route for testing
+Route::middleware(['auth:sanctum', 'not.guest'])->get('/protected', function () {
+    return response()->json(['message' => 'Access granted']);
+})->name('api.protected');
