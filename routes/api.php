@@ -24,6 +24,19 @@ use App\Http\Controllers\RunningStatsController;
 |
 */
 
+Route::middleware(['auth:sanctum', 'not.guest'])->get('/protected', function () {
+    return response()->json(['message' => 'Access granted']);
+});
+
+
+Route::get('/test-auth', function () {
+    return response()->json([
+        'auth_check' => Auth::check(),
+        'user' => Auth::user()
+    ]);
+});
+
+
 // Javne rute (bez autentifikacije)
 Route::post('/register', [AuthController::class, 'register'])->middleware('api');
 Route::post('/login', [AuthController::class, 'login']);

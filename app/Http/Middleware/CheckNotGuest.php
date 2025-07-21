@@ -17,15 +17,11 @@ class CheckNotGuest
      */
     public function handle(Request $request, Closure $next)
     {
+        
         if (!Auth::check() || Auth::user()->role === 'guest') {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'message' => 'Access denied. Guests are not allowed.'
-                ], 403);
-            }
-            
-            // For non-API routes, redirect to a page
-            return redirect()->route('home')->with('error', 'Access denied. Guests are not allowed.');
+            return response()->json([
+                'message' => 'Access denied. Guests are not allowed.'
+            ], 403);
         }
 
         return $next($request);
