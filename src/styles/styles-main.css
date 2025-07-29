@@ -1,4 +1,15 @@
 /* Globalne postavke */
+/* Reset stilovi */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main content */
+.main-content {
+  margin-top: 60px; /* visina navbar-a */
+}
 body {
   font-family: 'Roboto', sans-serif; /* Moderniji font */
   background-color: #F4E1C1; /* Svetla pozadina */
