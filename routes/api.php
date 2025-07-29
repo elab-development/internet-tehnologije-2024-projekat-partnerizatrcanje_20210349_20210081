@@ -1,20 +1,10 @@
 <?php
-// Handle CORS
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    header('Access-Control-Allow-Origin: http://localhost:3000');
-    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization');
-    exit(0);
-}
-
-header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
@@ -40,7 +30,7 @@ Route::get('/test-status', function() {
 Route::post('/register', [AuthController::class, 'register'])->name('api.register');
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
 
-// Fixed guest login route - now uses token-based auth like other routes
+// Guest login route
 Route::post('/guest-login', function () {
     try {
         // Create guest user
@@ -84,6 +74,10 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     })->name('api.user');
     
+    // Guest account deletion
+    Route::delete('/delete-guest-account', [AuthController::class, 'deleteGuestAccount']);
+    
+    // Users
     Route::get('/users', [UserController::class, 'index'])->name('api.users.index');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('api.users.show');
     Route::get('/users/{id}/stats', [UserController::class, 'stats'])->name('api.users.stats');
@@ -91,7 +85,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Feed
     Route::get('/feed', [FeedController::class, 'index'])->name('api.feed');
     
-    // Posts (read-only)F
+    // Posts (read-only)
     Route::get('/posts', [PostController::class, 'index'])->name('api.posts.index');
     Route::get('/posts/filter', [PostController::class, 'filterRunningPlans'])->name('api.posts.filter'); // BEFORE {id}
     Route::get('/posts/{id}', [PostController::class, 'show'])->name('api.posts.show');

@@ -13,6 +13,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
+            Log::info('Registration attempt started');
+            Log::info('Request data:', $request->all());
             Log::info('Registration attempt', $request->all());
             
             $validated = $request->validate([
@@ -109,17 +111,26 @@ class AuthController extends Controller
         }
     }
 
-    //Log-Out metoda
+    //Log-Out metoda - poboljšana sa info o role
     public function logout(Request $request)
     {
         try {
             $user = $request->user();
+            
+            Log::info('User logout attempt', [
+                'user_id' => $user->id,
+                'role' => $user->role,
+                'email' => $user->email
+            ]);
+            
+            // Obriši sve tokene
             $user->tokens()->delete();
 
-            Log::info('User logged out', ['user_id' => $user->id]);
+            Log::info('User logged out successfully', ['user_id' => $user->id]);
 
             return response()->json([
                 'message' => 'Logged out successfully',
+                'user_role' => $user->role
             ], 200);
         } catch (\Exception $e) {
             Log::error('Logout failed', [
@@ -128,6 +139,58 @@ class AuthController extends Controller
             
             return response()->json([
                 'error' => 'Logout failed'
+            ], 500);
+        }
+    }
+
+    // NOVA METODA - Brisanje guest account-a
+    public function deleteGuestAccount(Request $request)
+    {
+        try {
+            $user = $request->user();
+            
+            // Proveri da li je korisnik guest
+            if ($user->role !== 'guest') {
+                Log::warning('Non-guest user tried to delete guest account', [
+                    'user_id' => $user->id,
+                    'role' => $user->role
+                ]);
+                
+                return response()->json([
+                    'error' => 'Only guest accounts can be deleted automatically'
+                ], 403);
+            }
+            
+            Log::info('Deleting guest account', [
+                'user_id' => $user->id,
+                'email' => $user->email
+            ]);
+            
+            // Obriši sve tokene
+            $user->tokens()->delete();
+            
+            // Obriši korisnika iz baze
+            $user->delete();
+            
+            Log::info('Guest account deleted successfully', [
+                'user_id' => $user->id,
+                'email' => $user->email
+            ]);
+            
+            return response()->json([
+                'message' => 'Guest account successfully deleted'
+            ], 200);
+            
+        } catch (\Exception $e) {
+            Log::error('Failed to delete guest account', [
+                'error' => $e->getMessage(),
+                'user_id' => $request->user()->id ?? null,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'error' => 'Failed to delete guest account',
+                'message' => $e->getMessage()
             ], 500);
         }
     }
