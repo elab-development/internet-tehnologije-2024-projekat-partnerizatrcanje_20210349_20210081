@@ -131,7 +131,11 @@ Route::middleware(['auth:sanctum', 'not.guest'])->group(function () {
     Route::post('/challenges', [ChallengeController::class, 'store'])->name('api.challenges.store');
     Route::put('/challenges/{id}', [ChallengeController::class, 'update'])->name('api.challenges.update');
     Route::delete('/challenges/{id}', [ChallengeController::class, 'destroy'])->name('api.challenges.destroy');
+
 });
+
+    // Feed
+    Route::get('/feed', [FeedController::class, 'index'])->name('api.feed');
 
 // Protected route for testing
 Route::middleware(['auth:sanctum', 'not.guest'])->get('/protected', function () {
