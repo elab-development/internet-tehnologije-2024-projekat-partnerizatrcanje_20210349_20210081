@@ -8,11 +8,38 @@ const Navbar = () => {
   const location = useLocation(); 
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
+const handleLogout = async () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const token = localStorage.getItem('auth_token'); // Promeni 'token' u 'auth_token'
+  
+  console.log('User data:', user);
+  console.log('Token:', token);
+  
+  if (user && user.role === 'guest') {
+    try {
+      console.log('Attempting to delete guest account...');
+      
+      const response = await fetch('http://localhost:8000/api/delete-guest-account', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const responseData = await response.json();
+      console.log('Response:', responseData);
+      
+    } catch (error) {
+      console.error('Greška pri brisanju guest naloga:', error);
+    }
+  }
+  
+  // Obriši podatke iz localStorage-a
+  localStorage.removeItem('user');
+  localStorage.removeItem('auth_token'); // I ovde promeni
+  navigate('/login');
+};
 
   return (
     <nav className="navbar">

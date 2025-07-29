@@ -12,7 +12,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   // API base URL - promeni ako je potrebno
-  const API_BASE_URL = "http://localhost:8081/api";
+  const API_BASE_URL = "http://localhost:8000/api";
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ const Register = () => {
     setLoading(true);
     
     try {
-      // API poziv za registraciju
+      // API poziv za registraciju - PRAVI ENDPOINT
       const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: {
@@ -137,6 +137,7 @@ const Register = () => {
           {loading ? "Registrovanje..." : "Registruj se"}
         </button>
       </form>
+      
       <p>
         Već imate nalog? 
         <span 
