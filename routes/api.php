@@ -26,7 +26,23 @@ Route::get('/test-status', function() {
     return response()->json(['message' => 'Testing status code'], 201);
 });
 
-// Public routes (no authentication required)
+Route::post('/debug-register', function(Request $request) {
+    Log::info('=== DEBUG REGISTER ROUTE HIT ===');
+    Log::info('Request data:', $request->all());
+    return response()->json([
+        'message' => 'Debug successful', 
+        'received_data' => $request->all(),
+        'time' => now()
+    ]);
+});
+
+/*
+|--------------------------------------------------------------------------
+| PUBLIC ROUTES (No authentication required)
+|--------------------------------------------------------------------------
+*/
+
+// Authentication routes
 Route::post('/register', [AuthController::class, 'register'])->name('api.register');
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
 
@@ -43,7 +59,7 @@ Route::post('/guest-login', function () {
             'is_active' => true,
         ]);
 
-        // Create token instead of using Auth::login()
+        // Create token
         $token = $guest->createToken('guest_token')->plainTextToken;
 
         return response()->json([
@@ -59,8 +75,17 @@ Route::post('/guest-login', function () {
     }
 })->name('api.guest-login');
 
-// Routes for all authenticated users (including guests) - read-only
+// Feed - dostupan svima (uključujući guest)
+Route::get('/feed', [FeedController::class, 'index'])->name('api.feed.public');
+
+/*
+|--------------------------------------------------------------------------
+| AUTHENTICATED ROUTES (All logged users including guests)
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth:sanctum')->group(function () {
+    
     // Auth test routes
     Route::get('/test-auth', function (Request $request) {
         return response()->json([
@@ -69,7 +94,7 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     })->name('api.test-auth');
     
-    // User data
+    // Current user data
     Route::get('/user', function (Request $request) {
         return $request->user();
     })->name('api.user');
@@ -77,67 +102,116 @@ Route::middleware('auth:sanctum')->group(function () {
     // Guest account deletion
     Route::delete('/delete-guest-account', [AuthController::class, 'deleteGuestAccount']);
     
-    // Users
+    // Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+    
+    /*
+    |--------------------------------------------------------------------------
+    | READ-ONLY ROUTES (All authenticated users including guests)
+    |--------------------------------------------------------------------------
+    */
+    
+    // Users (read-only)
     Route::get('/users', [UserController::class, 'index'])->name('api.users.index');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('api.users.show');
     Route::get('/users/{id}/stats', [UserController::class, 'stats'])->name('api.users.stats');
     
-    // Feed
-    Route::get('/feed', [FeedController::class, 'index'])->name('api.feed');
-    
     // Posts (read-only)
     Route::get('/posts', [PostController::class, 'index'])->name('api.posts.index');
-    Route::get('/posts/filter', [PostController::class, 'filterRunningPlans'])->name('api.posts.filter'); // BEFORE {id}
+    Route::get('/posts/filter', [PostController::class, 'filterRunningPlans'])->name('api.posts.filter');
     Route::get('/posts/{id}', [PostController::class, 'show'])->name('api.posts.show');
     
     // Comments (read-only)
     Route::get('/posts/{post_id}/comments', [CommentController::class, 'getCommentsByPost'])->name('api.posts.comments');
     Route::get('/comments/{id}', [CommentController::class, 'show'])->name('api.comments.show');
     
-    // Races and challenges (read-only)
+    // Races (read-only)
     Route::get('/races', [RaceController::class, 'index'])->name('api.races.index');
     Route::get('/races/{id}', [RaceController::class, 'show'])->name('api.races.show');
+    
+    // Challenges (read-only)
     Route::get('/challenges', [ChallengeController::class, 'index'])->name('api.challenges.index');
     Route::get('/challenges/{id}', [ChallengeController::class, 'show'])->name('api.challenges.show');
-    
-    // Logout
-    Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+
 });
 
-// Routes for registered users only (not guests) - write operations
+/*
+|--------------------------------------------------------------------------
+| REGISTERED USERS ONLY (not guests) - WRITE OPERATIONS
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware(['auth:sanctum', 'not.guest'])->group(function () {
-    // User profile management
+    
+    /*
+    |--------------------------------------------------------------------------
+    | USER PROFILE MANAGEMENT
+    |--------------------------------------------------------------------------
+    */
     Route::put('/user/{id}', [UserController::class, 'update'])->name('api.users.update');
     Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('api.users.destroy');
     
-    // Posts management
+    /*
+    |--------------------------------------------------------------------------
+    | POSTS MANAGEMENT
+    |--------------------------------------------------------------------------
+    */
     Route::post('/posts', [PostController::class, 'store'])->name('api.posts.store');
     Route::put('/posts/{id}', [PostController::class, 'update'])->name('api.posts.update');
     Route::delete('/posts/{id}', [PostController::class, 'deleteRunningPlan'])->name('api.posts.destroy');
     Route::post('/posts/{id}/join', [PostController::class, 'joinRunningPlan'])->name('api.posts.join');
     
-    // Comments management
+    /*
+    |--------------------------------------------------------------------------
+    | COMMENTS MANAGEMENT
+    |--------------------------------------------------------------------------
+    */
     Route::post('/comments', [CommentController::class, 'store'])->name('api.comments.store');
     Route::put('/comments/{id}', [CommentController::class, 'update'])->name('api.comments.update');
     Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('api.comments.destroy');
     
-    // Races management
-    Route::post('/races', [RaceController::class, 'store'])->name('api.races.store');
-    Route::put('/races/{id}', [RaceController::class, 'update'])->name('api.races.update');
-    Route::delete('/races/{id}', [RaceController::class, 'destroy'])->name('api.races.destroy');
-    Route::post('/races/{raceId}/join', [UserRaceController::class, 'joinRace'])->name('api.races.join');
+    /*
+    |--------------------------------------------------------------------------
+    | CHALLENGES - USER ACTIONS
+    |--------------------------------------------------------------------------
+    */
+    Route::post('/challenges/{id}/join', [ChallengeController::class, 'join'])->name('api.challenges.join');
+    Route::delete('/challenges/{id}/leave', [ChallengeController::class, 'leave'])->name('api.challenges.leave');
+    Route::put('/challenges/{id}/progress', [ChallengeController::class, 'updateProgress'])->name('api.challenges.progress');
     
-    // Challenges management
+    /*
+    |--------------------------------------------------------------------------
+    | RACES - USER ACTIONS
+    |--------------------------------------------------------------------------
+    */
+    Route::post('/races/{id}/join', [RaceController::class, 'join'])->name('api.races.join');
+    Route::delete('/races/{id}/leave', [RaceController::class, 'leave'])->name('api.races.leave');
+    Route::post('/races/{id}/submit', [RaceController::class, 'submitResult'])->name('api.races.submit');
+    
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN ONLY ROUTES - CREATE, UPDATE, DELETE
+    |--------------------------------------------------------------------------
+    */
+    
+    // Challenges management (Admin only - controlled in controller)
     Route::post('/challenges', [ChallengeController::class, 'store'])->name('api.challenges.store');
     Route::put('/challenges/{id}', [ChallengeController::class, 'update'])->name('api.challenges.update');
     Route::delete('/challenges/{id}', [ChallengeController::class, 'destroy'])->name('api.challenges.destroy');
+    
+    // Races management (Admin only - controlled in controller)
+    Route::post('/races', [RaceController::class, 'store'])->name('api.races.store');
+    Route::put('/races/{id}', [RaceController::class, 'update'])->name('api.races.update');
+    Route::delete('/races/{id}', [RaceController::class, 'destroy'])->name('api.races.destroy');
 
 });
 
-    // Feed
-    Route::get('/feed', [FeedController::class, 'index'])->name('api.feed');
+/*
+|--------------------------------------------------------------------------
+| PROTECTED TEST ROUTE
+|--------------------------------------------------------------------------
+*/
 
-// Protected route for testing
 Route::middleware(['auth:sanctum', 'not.guest'])->get('/protected', function () {
-    return response()->json(['message' => 'Access granted']);
+    return response()->json(['message' => 'Access granted to registered users']);
 })->name('api.protected');
