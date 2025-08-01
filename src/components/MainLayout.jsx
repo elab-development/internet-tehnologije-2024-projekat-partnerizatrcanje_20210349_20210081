@@ -8,7 +8,7 @@ const MainLayout = ({ children }) => {
       <header>
         <Navbar />
       </header>
-      <main style={{ paddingTop: '120px' }}>
+      <main>
         {children}
       </main>
     </>
