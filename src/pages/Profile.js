@@ -1,62 +1,98 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/profil.css";
 
 export default function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState({
-    profileImage: "https://via.placeholder.com/150",
-    name: "Ivan Zekić",
-    email: "ivan@example.com",
-    height: 180,
-    weight: 75,
-    description: "Strastveni trkač i ljubitelj tehnologije."
+    name: "",
+    surname: "",
+    email: "",
+    height: null,
+    weight: null,
+    description: "",
+    profile_image_url: null
   });
   const [editingField, setEditingField] = useState(null);
   const [imageChanged, setImageChanged] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  
   const [settingsForm, setSettingsForm] = useState({
-    email: user.email,
+    email: "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: ""
   });
 
-  const [badges, setBadges] = useState([
+  // Mock badges - ovo možeš kasnije povezati sa bazom
+  const [badges] = useState([
     {
       id: 1,
-      name: "Maraton",
+      name: "Prvi post",
       icon: "🏅",
-      description: "Završio maraton ispod 4h",
-      type: "distance",
-      event: "Belgrade Marathon 2024"
+      description: "Kreirao prvi plan trčanja",
+      type: "achievement",
+      event: "Dobrodošlica u SprintLink"
     },
     {
       id: 2,
-      name: "Polumaraton",
+      name: "Aktivni korisnik",
       icon: "🥈",
-      description: "Završio polumaraton ispod 2h",
-      type: "distance",
-      event: "Fruškogorski polumaraton"
-    },
-    {
-      id: 3,
-      name: "10km Trka",
-      icon: "🥉",
-      description: "Završio 10km trku",
-      type: "distance",
-      event: "Nike 10K Belgrade"
-    },
-    {
-      id: 4,
-      name: "5km Sprint",
-      icon: "🎖️",
-      description: "5km lični rekord",
-      type: "achievement",
-      event: "Adidas 5K Challenge"
+      description: "Više od 5 planova",
+      type: "activity",
+      event: "Kontinuirana aktivnost"
     }
   ]);
+
+  // Učitaj korisnikove podatke
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("auth_token");
+      
+      const response = await fetch("http://localhost:8000/api/user/profile", {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setUser({
+          ...userData,
+          profile_image_url: userData.profile_image_url || "https://via.placeholder.com/150"
+        });
+        setSettingsForm({
+          email: userData.email,
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: ""
+        });
+      } else {
+        console.error("Failed to fetch user profile");
+        // Ako je 401, preusmeri na login
+        if (response.status === 401) {
+          localStorage.removeItem("auth_token");
+          localStorage.removeItem("user");
+          navigate("/login");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDoubleClick = (field) => {
     if (["description", "height", "weight"].includes(field)) {
@@ -68,25 +104,97 @@ export default function Profile() {
     const value = e.target.value;
     const updatedValue =
       editingField === "height" || editingField === "weight"
-        ? Number(value)
+        ? Number(value) || ""
         : value;
 
     setUser({ ...user, [editingField]: updatedValue });
   };
 
-  const handleBlur = () => {
-    setEditingField(null);
+  const handleBlur = async () => {
+    if (editingField) {
+      await saveField(editingField, user[editingField]);
+      setEditingField(null);
+    }
   };
 
-  const handleImageChange = (e) => {
+  const saveField = async (field, value) => {
+    try {
+      setSaving(true);
+      const token = localStorage.getItem("auth_token");
+      
+      // Za osnovna polja (height, weight, description) ne treba lozinka
+      const updateData = { [field]: value };
+      
+      const response = await fetch(`http://localhost:8000/api/user/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      if (response.ok) {
+        console.log(`${field} saved successfully`);
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to save field:", errorData);
+        alert("Greška pri čuvanju: " + (errorData.message || errorData.error || "Nepoznata greška"));
+      }
+    } catch (error) {
+      console.error("Error saving field:", error);
+      alert("Greška pri čuvanju podataka");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUser({ ...user, profileImage: reader.result });
+    if (!file) return;
+
+    // Validacija fajla
+    if (file.size > 2 * 1024 * 1024) { // 2MB
+      alert("Slika je prevelika. Maksimalna veličina je 2MB.");
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      alert("Molimo selektujte validnu sliku.");
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      const token = localStorage.getItem("auth_token");
+      
+      const formData = new FormData();
+      formData.append('profile_image', file);
+
+      const response = await fetch(`http://localhost:8000/api/user/${user.id}/upload-image`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Accept": "application/json"
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser({ ...user, profile_image_url: data.image_url });
         setImageChanged(true);
-      };
-      reader.readAsDataURL(file);
+        alert("Profilna slika je uspešno ažurirana!");
+      } else {
+        const errorData = await response.json();
+        alert("Greška pri upload-u slike: " + (errorData.message || "Nepoznata greška"));
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Greška pri upload-u slike");
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -95,7 +203,7 @@ export default function Profile() {
     setSettingsForm({ ...settingsForm, [name]: value });
   };
 
-  const handleSettingsSubmit = (e) => {
+  const handleSettingsSubmit = async (e) => {
     e.preventDefault();
 
     if (settingsForm.newPassword !== settingsForm.confirmPassword) {
@@ -103,30 +211,109 @@ export default function Profile() {
       return;
     }
 
-    setUser({ ...user, email: settingsForm.email });
-    alert("Podešavanja uspešno sačuvana!");
-    setShowSettingsModal(false);
+    if (settingsForm.newPassword && settingsForm.newPassword.length < 8) {
+      alert("Nova lozinka mora imati najmanje 8 karaktera!");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const token = localStorage.getItem("auth_token");
+      
+      const updateData = {
+        email: settingsForm.email,
+        current_password: settingsForm.currentPassword
+      };
+
+      if (settingsForm.newPassword) {
+        updateData.password = settingsForm.newPassword;
+        updateData.password_confirmation = settingsForm.confirmPassword;
+      }
+
+      const response = await fetch(`http://localhost:8000/api/user/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setUser({ ...user, email: settingsForm.email });
+        alert("Podešavanja uspešno sačuvana!");
+        setShowSettingsModal(false);
+        setSettingsForm({
+          ...settingsForm,
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: ""
+        });
+      } else {
+        const errorData = await response.json();
+        alert("Greška: " + (errorData.message || "Neispravni podaci"));
+      }
+    } catch (error) {
+      console.error("Error updating settings:", error);
+      alert("Greška pri ažuriranju podešavanja");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteProfile = () => {
     setShowDeleteConfirmation(true);
   };
 
-  const confirmDeleteProfile = () => {
-    alert("Profil je uspešno obrisan!");
-    navigate("/");
+  const confirmDeleteProfile = async () => {
+    try {
+      const token = localStorage.getItem("auth_token");
+      
+      const response = await fetch(`http://localhost:8000/api/user/${user.id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Accept": "application/json"
+        }
+      });
+
+      if (response.ok) {
+        alert("Profil je uspešno obrisan!");
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("user");
+        navigate("/login");
+      } else {
+        const errorData = await response.json();
+        alert("Greška pri brisanju profila: " + (errorData.message || "Nepoznata greška"));
+      }
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      alert("Greška pri brisanju profila");
+    }
   };
 
   const cancelDelete = () => {
     setShowDeleteConfirmation(false);
   };
 
+  if (loading) {
+    return (
+      <div className="profile-container">
+        <div className="loading-message">
+          <p>Učitavanje profila...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="profile-container">
       <div className="profile-header">
         <div className="profile-image-container">
           <img
-            src={user.profileImage}
+            src={user.profile_image_url}
             alt="Profile"
             className="profile-image"
           />
@@ -135,36 +322,45 @@ export default function Profile() {
             id="profileImage"
             className="hidden-input"
             onChange={handleImageChange}
+            accept="image/*"
+            disabled={uploadingImage}
           />
           <label className="profile-image-button" htmlFor="profileImage">
-            {imageChanged ? "Izmeni sliku" : "Dodaj sliku"}
+            {uploadingImage ? "Upload..." : (imageChanged ? "Izmeni sliku" : "Dodaj sliku")}
           </label>
         </div>
         <div className="profile-description" onDoubleClick={() => handleDoubleClick("description")}>
           {editingField === "description" ? (
             <textarea
               className="profile-textarea"
-              value={user.description}
+              value={user.description || ""}
               onChange={handleChange}
               onBlur={handleBlur}
+              placeholder="Dodaj opis o sebi..."
               autoFocus
+              disabled={saving}
             />
           ) : (
-            <p>{user.description}</p>
+            <p>{user.description || "Kliknite dvaput da dodate opis..."}</p>
           )}
         </div>
       </div>
 
       <div className="profile-info">
-        {[{ label: "Ime i Prezime", field: "name" }, { label: "E-mail", field: "email" }]
-          .map(({ label, field }) => (
-            <div key={field} className="profile-field">
-              <strong>{label}:</strong>
-              <div className="profile-field-value">
-                <p>{user[field]}</p>
-              </div>
-            </div>
-          ))}
+        <div className="profile-field">
+          <strong>Ime i Prezime:</strong>
+          <div className="profile-field-value">
+            <p>{user.name} {user.surname}</p>
+          </div>
+        </div>
+        
+        <div className="profile-field">
+          <strong>E-mail:</strong>
+          <div className="profile-field-value">
+            <p>{user.email}</p>
+          </div>
+        </div>
+        
         <div
           className="profile-field"
           onDoubleClick={() => handleDoubleClick("height")}
@@ -173,14 +369,18 @@ export default function Profile() {
           {editingField === "height" ? (
             <input
               type="number"
-              value={user.height}
+              value={user.height || ""}
               onChange={handleChange}
               onBlur={handleBlur}
               className="profile-input"
+              placeholder="cm"
+              min="100"
+              max="250"
               autoFocus
+              disabled={saving}
             />
           ) : (
-            <p>{user.height} cm</p>
+            <p>{user.height ? `${user.height} cm` : "Kliknite dvaput da dodate visinu"}</p>
           )}
         </div>
 
@@ -192,14 +392,19 @@ export default function Profile() {
           {editingField === "weight" ? (
             <input
               type="number"
-              value={user.weight}
+              value={user.weight || ""}
               onChange={handleChange}
               onBlur={handleBlur}
               className="profile-input"
+              placeholder="kg"
+              min="30"
+              max="300"
+              step="0.1"
               autoFocus
+              disabled={saving}
             />
           ) : (
-            <p>{user.weight} kg</p>
+            <p>{user.weight ? `${user.weight} kg` : "Kliknite dvaput da dodate kilažu"}</p>
           )}
         </div>
       </div>
@@ -220,8 +425,12 @@ export default function Profile() {
         </div>
       </div>
 
-      <button className="profile-button" onClick={() => setShowSettingsModal(true)}>
-        Podešavanja
+      <button 
+        className="profile-button" 
+        onClick={() => setShowSettingsModal(true)}
+        disabled={saving}
+      >
+        {saving ? "Čuva..." : "Podešavanja"}
       </button>
 
       {showSettingsModal && (
@@ -239,6 +448,7 @@ export default function Profile() {
                   onChange={handleSettingsChange}
                   className="modal-input"
                   required
+                  disabled={saving}
                 />
               </div>
 
@@ -252,11 +462,12 @@ export default function Profile() {
                   onChange={handleSettingsChange}
                   className="modal-input"
                   required
+                  disabled={saving}
                 />
               </div>
 
               <div className="modal-group">
-                <label htmlFor="newPassword">Nova lozinka:</label>
+                <label htmlFor="newPassword">Nova lozinka (opciono):</label>
                 <input
                   type="password"
                   id="newPassword"
@@ -265,6 +476,7 @@ export default function Profile() {
                   onChange={handleSettingsChange}
                   className="modal-input"
                   minLength="8"
+                  disabled={saving}
                 />
               </div>
 
@@ -278,20 +490,35 @@ export default function Profile() {
                   onChange={handleSettingsChange}
                   className="modal-input"
                   minLength="8"
+                  disabled={saving}
                 />
               </div>
 
               <div className="modal-actions">
-                <button type="button" className="cancel-button" onClick={() => setShowSettingsModal(false)}>
+                <button 
+                  type="button" 
+                  className="cancel-button" 
+                  onClick={() => setShowSettingsModal(false)}
+                  disabled={saving}
+                >
                   Otkaži
                 </button>
-                <button type="submit" className="save-button">
-                  Sačuvaj promene
+                <button 
+                  type="submit" 
+                  className="save-button"
+                  disabled={saving}
+                >
+                  {saving ? "Čuva..." : "Sačuvaj promene"}
                 </button>
               </div>
 
               <div className="delete-button-only">
-                <button type="button" className="delete-profile-button" onClick={handleDeleteProfile}>
+                <button 
+                  type="button" 
+                  className="delete-profile-button" 
+                  onClick={handleDeleteProfile}
+                  disabled={saving}
+                >
                   Obriši profil
                 </button>
               </div>
@@ -318,6 +545,4 @@ export default function Profile() {
       )}
     </div>
   );
-
-  
 }

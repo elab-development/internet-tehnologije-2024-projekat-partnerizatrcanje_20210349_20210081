@@ -6,19 +6,16 @@ import Profile from "./pages/Profile";
 import CreatePlan from "./pages/CreatePlan";
 import Challenges from "./pages/Challenges";
 import Races from "./pages/Races";
-import Navbar from "./components/Navbar";
+import MainLayout from "./components/MainLayout"; // Dodato
 import './styles/styles-main.css';
 
-// Jednostavan RoleGuard komponenta
 const RoleGuard = ({ children, allowedRoles = [], fallbackMessage = null }) => {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const userRole = user.role || 'guest';
 
-  // Proveri da li korisnik ima dozvoljenu ulogu
   const hasAccess = allowedRoles.includes(userRole);
 
   if (!hasAccess) {
-    // Prikaži poruku o odbijenom pristupu
     return (
       <div style={{
         display: 'flex',
@@ -60,7 +57,6 @@ const RoleGuard = ({ children, allowedRoles = [], fallbackMessage = null }) => {
   return children;
 };
 
-// Wrapper komponente za lakše korišćenje
 const RegisteredUsersOnly = ({ children }) => (
   <RoleGuard 
     allowedRoles={['user', 'admin']} 
@@ -74,69 +70,56 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Početna stranica preusmerava na login */}
         <Route path="/" element={<Navigate to="/login" />} />
-        
-        {/* Login i Register stranice bez Navbar-a */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        
-        {/* Home stranica - dostupna svima uključujući guest */}
+
+        {/* Sve rute sa navbarom unutar MainLayout */}
         <Route path="/home" element={
-          <>
-            <Navbar />
+          <MainLayout>
             <Home />
-          </>
+          </MainLayout>
         } />
-        
-        {/* Profil - samo registrovani korisnici */}
+
         <Route path="/profile" element={
-          <>
-            <Navbar />
+          <MainLayout>
             <RegisteredUsersOnly>
               <Profile />
             </RegisteredUsersOnly>
-          </>
+          </MainLayout>
         } />
-        
-        {/* Create Plan - samo registrovani korisnici */}
+
         <Route path="/create-plan" element={
-          <>
-            <Navbar />
+          <MainLayout>
             <RegisteredUsersOnly>
               <CreatePlan />
             </RegisteredUsersOnly>
-          </>
+          </MainLayout>
         } />
-        
-        {/* Challenges - samo registrovani korisnici */}
+
         <Route path="/challenges" element={
-          <>
-            <Navbar />
+          <MainLayout>
             <RegisteredUsersOnly>
               <Challenges />
             </RegisteredUsersOnly>
-          </>
+          </MainLayout>
         } />
-        
-        {/* Races - samo registrovani korisnici */}
+
         <Route path="/races" element={
-          <>
-            <Navbar />
+          <MainLayout>
             <RegisteredUsersOnly>
               <Races />
             </RegisteredUsersOnly>
-          </>
+          </MainLayout>
         } />
-        
-        {/* Races sa velikim R - za kompatibilnost */}
+
+        {/* Kompatibilnost */}
         <Route path="/Races" element={
-          <>
-            <Navbar />
+          <MainLayout>
             <RegisteredUsersOnly>
               <Races />
             </RegisteredUsersOnly>
-          </>
+          </MainLayout>
         } />
       </Routes>
     </Router>

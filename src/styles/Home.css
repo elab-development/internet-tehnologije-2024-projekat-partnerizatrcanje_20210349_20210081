@@ -4,13 +4,14 @@
   width: 800px;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 80px; /* Smanjen sa 200px */
+  padding-top: 80px; /* Ovo je sasvim dovoljno */
   min-height: 100vh;
   background: linear-gradient(135deg, #F4E6D1 0%, #E5D0AC 50%, #D4B896 100%);
   padding-bottom: 3rem;
-  margin: 0 auto; /* Umesto margin-top: 600px */
-  margin-top: 860px;
+  margin: 0 auto; /* Ovo centrira horizontalno */
+  /* Ukloni margin-top potpuno */
 }
+
 
 .feed {
   display: flex;

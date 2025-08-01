@@ -19,8 +19,12 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  display: contents;
+  
+  padding-top: 120px; /* Ostavlja prostor za fiksni navbar */
   color: #333; /* Tamna boja za tekst */
 }
+
 
 h1 {
   font-size: 2rem;
