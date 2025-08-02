@@ -110,6 +110,7 @@ const Login = () => {
   };
 
   return (
+    <div className="auth-page">
     <div className="auth-container">
       <h2>Prijava</h2>
       
@@ -191,6 +192,7 @@ const Login = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };

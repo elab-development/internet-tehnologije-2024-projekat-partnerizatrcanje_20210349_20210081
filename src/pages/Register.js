@@ -86,6 +86,7 @@ const Register = () => {
   };
 
   return (
+    <div className="auth-page">
     <div className="auth-container">
       <h2>Registracija</h2>
       <form onSubmit={handleRegister}>
@@ -147,6 +148,7 @@ const Register = () => {
           Prijavite se
         </span>
       </p>
+    </div>
     </div>
   );
 };

@@ -10,21 +10,23 @@
 .main-content {
   margin-top: 60px; /* visina navbar-a */
 }
+
 body {
   font-family: 'Roboto', sans-serif; /* Moderniji font */
-  background-color: #F4E1C1; /* Svetla pozadina */
+  background-color: #FF9D23; /* Narandžasta pozadina */
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  display: contents;
-  
-  padding-top: 120px; /* Ostavlja prostor za fiksni navbar */
   color: #333; /* Tamna boja za tekst */
 }
 
+/* Kontejner za centriranje auth stranica */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
 
 h1 {
   font-size: 2rem;
@@ -135,6 +137,7 @@ h1, .feed, .post, .comment-section, .running-plan-card {
 @media (max-width: 600px) {
   .auth-container {
     padding: 1rem;
+    margin: 10px;
   }
 
   .auth-container input,
