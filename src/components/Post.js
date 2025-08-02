@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import '../styles/Post.css';
 const Post = ({ 
   id, 
   title,

@@ -1,17 +1,31 @@
 /* Post Container */
 .post {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 15px;
   overflow: hidden;
   transition: all 0.3s ease;
-  border-left: 5px solid #C14600;
+  border: 1px solid rgba(193, 70, 0, 0.1);
+  position: relative;
+  max-width: 100%;
+}
+
+/* Narandžasti accent na vrhu */
+.post::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #C14600, #FF9D23, #FF6B35);
+  z-index: 1;
 }
 
 .post:hover {
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
 }
 
 /* Post Header */
@@ -19,15 +33,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 20px 10px 20px;
-  border-bottom: 1px solid #f0f0f0;
-  background: linear-gradient(135deg, #FEF9E1, #FFF8E1);
+  padding: 12px 15px 10px 15px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #FEF9E1 100%);
+  border-bottom: 1px solid rgba(193, 70, 0, 0.1);
+  margin-top: 3px; /* Za spacing posle accent linije */
 }
 
 .post-author h3 {
   color: #C14600;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: 600;
   margin: 0;
 }
 
@@ -37,89 +52,69 @@
   align-items: flex-end;
 }
 
+/* SAKRIJ creation date - dodaj display: none */
 .post-creation-date {
-  color: #666;
-  font-size: 0.9rem;
-  background: rgba(193, 70, 0, 0.1);
-  padding: 4px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(193, 70, 0, 0.2);
+  display: none;
 }
 
 /* Post Content */
 .post-content {
-  padding: 20px;
+  padding: 15px;
 }
 
 .post-title {
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: bold;
+  color: #8B4513;
+  font-size: 1.2rem;
+  font-weight: 600;
   margin-bottom: 15px;
   text-align: center;
-  padding: 10px;
-  background: linear-gradient(135deg, #C14600, #FF6B35);
-  color: white;
-  border-radius: 8px;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  padding: 12px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #F4E6D1 100%);
+  border-radius: 6px;
+  border: 2px solid #C14600;
+  box-shadow: 0 2px 6px rgba(193, 70, 0, 0.2);
 }
 
 /* Plan Description */
 .post-description {
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #C14600;
+  margin-bottom: 15px;
+  padding: 12px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #ffffff 100%);
+  border-radius: 6px;
+  border-left: 3px solid #FF9D23;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
 .post-description h4 {
   color: #C14600;
   font-size: 1rem;
   margin-bottom: 8px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .post-description p {
   color: #555;
-  line-height: 1.6;
+  line-height: 1.5;
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
-/* Date Info */
+/* Date Info - SAKRIJ KREIRAN sekciju */
 .post-date-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  padding: 10px 15px;
-  background: rgba(40, 167, 69, 0.1);
-  border-radius: 6px;
-  border: 1px solid rgba(40, 167, 69, 0.2);
-}
-
-.date-label {
-  font-weight: bold;
-  color: #28a745;
-  font-size: 0.9rem;
-}
-
-.date-value {
-  color: #333;
-  font-size: 0.9rem;
+  display: none;
 }
 
 /* Post Details Grid */
 .post-details {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 15px;
-  margin: 20px 0;
-  padding: 20px;
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border-radius: 10px;
-  border: 2px solid rgba(193, 70, 0, 0.1);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 15px 0;
+  padding: 15px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #FEF9E1 100%);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 157, 35, 0.2);
+  box-shadow: inset 0 1px 3px rgba(193, 70, 0, 0.05);
 }
 
 .detail-item {
@@ -127,167 +122,201 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 10px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 10px 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
   transition: all 0.3s ease;
+  border: 1px solid rgba(255, 157, 35, 0.15);
 }
 
 .detail-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+  border-color: rgba(255, 157, 35, 0.3);
 }
 
 .detail-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #666;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .detail-value {
-  font-weight: bold;
+  font-weight: 700;
   color: #C14600;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
-/* Post Actions */
+/* Post Actions - POVEĆAN SPACING */
 .post-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: #f8f9fa;
-  border-top: 1px solid #e9ecef;
+  padding: 15px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #ffffff 100%);
+  border-top: 1px solid rgba(193, 70, 0, 0.1);
+  gap: 12px;
 }
 
 .comment-toggle-button {
-  background: #007bff;
+  background: linear-gradient(135deg, #C14600 0%, #FF6B35 100%);
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 8px 15px;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.85rem;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(193, 70, 0, 0.3);
 }
 
 .comment-toggle-button:hover {
-  background: #0056b3;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF9D23 100%);
   transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(193, 70, 0, 0.4);
 }
 
 .join-button {
-  background: linear-gradient(135deg, #28a745, #20c997);
+  background: linear-gradient(135deg, #FF9D23 0%, #FFB84D 100%);
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 0.85rem;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(255, 157, 35, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .join-button:hover {
-  background: linear-gradient(135deg, #218838, #1ea085);
+  background: linear-gradient(135deg, #FFB84D 0%, #FFC870 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 3px 10px rgba(255, 157, 35, 0.4);
 }
 
 /* Comments Section */
 .comments-section {
-  padding: 20px;
-  background: #fefefe;
-  border-top: 2px solid #f0f0f0;
+  padding: 25px;
+  background: linear-gradient(135deg, #fefefe 0%, #f8f9fa 100%);
+  border-top: 3px solid rgba(193, 70, 0, 0.15);
+  margin-top: 5px; /* Spacing od action buttona */
 }
 
 .existing-comments {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .comment {
-  background: white;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+  border: 1px solid rgba(193, 70, 0, 0.1);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.comment:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+  transform: translateX(5px);
 }
 
 .comment-author {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(193, 70, 0, 0.1);
 }
 
 .comment-author strong {
   color: #C14600;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .comment-date {
   color: #999;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  background: rgba(193, 70, 0, 0.05);
+  padding: 3px 8px;
+  border-radius: 6px;
 }
 
 .comment-content {
   color: #555;
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
+  font-size: 0.95rem;
 }
 
 .no-comments {
   text-align: center;
   color: #999;
   font-style: italic;
-  padding: 20px;
+  padding: 30px;
+  background: rgba(193, 70, 0, 0.05);
+  border-radius: 10px;
+  border: 2px dashed rgba(193, 70, 0, 0.2);
 }
 
 /* Add Comment Form */
 .add-comment-form {
-  margin-top: 20px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 2px solid rgba(193, 70, 0, 0.1);
+  margin-top: 25px;
+  padding: 25px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #FEF9E1 100%);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 157, 35, 0.2);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 .add-comment-form textarea {
   width: 100%;
-  padding: 12px;
-  border: 2px solid #ddd;
-  border-radius: 6px;
+  padding: 15px;
+  border: 2px solid rgba(193, 70, 0, 0.2);
+  border-radius: 10px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 0.95rem;
   resize: vertical;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
 }
 
 .add-comment-form textarea:focus {
   outline: none;
-  border-color: #C14600;
-  box-shadow: 0 0 0 3px rgba(193, 70, 0, 0.1);
+  border-color: #FF9D23;
+  box-shadow: 0 0 0 4px rgba(255, 157, 35, 0.15);
+  transform: scale(1.01);
 }
 
 .submit-comment-button {
-  background: #C14600;
+  background: linear-gradient(135deg, #C14600 0%, #FF6B35 100%);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
+  padding: 12px 25px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
-  margin-top: 10px;
+  font-weight: 700;
+  margin-top: 15px;
   transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(193, 70, 0, 0.3);
 }
 
 .submit-comment-button:hover:not(:disabled) {
-  background: #FF6B35;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #FF6B35 0%, #FF9D23 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(193, 70, 0, 0.4);
 }
 
 .submit-comment-button:disabled {
@@ -301,7 +330,7 @@
   .post-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 15px;
   }
   
   .post-meta {
@@ -310,23 +339,24 @@
   
   .post-details {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 15px;
   }
   
   .post-actions {
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
   
   .comment-toggle-button,
   .join-button {
     width: 100%;
+    padding: 15px;
   }
 }
 
 @media (max-width: 480px) {
   .post {
-    margin: 0 5px 20px 5px;
+    margin: 0 10px 30px 10px;
   }
   
   .post-details {
@@ -334,6 +364,14 @@
   }
   
   .post-title {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    padding: 15px;
+  }
+  
+  .post-content,
+  .post-header,
+  .post-actions,
+  .comments-section {
+    padding: 20px;
   }
 }
