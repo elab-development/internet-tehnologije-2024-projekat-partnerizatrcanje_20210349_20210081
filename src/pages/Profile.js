@@ -58,7 +58,7 @@ export default function Profile() {
       setLoading(true);
       const token = localStorage.getItem("auth_token");
       
-      const response = await fetch("http://localhost:8000/api/user/profile", {
+      const response = await fetch("http://localhost:8000/api/user", {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -151,52 +151,66 @@ export default function Profile() {
   };
 
   const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const file = e.target.files[0];
+  if (!file) return;
 
-    // Validacija fajla
-    if (file.size > 2 * 1024 * 1024) { // 2MB
-      alert("Slika je prevelika. Maksimalna veličina je 2MB.");
-      return;
-    }
+  // Validacija fajla
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Slika je prevelika. Maksimalna veličina je 2MB.");
+    return;
+  }
 
-    if (!file.type.startsWith('image/')) {
-      alert("Molimo selektujte validnu sliku.");
-      return;
-    }
+  if (!file.type.startsWith('image/')) {
+    alert("Molimo selektujte validnu sliku.");
+    return;
+  }
 
-    try {
-      setUploadingImage(true);
-      const token = localStorage.getItem("auth_token");
+  try {
+    setUploadingImage(true);
+    const token = localStorage.getItem("auth_token");
+    
+    const formData = new FormData();
+    formData.append('profile_image', file);
+
+    const response = await fetch(`http://localhost:8000/api/user/${user.id}/upload-image`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/json"
+      },
+      body: formData
+    });
+
+    if (response.ok) {
+      const data = await response.json();
       
-      const formData = new FormData();
-      formData.append('profile_image', file);
-
-      const response = await fetch(`http://localhost:8000/api/user/${user.id}/upload-image`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Accept": "application/json"
-        },
-        body: formData
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser({ ...user, profile_image_url: data.image_url });
-        setImageChanged(true);
-        alert("Profilna slika je uspešno ažurirana!");
-      } else {
-        const errorData = await response.json();
-        alert("Greška pri upload-u slike: " + (errorData.message || "Nepoznata greška"));
+      // AŽURIRAJ SLIKU SA CACHE BUSTING
+      setUser(prevUser => ({ 
+        ...prevUser, 
+        profile_image_url: data.image_url + '?v=' + Date.now(),
+        profile_image: data.image_path
+      }));
+      
+      setImageChanged(true);
+      alert("Profilna slika je uspešno ažurirana!");
+      
+      // FORSIRAJ RELOAD SLIKE
+      const imgElement = document.querySelector('.profile-image');
+      if (imgElement) {
+        imgElement.src = data.image_url + '?v=' + Date.now();
       }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Greška pri upload-u slike");
-    } finally {
-      setUploadingImage(false);
+      
+    } else {
+      const errorData = await response.json();
+      alert("Greška pri upload-u slike: " + (errorData.message || "Nepoznata greška"));
     }
-  };
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    alert("Greška pri upload-u slike");
+  } finally {
+    setUploadingImage(false);
+  }
+};
 
   const handleSettingsChange = (e) => {
     const { name, value } = e.target;

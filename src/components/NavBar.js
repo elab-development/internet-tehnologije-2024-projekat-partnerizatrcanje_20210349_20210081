@@ -95,22 +95,10 @@ const Navbar = () => {
               </Link>
             </li>
           )}
-          
-          {/* Admin panel - samo za adminе */}
-          {userRole === 'admin' && (
-            <li>
-              <Link to="/admin" className={location.pathname === '/admin' ? 'active' : ''}>
-                Admin Panel
-              </Link>
-            </li>
-          )}
         </ul>
 
         {/* User info i logout */}
         <div className="user-section">
-          <span className="user-info">
-            {user.name || 'Korisnik'} ({userRole === 'guest' ? 'Gost' : userRole === 'admin' ? 'Admin' : 'Korisnik'})
-          </span>
           <button className="logout-button" onClick={handleLogout}>
             Izloguj se
           </button>
