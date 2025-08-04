@@ -103,60 +103,62 @@ class UserController extends Controller
 
     // Upload profile image
     public function uploadProfileImage(Request $request, $id)
-    {
-        try {
-            $user = User::find($id);
+{
+    try {
+        $user = User::find($id);
 
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-
-            // Proverava da li je korisnik autentifikovan i da li pokušava da ažurira svoj profil
-            if ($request->user()->id != $id && !$request->user()->isAdmin()) {
-                return response()->json(['error' => 'Unauthorized'], 403);
-            }
-
-            $request->validate([
-                'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
-            ]);
-
-            // Obriši staru sliku ako postoji
-            if ($user->profile_image) {
-                Storage::disk('public')->delete($user->profile_image);
-            }
-
-            // Sačuvaj novu sliku
-            $imagePath = $request->file('profile_image')->store('profile_images', 'public');
-            
-            // Ažuriraj korisnika
-            $user->update(['profile_image' => $imagePath]);
-
-            $imageUrl = asset('storage/' . $imagePath);
-
-            Log::info('Profile image uploaded successfully', [
-                'user_id' => $user->id,
-                'image_path' => $imagePath,
-                'image_url' => $imageUrl
-            ]);
-
-            return response()->json([
-                'message' => 'Profile image uploaded successfully',
-                'image_url' => $imageUrl,
-                'image_path' => $imagePath
-            ], 200);
-
-        } catch (\Exception $e) {
-            Log::error('Profile image upload failed', [
-                'user_id' => $id,
-                'error' => $e->getMessage()
-            ]);
-
-            return response()->json([
-                'error' => 'Failed to upload profile image',
-                'message' => $e->getMessage()
-            ], 500);
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
         }
+
+        // Proverava da li je korisnik autentifikovan i da li pokušava da ažurira svoj profil
+        if ($request->user()->id != $id && $request->user()->role !== 'admin') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Obriši staru sliku ako postoji
+        if ($user->profile_image) {
+            Storage::disk('public')->delete($user->profile_image);
+        }
+
+        // Sačuvaj novu sliku
+        $imagePath = $request->file('profile_image')->store('profile_images', 'public');
+        
+        // Ažuriraj korisnika
+        $user->update(['profile_image' => $imagePath]);
+
+        // DODAJ CACHE BUSTING sa timestamp
+        $imageUrl = asset('storage/' . $imagePath) . '?v=' . time();
+
+        Log::info('Profile image uploaded successfully', [
+            'user_id' => $user->id,
+            'image_path' => $imagePath,
+            'image_url' => $imageUrl
+        ]);
+
+        return response()->json([
+            'message' => 'Profile image uploaded successfully',
+            'image_url' => $imageUrl,
+            'image_path' => $imagePath,
+            'user' => $user->fresh() // Vrati osvežene podatke
+        ], 200);
+
+    } catch (\Exception $e) {
+        Log::error('Profile image upload failed', [
+            'user_id' => $id,
+            'error' => $e->getMessage()
+        ]);
+
+        return response()->json([
+            'error' => 'Failed to upload profile image',
+            'message' => $e->getMessage()
+        ], 500);
     }
+}
 
     // Brisanje korisnika
     public function destroy(Request $request, $id)

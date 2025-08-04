@@ -150,6 +150,7 @@ Route::middleware(['auth:sanctum', 'not.guest'])->group(function () {
     */
     Route::put('/user/{id}', [UserController::class, 'update'])->name('api.users.update');
     Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('api.users.destroy');
+    Route::post('/user/{id}/upload-image', [UserController::class, 'uploadProfileImage'])->name('api.user.upload.image');
     
     /*
     |--------------------------------------------------------------------------
