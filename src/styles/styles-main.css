@@ -124,6 +124,7 @@ h1, .feed, .post, .comment-section, .running-plan-card {
 
 .auth-container button {
   margin-top: 1rem; /* Dodaj razmak između input polja i dugmeta */
+  margin-bottom: 1rem;
 }
 
 /* Poruka o grešci */
@@ -206,6 +207,6 @@ h1, .feed, .post, .comment-section, .running-plan-card {
 }
 
 .auth-container .guest-button:hover {
-  background: #e59c5c;
+  background: #FF7F11;
   transform: translateY(-4px);
 }
