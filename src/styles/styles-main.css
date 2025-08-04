@@ -13,7 +13,7 @@
 
 body {
   font-family: 'Roboto', sans-serif; /* Moderniji font */
-  background-color: #FF9D23; /* Narandžasta pozadina */
+  background-color: #f7b96c; /* Narandžasta pozadina */
   margin: 0;
   padding: 0;
   color: #333; /* Tamna boja za tekst */
@@ -84,7 +84,7 @@ h1, .feed, .post, .comment-section, .running-plan-card {
 }
 
 .auth-container input:focus {
-  border-color: #FF9D23; /* Narandžasta boja fokusa */
+  border-color: #f3b365; /* Narandžasta boja fokusa */
   outline: none;
 }
 
@@ -193,7 +193,7 @@ h1, .feed, .post, .comment-section, .running-plan-card {
 
 /* Dugme za prijavu kao gost */
 .auth-container .guest-button {
-  background: #FF9D23;
+  background: #e59c5c;
   color: white;
   border: none;
   padding: 1rem;
@@ -206,6 +206,6 @@ h1, .feed, .post, .comment-section, .running-plan-card {
 }
 
 .auth-container .guest-button:hover {
-  background: #FF7F11;
+  background: #e59c5c;
   transform: translateY(-4px);
 }
