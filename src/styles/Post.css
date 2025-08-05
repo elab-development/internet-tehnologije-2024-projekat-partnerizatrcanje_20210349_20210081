@@ -325,6 +325,67 @@
   transform: none;
 }
 
+/* Participants tooltip */
+.participants-item {
+  position: relative;
+  cursor: pointer;
+}
+
+.participants-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 2px solid #C14600;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  z-index: 1000;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.tooltip-header {
+  font-weight: bold;
+  color: #C14600;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
+}
+
+.participant-item {
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.participant-email {
+  color: #666;
+  font-size: 12px;
+}
+
+.no-participants {
+  color: #999;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Join button states */
+.join-button.joined {
+  background: #28a745;
+  cursor: default;
+}
+
+.join-button.full {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.join-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .post-header {
@@ -353,7 +414,6 @@
     padding: 15px;
   }
 }
-
 @media (max-width: 480px) {
   .post {
     margin: 0 10px 30px 10px;

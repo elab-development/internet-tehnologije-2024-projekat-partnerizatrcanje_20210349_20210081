@@ -32,18 +32,29 @@ const Feed = () => {
       
       const token = localStorage.getItem("auth_token");
       
+      // Različiti headers na osnovu da li je korisnik guest ili ne
+      const headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      };
+      
+      // Dodaj Authorization header samo ako nije guest
+      if (!isGuest && token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      
+      console.log("Making API call with headers:", headers, "isGuest:", isGuest); // Debug
+      
       const response = await fetch(`http://localhost:8000/api/feed?page=${page}`, {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        }
+        headers: headers
       });
 
+      console.log("Response status:", response.status); // Debug
+
       if (!response.ok) {
-        if (response.status === 401) {
-          // Korisnik nije autentifikovan
+        if (response.status === 401 && !isGuest) {
+          // Samo za autentifikovane korisnike - preusmeri na login
           localStorage.removeItem("auth_token");
           localStorage.removeItem("user");
           window.location.href = "/login";
@@ -178,6 +189,48 @@ const Feed = () => {
     }
   };
 
+  // Funkcija za pridruživanje planu trčanja
+  const joinPlan = async (postId) => {
+    try {
+      const token = localStorage.getItem("auth_token");
+      
+      const response = await fetch(`http://localhost:8000/api/posts/${postId}/join`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Ažuriraj post sa novim brojem učesnika
+        setPosts(prevPosts => 
+          prevPosts.map(post => {
+            if (post.id === postId) {
+              return {
+                ...post,
+                current_participants: data.plan.current_participants,
+                participants: data.plan.participants || []
+              };
+            }
+            return post;
+          })
+        );
+        
+        alert("Uspešno ste se pridružili planu!");
+      } else {
+        const errorData = await response.json();
+        alert("Greška: " + (errorData.message || "Ne možete se pridružiti planu"));
+      }
+    } catch (error) {
+      console.error("Greška pri pridruživanju planu:", error);
+      alert("Greška pri pridruživanju planu");
+    }
+  };
+
   // Loading state
   if (loading && posts.length === 0) {
     return (
@@ -248,8 +301,10 @@ const Feed = () => {
               current_participants={post.current_participants || 0}
               created_at={post.created_at}
               comments={post.comments || []}
+              participants={post.participants || []} // Proslijedi učesnike
               addComment={addComment}
-              isGuest={isGuest} // Proslijedi guest status
+              onJoinPlan={joinPlan} // Proslijedi join funkciju
+              isGuest={isGuest}
             />
           ))}
 

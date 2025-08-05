@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import '../styles/Post.css';
+
 const Post = ({ 
   id, 
   title,
@@ -14,11 +15,20 @@ const Post = ({
   created_at,
   comments, 
   addComment,
-  isGuest = false // Nova prop
+  isGuest = false,
+  participants = [], // Nova prop za učesnike
+  onJoinPlan // Nova prop za join funkciju
 }) => {
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [submittingComment, setSubmittingComment] = useState(false);
+  const [showParticipants, setShowParticipants] = useState(false);
+  const [joiningPlan, setJoiningPlan] = useState(false);
+
+  // Dohvati trenutnog korisnika
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const isOwner = currentUser.id === participants.find(p => p.pivot?.user_id === currentUser.id)?.pivot?.user_id;
+  const hasJoined = participants.some(p => p.id === currentUser.id);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -44,6 +54,32 @@ const Post = ({
 
   const toggleComments = () => {
     setShowComments(!showComments);
+  };
+
+  const handleJoinPlan = async () => {
+    if (isGuest) {
+      alert("Registrujte se da biste se mogli pridružiti planu.");
+      return;
+    }
+
+    if (hasJoined) {
+      alert("Već ste pridruženi ovom planu.");
+      return;
+    }
+
+    if (current_participants >= max_participants) {
+      alert("Plan je popunjen.");
+      return;
+    }
+
+    setJoiningPlan(true);
+    try {
+      await onJoinPlan(id);
+    } catch (error) {
+      console.error("Greška pri pridruživanju planu:", error);
+    } finally {
+      setJoiningPlan(false);
+    }
   };
 
   // Formatiranje datuma
@@ -109,7 +145,7 @@ const Post = ({
           </div>
         )}
         
-        {/* Creation date */}
+        {/* Creation date - ZADRŽANO IZ PRVOG KODA */}
         <div className="post-date-info">
           <span className="date-label">Kreiran:</span>
           <span className="date-value">{formatDate(created_at)}</span>
@@ -132,10 +168,36 @@ const Post = ({
             <span className="detail-value">{formatFrequency(frequency)}</span>
           </div>
           
-          <div className="detail-item">
+          <div 
+            className={`detail-item ${participants.length > 0 ? 'participants-item' : ''}`}
+            onMouseEnter={() => participants.length > 0 && setShowParticipants(true)}
+            onMouseLeave={() => setShowParticipants(false)}
+          >
             <span className="detail-label">Učesnici:</span>
             <span className="detail-value">
               {current_participants}/{max_participants}
+              
+              {/* Participants tooltip */}
+              {showParticipants && participants.length > 0 && (
+                <div className="participants-tooltip">
+                  <div className="tooltip-header">
+                    Učesnici:
+                  </div>
+                  {participants.map((participant, index) => (
+                    <div key={index} className="participant-item">
+                      {participant.name} {participant.surname}
+                      {(participant.email || (participant.id === currentUser.id && currentUser.email)) && (
+                        <span className="participant-email">
+                          ({participant.email || (participant.id === currentUser.id ? currentUser.email : '')})
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                  {participants.length === 0 && (
+                    <div className="no-participants">Nema učesnika</div>
+                  )}
+                </div>
+              )}
             </span>
           </div>
         </div>
@@ -150,10 +212,17 @@ const Post = ({
           {showComments ? "Sakrij" : "Prikaži"} komentare ({comments?.length || 0})
         </button>
 
-        {/* Join dugme - samo registrovani korisnici */}
-        {!isGuest && max_participants && current_participants < max_participants && (
-          <button className="join-button">
-            Pridruži se
+        {/* Join dugme - samo registrovani korisnici sa svim funkcionalnostima iz drugog koda */}
+        {!isGuest && (
+          <button 
+            className={`join-button ${hasJoined ? 'joined' : ''} ${current_participants >= max_participants ? 'full' : ''}`}
+            onClick={handleJoinPlan}
+            disabled={joiningPlan || hasJoined || current_participants >= max_participants}
+          >
+            {joiningPlan ? "Pridružujem..." : 
+             hasJoined ? "Pridružen" :
+             current_participants >= max_participants ? "Popunjen" : 
+             "Pridruži se"}
           </button>
         )}
 
