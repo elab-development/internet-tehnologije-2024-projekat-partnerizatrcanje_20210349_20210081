@@ -12,14 +12,14 @@ class PostController extends Controller
     // Get all posts
     public function index()
     {
-        $posts = Post::with(['user', 'participants'])->get();
+        $posts = Post::with(['user', 'participants:id,name,surname,email'])->get();
         return response()->json($posts, 200);
     }
 
     // Get single post
     public function show($id)
     {
-        $post = Post::with(['user', 'participants'])->find($id);
+        $post = Post::with(['user', 'participants:id,name,surname,email'])->find($id);
         if (!$post) {
             return response()->json(['message' => 'Post not found'], 404);
         }
@@ -114,8 +114,8 @@ class PostController extends Controller
         $plan->participants()->attach($userId);
         $plan->increment('current_participants');
         
-        // Load participants for response
-        $plan->load(['participants', 'user']);
+        // Load participants for response with email
+        $plan->load(['participants:id,name,surname,email', 'user']);
         
         return response()->json([
             'message' => 'Successfully joined the plan',
@@ -141,7 +141,7 @@ class PostController extends Controller
             $query->where('max_participants', '>=', $request->input('max_participants'));
         }
 
-        $filteredPlans = $query->with('user')->get();
+        $filteredPlans = $query->with(['user', 'participants:id,name,surname,email'])->get();
         return response()->json($filteredPlans, 200);
     }
 

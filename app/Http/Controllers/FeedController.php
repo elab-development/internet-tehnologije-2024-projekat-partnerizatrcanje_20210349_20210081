@@ -30,7 +30,7 @@ class FeedController extends Controller
             $posts = Post::with([
                 'user:id,name,surname,email',
                 'comments.user:id,name,surname',
-                'participants:id,name,surname'
+                'participants:id,name,surname,email'
             ])
             ->orderBy('created_at', 'DESC')
             ->orderBy('id', 'DESC')
@@ -84,7 +84,7 @@ class FeedController extends Controller
             $query = Post::with([
                 'user:id,name,surname,email',
                 'comments.user:id,name,surname',
-                'participants:id,name,surname'
+                'participants:id,name,surname,email'
             ]);
 
             // Filtriranje po tipu posta (ako postoji type kolona)
@@ -148,7 +148,7 @@ class FeedController extends Controller
             $posts = Post::with([
                 'user:id,name,surname,email',
                 'comments.user:id,name,surname',
-                'participants:id,name,surname'
+                'participants:id,name,surname,email'
             ])
             // ->whereIn('user_id', $followingUserIds) // Uncomment ako imaš following
             ->orderBy('created_at', 'desc')
