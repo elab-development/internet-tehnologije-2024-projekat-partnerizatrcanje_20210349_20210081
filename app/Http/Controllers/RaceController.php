@@ -12,10 +12,16 @@ class RaceController extends Controller
     public function index()
     {
         try {
-            $races = Race::with(['organizer:id,name,surname', 'participants'])
+            $currentUser = Auth::user(); // Trenutno ulogovani korisnik
+            
+            $races = Race::with(['organizer:id,name,surname', 'participants:id,name,surname,email'])
                 ->orderBy('race_date', 'asc')
                 ->get()
-                ->map(function ($race) {
+                ->map(function ($race) use ($currentUser) {
+                    // Proveri da li je trenutni korisnik već pridružen ovoj trci
+                    $isUserJoined = $currentUser ? 
+                        $race->participants->contains('id', $currentUser->id) : false;
+                    
                     return [
                         'id' => $race->id,
                         'name' => $race->name,
@@ -27,9 +33,12 @@ class RaceController extends Controller
                         'prize' => $race->prize,
                         'max_participants' => $race->max_participants,
                         'organizer' => $race->organizer,
+                        'participants' => $race->participants, // Dodano za frontend
                         'participants_count' => $race->participants->count(),
                         'is_active' => $race->isActive(),
                         'can_join' => $race->canJoin(),
+                        'is_registration_expired' => $race->isRegistrationExpired(),
+                        'is_user_joined' => $isUserJoined, // NOVO - da li je user pridružen
                         'created_at' => $race->created_at,
                     ];
                 });
@@ -205,7 +214,7 @@ class RaceController extends Controller
         }
     }
 
-    // Pridruživanje trci (user + admin)
+    // Pridruživanje trci (user + admin) - AŽURIRANA METODA
     public function join(Request $request, $id)
     {
         try {
@@ -217,13 +226,14 @@ class RaceController extends Controller
 
             $user = Auth::user();
 
-            // Proveri da li trka može da se join-uje
-            if (!$race->canJoin()) {
-                if ($race->race_date->isPast()) {
-                    return response()->json(['message' => 'Ne možete se pridružiti završenoj trci.'], 400);
-                } else {
-                    return response()->json(['message' => 'Trka je popunjena.'], 400);
-                }
+            // Proveri da li je deadline za prijavu prošao
+            if ($race->isRegistrationExpired()) {
+                return response()->json(['message' => 'Vreme za prijavu na trku je isteklo.'], 400);
+            }
+
+            // Proveri da li trka može da se join-uje (ima mesta)
+            if ($race->participants()->count() >= $race->max_participants) {
+                return response()->json(['message' => 'Trka je popunjena.'], 400);
             }
 
             // Proveri da li je korisnik već pridružen

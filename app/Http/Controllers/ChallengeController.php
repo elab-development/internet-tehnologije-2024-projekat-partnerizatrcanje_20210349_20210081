@@ -9,13 +9,19 @@ use Illuminate\Support\Facades\Auth;
 class ChallengeController extends Controller
 {
     // Prikaz svih izazova
-    public function index()
+     public function index()
     {
         try {
-            $challenges = Challenge::with(['creator:id,name,surname', 'participants'])
+            $currentUser = Auth::user(); // Trenutno ulogovani korisnik
+            
+            $challenges = Challenge::with(['creator:id,name,surname', 'participants:id,name,surname,email'])
                 ->orderBy('created_at', 'desc')
                 ->get()
-                ->map(function ($challenge) {
+                ->map(function ($challenge) use ($currentUser) {
+                    // Proveri da li je trenutni korisnik već pridružen ovom izazovu
+                    $isUserJoined = $currentUser ? 
+                        $challenge->participants->contains('id', $currentUser->id) : false;
+                    
                     return [
                         'id' => $challenge->id,
                         'name' => $challenge->name,
@@ -26,8 +32,10 @@ class ChallengeController extends Controller
                         'end_date' => $challenge->end_date,
                         'prize' => $challenge->prize,
                         'creator' => $challenge->creator,
+                        'participants' => $challenge->participants, // Dodano za frontend
                         'participants_count' => $challenge->participants->count(),
                         'is_active' => $challenge->isActive(),
+                        'is_user_joined' => $isUserJoined, // NOVO - da li je user pridružen
                         'created_at' => $challenge->created_at,
                     ];
                 });

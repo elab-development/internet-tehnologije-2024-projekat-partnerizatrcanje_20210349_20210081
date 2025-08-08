@@ -11,8 +11,8 @@ class Race extends Model
         'name',
         'description',
         'race_date',        // Dan kada se trka održava
-        'start_time',       // Vreme početka (npr. 09:00)
-        'end_time',         // Vreme kraja (npr. 11:00)
+        'start_time',       // Vreme početka prijave (npr. 09:00)
+        'end_time',         // Vreme kraja prijave (npr. 17:00) - DEADLINE ZA PRIJAVU
         'distance',         // Distanca trke
         'prize',
         'max_participants', // Maksimalan broj učesnika
@@ -52,9 +52,33 @@ class Race extends Model
         return $now->between($raceStart, $raceEnd);
     }
 
+    // AŽURIRANA METODA - proveri da li je deadline za prijavu prošao
     public function canJoin()
     {
-        return $this->race_date->isFuture() && 
+        $now = now();
+        
+        // Kombiniraj race_date sa end_time da dobiješ deadline za prijavu
+        $registrationDeadline = $this->race_date->copy()->setTime(
+            $this->end_time->hour, 
+            $this->end_time->minute
+        );
+        
+        // Korisnik može da se prijavi ako:
+        // 1. Nije prošao deadline za prijavu
+        // 2. Ima mesta u trci
+        return $now->isBefore($registrationDeadline) && 
                $this->participants()->count() < $this->max_participants;
+    }
+
+    // NOVA METODA - proveri da li je deadline za prijavu prošao
+    public function isRegistrationExpired()
+    {
+        $now = now();
+        $registrationDeadline = $this->race_date->copy()->setTime(
+            $this->end_time->hour, 
+            $this->end_time->minute
+        );
+        
+        return $now->isAfter($registrationDeadline);
     }
 }
