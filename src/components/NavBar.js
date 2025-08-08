@@ -44,15 +44,33 @@ const Navbar = () => {
     navigate('/login');
   };
 
-  return (
-    <nav className="navbar">
-      <div className="nav-container">
-        <div className="logo-container">
-          <img src={handprint} alt="Crvena Šaka" className="handprint" />
-          <img src={logo} alt="SprintLink Logo" className="logo" />
-        </div>
-        
-        <ul className="nav-links">
+  // Renderuj različite menije na osnovu role
+  const renderMenuItems = () => {
+    if (userRole === 'admin') {
+      // ADMIN MENI - samo Početna, Kreiraj izazove, Kreiraj biznis trke
+      return (
+        <>
+          <li>
+            <Link to="/home" className={location.pathname === '/home' ? 'active' : ''}>
+              Početna
+            </Link>
+          </li>
+          <li>
+            <Link to="/create-challenge" className={location.pathname === '/create-challenge' ? 'active' : ''}>
+              Kreiraj izazove
+            </Link>
+          </li>
+          <li>
+            <Link to="/create-race" className={location.pathname === '/create-race' ? 'active' : ''}>
+              Kreiraj biznis trke
+            </Link>
+          </li>
+        </>
+      );
+    } else {
+      // USER I GUEST MENI - originalni
+      return (
+        <>
           {/* Početna (Feed) - dostupna svima uključujući i guest */}
           <li>
             <Link to="/home" className={location.pathname === '/home' ? 'active' : ''}>
@@ -69,20 +87,20 @@ const Navbar = () => {
             </li>
           )}
 
-          {/* Izazovi - admin može kreirati, user može pristupiti, guest ne može */}
+          {/* Izazovi - user može pristupiti, guest ne može */}
           {userRole !== 'guest' && (
             <li>
               <Link to="/challenges" className={location.pathname === '/challenges' ? 'active' : ''}>
-                {userRole === 'admin' ? 'Upravljaj izazovima' : 'Izazovi'}
+                Izazovi
               </Link>
             </li>
           )}
 
-          {/* Biznis trke - admin može kreirati, user može pristupiti, guest ne može */}
+          {/* Biznis trke - user može pristupiti, guest ne može */}
           {userRole !== 'guest' && (
             <li>
               <Link to="/races" className={location.pathname === '/races' || location.pathname === '/Races' ? 'active' : ''}>
-                {userRole === 'admin' ? 'Upravljaj trkama' : 'Biznis trke'}
+                Biznis trke
               </Link>
             </li>
           )}
@@ -95,6 +113,21 @@ const Navbar = () => {
               </Link>
             </li>
           )}
+        </>
+      );
+    }
+  };
+
+  return (
+    <nav className="navbar">
+      <div className="nav-container">
+        <div className="logo-container">
+          <img src={handprint} alt="Crvena Šaka" className="handprint" />
+          <img src={logo} alt="SprintLink Logo" className="logo" />
+        </div>
+        
+        <ul className="nav-links">
+          {renderMenuItems()}
         </ul>
 
         {/* User info i logout */}

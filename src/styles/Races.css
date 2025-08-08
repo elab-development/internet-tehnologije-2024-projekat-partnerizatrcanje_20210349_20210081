@@ -1,90 +1,611 @@
-/* styles/Races.css */
+/* Poboljšani Races.css sa modernim dizajnom */
 .races-container {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 50px;
+  padding: 30px 50px 50px 50px;
   min-height: 100vh;
-  margin-top: 0%; /* Spuštanje ispod menija */
-  padding-top: 40px;
+  background: #FFF8E1;
+  gap: 30px;
 }
 
+/* Sekcije sa glassmorphism efektom */
 .races-section, .joined-races-section {
-  background: #E5D0AC;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+  background: rgba(229, 208, 172, 0.9);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(193, 70, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.races-section:hover, .joined-races-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 6px 20px rgba(193, 70, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .races-section {
-  width: 55%;
+  flex: 1;
+  max-width: 65%;
 }
 
 .joined-races-section {
-  width: 35%;
+  flex: 0.6;
+  max-width: 35%;
 }
 
+/* Naslovi bez gradijenata */
+.races-section h2, .joined-races-section h2 {
+  color: #C14600;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.races-section h2::after, .joined-races-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #C14600;
+  border-radius: 2px;
+}
+
+/* Grid layout za trke */
 .race-list {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 30px;
-  row-gap: 20px;;
-  padding-bottom: 30px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  padding-bottom: 20px;
 }
 
+/* Modernije kartice */
 .race-card {
   background: #FF9D23;
   color: white;
-  padding: 15px;
-  border-radius: 10px;
-  width: 45%;
+  padding: 25px;
+  border-radius: 16px;
   text-align: center;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 8px 25px rgba(255, 157, 35, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.race-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  transform: scale(0);
+  transition: transform 0.6s ease;
+}
+
+.race-card:hover::before {
+  transform: scale(1);
+}
+
+.race-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 15px 40px rgba(255, 157, 35, 0.4),
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
 }
 
 .race-card h3 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 2;
 }
 
+.race-card p {
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  opacity: 0.9;
+  position: relative;
+  z-index: 2;
+}
+
+/* Poboljšane informacije o trci */
+.race-details {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.race-details div {
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.race-details strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+/* Status badges */
+.race-status {
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.race-status span {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Poboljšana dugmad */
 .join-button, .leave-button {
   background: #C14600;
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: 25px;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.2s ease;
+  margin-top: 15px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 
+    0 4px 15px rgba(193, 70, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.join-button::before, .leave-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.join-button:hover::before, .leave-button:hover::before {
+  left: 100%;
 }
 
 .join-button:hover, .leave-button:hover {
-  background: #A13500;
+  background: #FF6B35;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(193, 70, 0, 0.5),
+    0 3px 12px rgba(0, 0, 0, 0.3);
 }
 
+.join-button:active, .leave-button:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 8px rgba(193, 70, 0, 0.3),
+    0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Stanja dugmadi */
 .join-button.joined {
-  background: #8D5033;
-  cursor: not-allowed;
-  opacity: 0.8;
+  background: #28a745;
+  cursor: default;
+  box-shadow: 
+    0 4px 15px rgba(40, 167, 69, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .join-button.joined:hover {
-  background: #9D6043;
-  opacity: 0.9;
+  background: #28a745;
+  transform: none;
+  box-shadow: 
+    0 4px 15px rgba(40, 167, 69, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+.join-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: 
+    0 2px 8px rgba(108, 117, 125, 0.3),
+    0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.join-button:disabled:hover {
+  background: #6c757d;
+  transform: none;
+}
+
+/* Pridružene trke - poboljšana lista */
 .joined-races-section ul {
   list-style: none;
   padding: 0;
+  margin: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #C14600 transparent;
+}
+
+/* Custom scrollbar za webkit */
+.joined-races-section ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.joined-races-section ul::-webkit-scrollbar-track {
+  background: rgba(193, 70, 0, 0.1);
+  border-radius: 3px;
+}
+
+.joined-races-section ul::-webkit-scrollbar-thumb {
+  background: #C14600;
+  border-radius: 3px;
+}
+
+.joined-races-section ul::-webkit-scrollbar-thumb:hover {
+  background: #FF6B35;
 }
 
 .joined-races-section li {
   background: #FF9D23;
   color: white;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 5px;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 16px;
+  box-shadow: 
+    0 6px 20px rgba(255, 157, 35, 0.25),
+    0 3px 10px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  transform-origin: left center;
+}
+
+/* Hover animacija sa scaling */
+.joined-races-section li:hover {
+  box-shadow: 
+    0 10px 30px rgba(255, 157, 35, 0.35),
+    0 5px 15px rgba(0, 0, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Animirani left border */
+.joined-races-section li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  background: #C14600;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.joined-races-section li:hover::before {
+  width: 8px;
+  background: #FF6B35;
+}
+
+/* Race header sa ikonama */
+.joined-race-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.joined-race-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  flex: 1;
+  line-height: 1.3;
+}
+
+/* Race status badge */
+.joined-race-status {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 10px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Race details grid */
+.joined-race-details {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 12px;
+  margin: 12px 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.85rem;
+}
+
+.joined-race-details-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 6px;
+  padding: 2px 0;
+}
+
+.joined-race-details-row:last-child {
+  margin-bottom: 0;
+}
+
+.joined-race-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.joined-race-value {
+  color: white;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Prize highlight */
+.joined-race-prize {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin: 8px 0;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.joined-race-prize::before {
+  content: '🏆 ';
+  margin-right: 4px;
+}
+
+/* Expired warning - poboljšano */
+.joined-race-expired {
+  background: rgba(248, 215, 218, 0.95) !important;
+  color: #721c24 !important;
+  border: 2px solid #f1aeb5 !important;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin: 12px 0;
+  font-weight: 700;
+  text-align: center;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: expiredPulse 3s infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.joined-race-expired::before {
+  content: '⚠️ ';
+  font-size: 1.1rem;
+  margin-right: 6px;
+}
+
+.joined-race-expired::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: expiredShine 2s infinite;
+}
+
+@keyframes expiredPulse {
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.9;
+    transform: scale(1.01);
+  }
+}
+
+@keyframes expiredShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Leave button - redesign */
+.leave-button {
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 3px 10px rgba(220, 53, 69, 0.3),
+    0 1px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.leave-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.3s ease;
+}
+
+.leave-button:hover::before {
+  left: 100%;
+}
+
+.leave-button:hover {
+  background: rgba(220, 53, 69, 1);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 5px 15px rgba(220, 53, 69, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.leave-button:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 5px rgba(220, 53, 69, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* No races state */
+.no-joined-races {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 2px dashed rgba(193, 70, 0, 0.3);
+  margin: 20px 0;
+}
+
+.no-joined-races-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.no-joined-races-text {
+  font-style: italic;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.no-joined-races-hint {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Loading a error stanji */
+.races-container > div[style*="textAlign: center"] {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Responsivnost */
+@media (max-width: 1200px) {
+  .races-container {
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .races-section, .joined-races-section {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .race-list {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .races-container {
+    padding: 20px;
+  }
+  
+  .race-list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .race-card {
+    padding: 20px;
+  }
+  
+  .races-section h2, .joined-races-section h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .races-container {
+    padding: 15px;
+  }
+  
+  .races-section, .joined-races-section {
+    padding: 20px;
+    border-radius: 15px;
+  }
+  
+  .race-card {
+    padding: 18px;
+  }
+  
+  .join-button, .leave-button {
+    padding: 10px 20px;
+    font-size: 0.8rem;
+  }
 }

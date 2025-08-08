@@ -3,99 +3,123 @@
     gap: 30px;
     justify-content: space-between;
     margin-top: 30px;
-  }
-  
-  .all-challenges {
-    width: 70%; /* 80% širine za izazove */
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+/* Sekcije */
+.all-challenges, 
+.joined-challenges {
     padding: 20px;
     border-radius: 12px;
-    background-color: #FEF9E1; /* Svetla pozadina */
-  }
-  
-  .joined-challenges {
-    width: 28%; /* 20% širine za prijavljene izazove */
-    padding: 20px;
-    border-radius: 12px;
-    background-color: #FEF9E1; /* Svetla pozadina */
-  }
-  
-  .all-challenges h2, 
-  .joined-challenges h2 {
-    font-size: 1.5rem;
-    color: #C14600; /* Narandžasta boja */
+    background-color: #FEF9E1;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.all-challenges {
+    flex: 1 1 68%;
+    min-width: 320px;
+}
+
+.joined-challenges {
+    flex: 1 1 28%;
+    min-width: 280px;
+}
+
+/* Naslovi sekcija */
+.all-challenges h2, 
+.joined-challenges h2 {
+    font-size: 1.6rem;
+    color: #C14600;
     margin-bottom: 15px;
-  }
-  
-  .challenge-list {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Lista izazova */
+.challenge-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 kolone za izazove */
-    gap: 30px; /* Veći razmak između kartica */
-  }
-  
-  .challenge-card {
-    background: linear-gradient(145deg, #FF9D23, #E5D0AC); /* Gradient za kartice */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+/* Kartice izazova */
+.challenge-card {
+    background-color: #FF9D23;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: box-shadow 0.3s ease, transform 0.25s ease;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 220px; /* Visina kartice */
-    color: #fff; /* Tekst u beloj boji */
-  }
-  
-  .challenge-card:hover {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25); /* Senka pri hoveru */
-    transform: translateY(-10px); /* Efekat podizanja kartice */
-  }
-  
-  .challenge-card h3 {
-    font-size: 1.2rem;
+    height: auto;
+    min-height: 230px;
+    color: #fff;
+}
+
+.challenge-card:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    transform: translateY(-6px);
+}
+
+.challenge-card h3 {
+    font-size: 1.25rem;
     font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .challenge-card p {
-    flex-grow: 1; /* Popunjava preostali prostor */
+    margin-bottom: 8px;
+}
+
+.challenge-card p {
+    flex-grow: 1;
     font-size: 0.95rem;
-  }
-  
-  .join-button {
+    line-height: 1.4;
+}
+
+/* Dugmad */
+.join-button {
     margin-top: auto;
-    padding: 12px 24px;
+    padding: 10px 20px;
     background-color: #C14600;
     color: white;
     border: none;
-    border-radius: 25px; /* Zaobljeni ivici dugmeta */
+    border-radius: 25px;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .join-button:hover {
+    text-align: center;
+}
+
+.join-button:hover {
     background-color: #FF9D23;
-    transform: scale(1.05); /* Efekat povećanja dugmeta */
-  }
-  
-  .joined-challenges ul {
+    transform: scale(1.05);
+}
+
+.join-button.disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Pridruženi izazovi lista */
+.joined-challenges ul {
     list-style-type: none;
     padding-left: 0;
-  }
-  
-  .joined-challenges li {
+    margin: 0;
+}
+
+.joined-challenges li {
     background-color: #E5D0AC;
     margin-bottom: 12px;
     padding: 12px;
     border-radius: 10px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  }
-  
-  .leave-button {
+}
+
+.leave-button {
+    margin-top: 8px;
     padding: 10px 20px;
     background-color: #FF9D23;
     color: white;
@@ -103,16 +127,20 @@
     border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .leave-button:hover {
-    background-color: #C14600;
-    transform: scale(1.05); /* Efekat povećanja dugmeta */
-  }
-  
+    align-self: flex-start;
+}
 
-  .join-button.disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
+.leave-button:hover {
+    background-color: #C14600;
+    transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .challenges-container {
+        flex-direction: column;
+    }
+    .all-challenges, .joined-challenges {
+        width: 100%;
+    }
+}

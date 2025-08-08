@@ -4,9 +4,11 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import CreatePlan from "./pages/CreatePlan";
+import AdminCreateChallenge from "./pages/AdminCreateChallenge"; // DODANO
+import AdminCreateRace from "./pages/AdminCreateRace";           // DODANO
 import Challenges from "./pages/Challenges";
 import Races from "./pages/Races";
-import MainLayout from "./components/MainLayout"; // Dodato
+import MainLayout from "./components/MainLayout";
 import './styles/styles-main.css';
 
 const RoleGuard = ({ children, allowedRoles = [], fallbackMessage = null }) => {
@@ -66,6 +68,16 @@ const RegisteredUsersOnly = ({ children }) => (
   </RoleGuard>
 );
 
+// NOVA KOMPONENTA - AdminOnly guard
+const AdminOnly = ({ children }) => (
+  <RoleGuard 
+    allowedRoles={['admin']} 
+    fallbackMessage="Samo administratori mogu pristupiti ovoj stranici."
+  >
+    {children}
+  </RoleGuard>
+);
+
 function App() {
   return (
     <Router>
@@ -94,6 +106,23 @@ function App() {
             <RegisteredUsersOnly>
               <CreatePlan />
             </RegisteredUsersOnly>
+          </MainLayout>
+        } />
+
+        {/* NOVE ADMIN RUTE */}
+        <Route path="/create-challenge" element={
+          <MainLayout>
+            <AdminOnly>
+              <AdminCreateChallenge />
+            </AdminOnly>
+          </MainLayout>
+        } />
+
+        <Route path="/create-race" element={
+          <MainLayout>
+            <AdminOnly>
+              <AdminCreateRace />
+            </AdminOnly>
           </MainLayout>
         } />
 
