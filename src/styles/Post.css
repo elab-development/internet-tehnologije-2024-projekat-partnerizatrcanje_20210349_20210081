@@ -1,3 +1,388 @@
+/* KOMPLETNA ADMIN TEMA CSS - dodaj na početak svakog CSS fajla */
+
+/* DEFAULT THEME - Narandžaste boje */
+:root {
+  --primary-color: #FF9D23;
+  --secondary-color: #C14600;
+  --accent-color: #FF6B35;
+  --background-color: #FFF8E1;
+  --surface-color: rgba(229, 208, 172, 0.9);
+  --text-color: white;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #FF9D23;
+}
+
+/* ADMIN THEME - Plave i bela */
+body.admin-theme {
+  --primary-color: #2563eb !important;      /* Plava */
+  --secondary-color: #1e40af !important;    /* Tamno plava */
+  --accent-color: #3b82f6 !important;       /* Svetlo plava */
+  --background-color: #f8fafc !important;   /* Svetlo siva/bela */
+  --surface-color: rgba(241, 245, 249, 0.9) !important; /* Svetlo plava/bela */
+  --text-color: white !important;
+  --success-color: #10b981 !important;      /* Zelena */
+  --danger-color: #ef4444 !important;       /* Crvena */
+  --warning-color: #f59e0b !important;      /* Žuta */
+}
+
+/* ADMIN specifične boje */
+body.admin-theme {
+  --admin-primary: #1d4ed8 !important;      /* Kraljevski plava */
+  --admin-secondary: #1e3a8a !important;    /* Tamno plava */
+  --admin-accent: #60a5fa !important;       /* Svetlo plava */
+  --admin-light: #e0f2fe !important;        /* Vrlo svetlo plava */
+  --admin-white: #ffffff !important;        /* Čista bela */
+  --admin-gray: #f1f5f9 !important;         /* Svetlo siva */
+  --admin-border: #bfdbfe !important;       /* Plavi border */
+}
+
+/* =================================== */
+/* NAVBAR - Admin tema */
+/* =================================== */
+body.admin-theme .navbar {
+  background-color: var(--admin-primary) !important;
+}
+
+body.admin-theme .navbar a {
+  color: white !important;
+}
+
+body.admin-theme .navbar a.active {
+  background-color: var(--admin-secondary) !important;
+}
+
+body.admin-theme .navbar a:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+body.admin-theme .logout-button {
+  background-color: var(--danger-color) !important;
+}
+
+body.admin-theme .logout-button:hover {
+  background-color: #dc2626 !important;
+}
+
+/* =================================== */
+/* FEED/HOME PAGE - Admin tema */
+/* =================================== */
+body.admin-theme .post {
+  background: var(--admin-white) !important;
+  border: 1px solid var(--admin-border) !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.08) !important;
+}
+
+body.admin-theme .post::before {
+  background: linear-gradient(90deg, var(--admin-primary), var(--admin-accent), var(--admin-secondary)) !important;
+}
+
+body.admin-theme .post:hover {
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15) !important;
+}
+
+body.admin-theme .post-header {
+  background: linear-gradient(135deg, var(--admin-gray) 0%, var(--admin-light) 100%) !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .post-author h3 {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .post-title {
+  color: var(--admin-secondary) !important;
+  background: linear-gradient(135deg, var(--admin-light) 0%, var(--admin-gray) 100%) !important;
+  border: 2px solid var(--admin-primary) !important;
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.2) !important;
+}
+
+body.admin-theme .post-description {
+  background: linear-gradient(135deg, var(--admin-gray) 0%, var(--admin-white) 100%) !important;
+  border-left: 3px solid var(--admin-accent) !important;
+}
+
+body.admin-theme .post-description h4 {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .post-details {
+  background: linear-gradient(135deg, var(--admin-light) 0%, var(--admin-gray) 100%) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .detail-item {
+  background: linear-gradient(135deg, var(--admin-white) 0%, var(--admin-gray) 100%) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .detail-item:hover {
+  border-color: var(--admin-accent) !important;
+}
+
+body.admin-theme .detail-value {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .post-actions {
+  background: linear-gradient(135deg, var(--admin-light) 0%, var(--admin-white) 100%) !important;
+  border-top: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .comment-toggle-button {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.3) !important;
+}
+
+body.admin-theme .comment-toggle-button:hover {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
+  box-shadow: 0 3px 10px rgba(29, 78, 216, 0.4) !important;
+}
+
+body.admin-theme .join-button {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
+}
+
+body.admin-theme .join-button:hover {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
+  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.4) !important;
+}
+
+body.admin-theme .join-button.joined {
+  background: var(--success-color) !important;
+}
+
+/* =================================== */
+/* COMMENTS - Admin tema */
+/* =================================== */
+body.admin-theme .comments-section {
+  background: linear-gradient(135deg, var(--admin-gray) 0%, var(--admin-light) 100%) !important;
+  border-top: 3px solid var(--admin-border) !important;
+}
+
+body.admin-theme .comment {
+  background: linear-gradient(135deg, var(--admin-white) 0%, var(--admin-gray) 100%) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .comment:hover {
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.12) !important;
+}
+
+body.admin-theme .comment-author strong {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .comment-date {
+  background: rgba(29, 78, 216, 0.05) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .no-comments {
+  background: rgba(29, 78, 216, 0.05) !important;
+  border: 2px dashed var(--admin-border) !important;
+}
+
+body.admin-theme .add-comment-form {
+  background: linear-gradient(135deg, var(--admin-light) 0%, var(--admin-gray) 100%) !important;
+  border: 2px solid var(--admin-border) !important;
+}
+
+body.admin-theme .add-comment-form textarea {
+  border: 2px solid var(--admin-border) !important;
+  background: linear-gradient(135deg, var(--admin-white) 0%, var(--admin-gray) 100%) !important;
+}
+
+body.admin-theme .add-comment-form textarea:focus {
+  border-color: var(--admin-accent) !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+}
+
+body.admin-theme .submit-comment-button {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3) !important;
+}
+
+body.admin-theme .submit-comment-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
+  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.4) !important;
+}
+
+/* =================================== */
+/* RACES PAGE - Admin tema */
+/* =================================== */
+body.admin-theme .races-container,
+body.admin-theme .challenges-container {
+  background: var(--admin-gray) !important;
+}
+
+body.admin-theme .races-section,
+body.admin-theme .joined-races-section,
+body.admin-theme .all-challenges,
+body.admin-theme .joined-challenges {
+  background: rgba(241, 245, 249, 0.9) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .races-section h2,
+body.admin-theme .joined-races-section h2,
+body.admin-theme .all-challenges h2,
+body.admin-theme .joined-challenges h2 {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .races-section h2::after,
+body.admin-theme .joined-races-section h2::after,
+body.admin-theme .all-challenges h2::after,
+body.admin-theme .joined-challenges h2::after {
+  background: var(--admin-primary) !important;
+}
+
+body.admin-theme .race-card,
+body.admin-theme .challenge-card {
+  background: var(--admin-primary) !important;
+  box-shadow: 0 8px 25px rgba(29, 78, 216, 0.3) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .race-card:hover,
+body.admin-theme .challenge-card:hover {
+  box-shadow: 0 15px 40px rgba(29, 78, 216, 0.4) !important;
+}
+
+body.admin-theme .race-details,
+body.admin-theme .challenge-details {
+  background: rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+body.admin-theme .joined-races-section li,
+body.admin-theme .joined-challenges li {
+  background: var(--admin-primary) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .joined-races-section li::before,
+body.admin-theme .joined-challenges li::before {
+  background: var(--admin-secondary) !important;
+}
+
+body.admin-theme .joined-races-section li:hover::before,
+body.admin-theme .joined-challenges li:hover::before {
+  background: var(--admin-accent) !important;
+}
+
+body.admin-theme .leave-button {
+  background: rgba(239, 68, 68, 0.9) !important;
+}
+
+body.admin-theme .leave-button:hover {
+  background: rgba(239, 68, 68, 1) !important;
+}
+
+/* =================================== */
+/* CREATE PLAN/FORMS - Admin tema */
+/* =================================== */
+body.admin-theme .running-plan-container {
+  background: var(--admin-gray) !important;
+}
+
+body.admin-theme .running-plan-container h2 {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .running-plan-form {
+  background: var(--admin-white) !important;
+  border: 2px solid var(--admin-border) !important;
+  box-shadow: 0 8px 32px rgba(29, 78, 216, 0.1) !important;
+}
+
+body.admin-theme .running-plan-input,
+body.admin-theme .running-plan-textarea {
+  border: 2px solid var(--admin-border) !important;
+  background: var(--admin-white) !important;
+}
+
+body.admin-theme .running-plan-input:focus,
+body.admin-theme .running-plan-textarea:focus {
+  border-color: var(--admin-primary) !important;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
+}
+
+body.admin-theme .running-plan-button {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3) !important;
+}
+
+body.admin-theme .running-plan-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
+  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.4) !important;
+}
+
+/* =================================== */
+/* FEED HEADER - Admin tema */
+/* =================================== */
+body.admin-theme .feed-header,
+body.admin-theme [style*="background: linear-gradient"][style*="#FF9D23"] {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-accent) 100%) !important;
+}
+
+/* =================================== */
+/* OVERRIDE SVE NARANDŽASTE BOJE */
+/* =================================== */
+body.admin-theme *[style*="#FF9D23"],
+body.admin-theme *[style*="#C14600"],
+body.admin-theme *[style*="#FF6B35"],
+body.admin-theme *[style*="#FFF8E1"] {
+  background-color: var(--admin-primary) !important;
+}
+
+body.admin-theme *[style*="color: #FF9D23"],
+body.admin-theme *[style*="color: #C14600"],
+body.admin-theme *[style*="color: #FF6B35"] {
+  color: var(--admin-primary) !important;
+}
+
+/* =================================== */
+/* DODATNI OVERRIDE ZA SVE ELEMENTE */
+/* =================================== */
+body.admin-theme .orange-element,
+body.admin-theme [class*="orange"],
+body.admin-theme [class*="FF9D23"],
+body.admin-theme [class*="C14600"] {
+  background-color: var(--admin-primary) !important;
+  color: white !important;
+}
+
+/* Status badges override */
+body.admin-theme .race-status span,
+body.admin-theme .challenge-status span {
+  background: rgba(29, 78, 216, 0.2) !important;
+  border: 1px solid rgba(29, 78, 216, 0.3) !important;
+}
+
+/* Background override */
+body.admin-theme {
+  background: var(--admin-gray) !important;
+}
+
+/* Osvezi dugme */
+body.admin-theme button[style*="#FF9D23"],
+body.admin-theme button[style*="#C14600"] {
+  background: var(--admin-primary) !important;
+}
+
+/* Tooltip override */
+body.admin-theme .participants-tooltip {
+  background: var(--admin-white) !important;
+  border: 2px solid var(--admin-primary) !important;
+}
+
+body.admin-theme .tooltip-header {
+  color: var(--admin-primary) !important;
+}
+
 /* Post Container */
 .post {
   background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);

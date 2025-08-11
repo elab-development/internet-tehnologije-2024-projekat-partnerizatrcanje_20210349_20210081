@@ -1,4 +1,115 @@
 /* Globalne postavke */
+/* POPRAVKA - ISKLJUČI ADMIN TEMU SA LOGIN/REGISTER STRANICA */
+
+/* Ukloni admin temu sa auth stranica */
+body.admin-theme .auth-container,
+body.admin-theme .auth-page,
+body.admin-theme .auth-container *,
+body.admin-theme .auth-page * {
+  /* FORSIRAJ NARANDŽASTE BOJE NA LOGIN/REGISTER */
+  --primary-color: #FF9D23 !important;
+  --secondary-color: #C14600 !important;
+  --accent-color: #FF6B35 !important;
+  --background-color: #FFF8E1 !important;
+}
+
+/* Login/Register dugmad - FORSIRAJ NARANDŽASTO */
+.auth-container button,
+.auth-page button,
+button[type="submit"] {
+  background: #FF9D23 !important;
+  color: white !important;
+  border: none !important;
+}
+
+.auth-container button:hover,
+.auth-page button:hover,
+button[type="submit"]:hover {
+  background: #FF7F11 !important;
+}
+
+/* Admin tema NEĆE uticati na auth stranice */
+body.admin-theme .auth-container button,
+body.admin-theme .auth-page button,
+body.admin-theme .auth-container button[type="submit"],
+body.admin-theme .auth-page button[type="submit"] {
+  background: #FF9D23 !important;
+  color: white !important;
+}
+
+body.admin-theme .auth-container button:hover,
+body.admin-theme .auth-page button:hover,
+body.admin-theme .auth-container button[type="submit"]:hover,
+body.admin-theme .auth-page button[type="submit"]:hover {
+  background: #FF7F11 !important;
+}
+
+/* Guest dugme takođe narandžasto */
+.auth-container .guest-button,
+.auth-page .guest-button {
+  background: #e59c5c !important;
+  color: white !important;
+}
+
+.auth-container .guest-button:hover,
+.auth-page .guest-button:hover {
+  background: #FF7F11 !important;
+}
+
+body.admin-theme .auth-container .guest-button,
+body.admin-theme .auth-page .guest-button {
+  background: #e59c5c !important;
+  color: white !important;
+}
+
+body.admin-theme .auth-container .guest-button:hover,
+body.admin-theme .auth-page .guest-button:hover {
+  background: #FF7F11 !important;
+}
+
+/* Linkovi takođe narandžasti */
+.auth-container span,
+.auth-page span,
+.auth-container a,
+.auth-page a {
+  color: #C14600 !important;
+}
+
+.auth-container span:hover,
+.auth-page span:hover,
+.auth-container a:hover,
+.auth-page a:hover {
+  color: #FF9D23 !important;
+}
+
+body.admin-theme .auth-container span,
+body.admin-theme .auth-page span,
+body.admin-theme .auth-container a,
+body.admin-theme .auth-page a {
+  color: #C14600 !important;
+}
+
+body.admin-theme .auth-container span:hover,
+body.admin-theme .auth-page span:hover,
+body.admin-theme .auth-container a:hover,
+body.admin-theme .auth-page a:hover {
+  color: #FF9D23 !important;
+}
+
+/* Naslov takođe narandžast */
+.auth-container h2,
+.auth-page h2,
+.auth-container h1,
+.auth-page h1 {
+  color: #C14600 !important;
+}
+
+body.admin-theme .auth-container h2,
+body.admin-theme .auth-page h2,
+body.admin-theme .auth-container h1,
+body.admin-theme .auth-page h1 {
+  color: #C14600 !important;
+}
 /* Reset stilovi */
 * {
   margin: 0;

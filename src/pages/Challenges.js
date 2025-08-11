@@ -26,9 +26,16 @@ const Challenges = () => {
 
         if (response.ok) {
           const challengesData = await response.json();
+          
+          // DEBUG: Prikaži šta stiže sa backend-a
+          console.log('🔍 DEBUG: Podaci sa backend-a:', challengesData);
+          if (challengesData.length > 0) {
+            console.log('🔍 DEBUG: Prvi izazov:', challengesData[0]);
+          }
+          
           setAllChallenges(challengesData);
           
-          // Filtriraj izazove u koje je korisnik već pridružen (koristi backend podatke)
+          // Filtriraj izazove u koje je korisnik već pridružen
           const userJoinedChallenges = challengesData.filter(challenge => challenge.is_user_joined);
           setJoinedChallenges(userJoinedChallenges);
         } else {
@@ -151,12 +158,55 @@ const Challenges = () => {
     }
   };
 
-  // Proveri da li je izazov aktivan
-  const isChallengeActive = (challenge) => {
-    return challenge.is_active || false;
+  // NOVA LOGIKA - koristi backend status ili napravi svoj
+  const getChallengeStatus = (challenge) => {
+    // Ako backend šalje status polje, koristi ga
+    if (challenge.status) {
+      switch (challenge.status) {
+        case 'upcoming':
+          return { status: 'USKORO', color: '#FFF', icon: '⏳' };
+        case 'active':
+          return { status: 'AKTIVAN', color: '#28a745', icon: '🟢' };
+        case 'finished':
+          return { status: 'ZAVRŠEN', color: '#dc3545', icon: '🔴' };
+        default:
+          return { status: 'NEPOZNATO', color: '#6c757d', icon: '❓' };
+      }
+    }
+
+    // Fallback logika na osnovu datuma
+    if (!challenge.start_date || !challenge.end_date) {
+      return { status: 'NEDEFINIRANO', color: '#6c757d', icon: '❓' };
+    }
+
+    const now = new Date();
+    const startDate = new Date(challenge.start_date);
+    const endDate = new Date(challenge.end_date);
+
+    console.log(`🔍 Frontend datum analiza za "${challenge.name}":`, {
+      now: now.toISOString(),
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      is_active_from_backend: challenge.is_active
+    });
+
+    if (now < startDate) {
+      return { status: 'USKORO', color: '#FFF', icon: '⏳' };
+    } else if (now >= startDate && now <= endDate) {
+      return { status: 'AKTIVAN', color: '#28a745', icon: '🟢' };
+    } else {
+      return { status: 'ZAVRŠEN', color: '#dc3545', icon: '🔴' };
+    }
   };
 
-  // Check if challenge is already joined - koristi backend podatke
+  // Proveri da li je izazov dostupan za pridruživanje
+  const isChallengeJoinable = (challenge) => {
+    const statusInfo = getChallengeStatus(challenge);
+    // Samo AKTIVAN status dozvoljava pridruživanje
+    return statusInfo.status === 'AKTIVAN';
+  };
+
+  // Check if challenge is already joined
   const isChallengeJoined = (challenge) => {
     return challenge.is_user_joined || false;
   };
@@ -194,51 +244,57 @@ const Challenges = () => {
           </div>
         ) : (
           <div className="challenge-list">
-            {allChallenges.map((challenge) => (
-              <div className="challenge-card" key={challenge.id}>
-                <h3>{challenge.name}</h3>
-                <p>{challenge.description}</p>
-                
-                {/* Dodatne informacije o izazovu */}
-                <div className="challenge-details" style={{ fontSize: '0.9em', color: '#666', margin: '10px 0' }}>
-                  <div><strong>Početak:</strong> {formatDate(challenge.start_date)}</div>
-                  <div><strong>Kraj:</strong> {formatDate(challenge.end_date)}</div>
-                  <div><strong>Ciljna distanca:</strong> {challenge.target_distance} km</div>
-                  <div><strong>Trajanje:</strong> {challenge.duration_days} dana</div>
-                  {challenge.prize && (
-                    <div><strong>Nagrada:</strong> {challenge.prize}</div>
-                  )}
-                  <div><strong>Učesnici:</strong> {challenge.participants_count || 0}</div>
-                </div>
+            {allChallenges.map((challenge) => {
+              const statusInfo = getChallengeStatus(challenge);
+              
+              return (
+                <div className="challenge-card" key={challenge.id}>
+                  <h3>{challenge.name}</h3>
+                  <p>{challenge.description}</p>
+                  
+                  {/* Dodatne informacije o izazovu */}
+                  <div className="challenge-details" style={{ fontSize: '0.9em', color: '#666', margin: '10px 0' }}>
+                    <div><strong>Početak:</strong> {formatDate(challenge.start_date)}</div>
+                    <div><strong>Kraj:</strong> {formatDate(challenge.end_date)}</div>
+                    <div><strong>Ciljna distanca:</strong> {challenge.target_distance} km</div>
+                    <div><strong>Trajanje:</strong> {challenge.duration_days} dana</div>
+                    {challenge.prize && (
+                      <div><strong>Nagrada:</strong> {challenge.prize}</div>
+                    )}
+                    <div><strong>Učesnici:</strong> {challenge.participants_count || 0}</div>
+                  </div>
 
-                {/* Status izazova */}
-                <div className="challenge-status" style={{ fontSize: '0.85em', marginBottom: '10px' }}>
-                  {isChallengeActive(challenge) ? (
-                    <span style={{ color: '#28a745', fontWeight: 'bold' }}>🟢 AKTIVAN</span>
+                  {/* ISPRAVLJENI STATUS PRIKAZ */}
+                  <div className="challenge-status" style={{ fontSize: '0.85em', marginBottom: '10px' }}>
+                    <span style={{ color: statusInfo.color, fontWeight: 'bold' }}>
+                      {statusInfo.icon} {statusInfo.status}
+                    </span>
+                  </div>
+
+                  {/* ISPRAVLJENA LOGIKA ZA DUGMAD */}
+                  {isChallengeJoined(challenge) ? (
+                    <button className="join-button disabled" disabled>
+                      Pridružen
+                    </button>
+                  ) : isChallengeJoinable(challenge) ? (
+                    <button
+                      onClick={() => handleJoinChallenge(challenge.id)}
+                      className="join-button"
+                    >
+                      Pridruži se
+                    </button>
+                  ) : statusInfo.status === 'USKORO' ? (
+                    <button className="join-button disabled" disabled>
+                      Uskoro počinje
+                    </button>
                   ) : (
-                    <span style={{ color: '#dc3545', fontWeight: 'bold' }}>🔴 ZAVRŠEN</span>
+                    <button className="join-button disabled" disabled>
+                      Završen
+                    </button>
                   )}
                 </div>
-
-                {/* Dugmad */}
-                {isChallengeJoined(challenge) ? (
-                  <button className="join-button disabled" disabled>
-                    Pridružen
-                  </button>
-                ) : isChallengeActive(challenge) ? (
-                  <button
-                    onClick={() => handleJoinChallenge(challenge.id)}
-                    className="join-button"
-                  >
-                    Pridruži se
-                  </button>
-                ) : (
-                  <button className="join-button disabled" disabled>
-                    Završen
-                  </button>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -247,37 +303,67 @@ const Challenges = () => {
       <div className="joined-challenges">
         <h2>Pridruženi izazovi</h2>
         {joinedChallenges.length === 0 ? (
-          <p style={{ color: '#666', fontStyle: 'italic' }}>
-            Niste se pridružili nijednom izazovu.
-          </p>
+          <div className="no-joined-challenges">
+            <div className="no-joined-challenges-icon">🎯</div>
+            <div className="no-joined-challenges-text">
+              Niste se pridružili nijednom izazovu.
+            </div>
+            <div className="no-joined-challenges-hint">
+              Pridružite se izazovima da biste videli detalje ovde.
+            </div>
+          </div>
         ) : (
           <ul>
-            {joinedChallenges.map((challenge) => (
-              <li key={challenge.id} style={{ marginBottom: '15px', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
-                <div>
-                  <strong>{challenge.name}</strong>
-                  <div style={{ fontSize: '0.9em', color: '#666', margin: '8px 0' }}>
-                    <div>Početak: {formatDate(challenge.start_date)} | Kraj: {formatDate(challenge.end_date)}</div>
-                    <div>Cilj: {challenge.target_distance} km | Trajanje: {challenge.duration_days} dana</div>
-                    {challenge.prize && <div>Nagrada: {challenge.prize}</div>}
-                    <div style={{ 
-                      marginTop: '5px',
-                      color: isChallengeActive(challenge) ? '#28a745' : '#dc3545',
-                      fontWeight: 'bold'
-                    }}>
-                      Status: {isChallengeActive(challenge) ? 'AKTIVAN' : 'ZAVRŠEN'}
+            {joinedChallenges.map((challenge) => {
+              const statusInfo = getChallengeStatus(challenge);
+              
+              return (
+                <li key={challenge.id}>
+                  <div className="joined-challenge-header">
+                    <div className="joined-challenge-title">{challenge.name}</div>
+                    <div className="joined-challenge-status">
+                      {statusInfo.status}
                     </div>
                   </div>
-                </div>
-                <button
-                  onClick={() => handleLeaveChallenge(challenge.id)}
-                  className="leave-button"
-                  style={{ marginTop: '8px' }}
-                >
-                  Napusti izazov
-                </button>
-              </li>
-            ))}
+                  
+                  <div className="joined-challenge-details">
+                    <div className="joined-challenge-details-row">
+                      <span className="joined-challenge-label">Početak:</span>
+                      <span className="joined-challenge-value">{formatDate(challenge.start_date)}</span>
+                    </div>
+                    <div className="joined-challenge-details-row">
+                      <span className="joined-challenge-label">Kraj:</span>
+                      <span className="joined-challenge-value">{formatDate(challenge.end_date)}</span>
+                    </div>
+                    <div className="joined-challenge-details-row">
+                      <span className="joined-challenge-label">Ciljna distanca:</span>
+                      <span className="joined-challenge-value">{challenge.target_distance} km</span>
+                    </div>
+                    <div className="joined-challenge-details-row">
+                      <span className="joined-challenge-label">Trajanje:</span>
+                      <span className="joined-challenge-value">{challenge.duration_days} dana</span>
+                    </div>
+                    <div className="joined-challenge-details-row">
+                      <span className="joined-challenge-label">Učesnici:</span>
+                      <span className="joined-challenge-value">{challenge.participants_count || 0}</span>
+                    </div>
+                  </div>
+                  
+                  {challenge.prize && (
+                    <div className="joined-challenge-prize">
+                      Nagrada: {challenge.prize}
+                    </div>
+                  )}
+                  
+                  <button
+                    onClick={() => handleLeaveChallenge(challenge.id)}
+                    className="leave-button"
+                  >
+                    Napusti izazov
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

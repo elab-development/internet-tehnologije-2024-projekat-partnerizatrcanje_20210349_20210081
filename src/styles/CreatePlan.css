@@ -1,21 +1,189 @@
+/* Admin Theme CSS - dodaj na početak svakog CSS fajla */
+
+/* DEFAULT THEME - ORIGINALNE NARANDŽASTE BOJE (OSTAVLJAM ZA LOGIN/REGISTER) */
+:root {
+  --primary-color: #FF9D23;
+  --secondary-color: #C14600;
+  --accent-color: #FF6B35;
+  --background-color: #FFF8E1;
+  --surface-color: rgba(229, 208, 172, 0.9);
+  --text-color: white;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #FF9D23;
+}
+
+/* ADMIN THEME - Plave i bela */
+body.admin-theme {
+  --primary-color: #2563eb;      /* Plava */
+  --secondary-color: #1e40af;    /* Tamno plava */
+  --accent-color: #3b82f6;       /* Svetlo plava */
+  --background-color: #f8fafc;   /* Svetlo siva/bela */
+  --surface-color: rgba(241, 245, 249, 0.9); /* Svetlo plava/bela */
+  --text-color: white;
+  --success-color: #10b981;      /* Zelena */
+  --danger-color: #ef4444;       /* Crvena */
+  --warning-color: #f59e0b;      /* Žuta */
+}
+
+/* ADMIN specifične boje */
+body.admin-theme {
+  --admin-primary: #1d4ed8;      /* Kraljevski plava */
+  --admin-secondary: #1e3a8a;    /* Tamno plava */
+  --admin-accent: #60a5fa;       /* Svetlo plava */
+  --admin-light: #e0f2fe;        /* Vrlo svetlo plava */
+  --admin-white: #ffffff;        /* Čista bela */
+  --admin-gray: #f1f5f9;         /* Svetlo siva */
+}
+
+/* Primeni admin boje na sve elemente */
+body.admin-theme .navbar {
+  background-color: var(--admin-primary) !important;
+}
+
+body.admin-theme .post-title,
+body.admin-theme .race-card,
+body.admin-theme .challenge-card,
+body.admin-theme .joined-races-section li,
+body.admin-theme .joined-challenges li {
+  background: var(--admin-primary) !important;
+}
+
+body.admin-theme .post-details,
+body.admin-theme .races-section,
+body.admin-theme .joined-races-section,
+body.admin-theme .all-challenges,
+body.admin-theme .joined-challenges {
+  background: var(--admin-white) !important;
+  border: 2px solid var(--admin-light) !important;
+}
+
+body.admin-theme .join-button,
+body.admin-theme .leave-button,
+body.admin-theme .comment-toggle-button,
+body.admin-theme .submit-comment-button,
+body.admin-theme .running-plan-button {
+  background: var(--admin-secondary) !important;
+}
+
+body.admin-theme .join-button:hover,
+body.admin-theme .leave-button:hover,
+body.admin-theme .comment-toggle-button:hover,
+body.admin-theme .submit-comment-button:hover,
+body.admin-theme .running-plan-button:hover {
+  background: var(--admin-accent) !important;
+}
+
+body.admin-theme .post-author h3,
+body.admin-theme .races-section h2,
+body.admin-theme .joined-races-section h2,
+body.admin-theme .all-challenges h2,
+body.admin-theme .joined-challenges h2,
+body.admin-theme .running-plan-container h2 {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .post-title::after,
+body.admin-theme .races-section h2::after,
+body.admin-theme .joined-races-section h2::after,
+body.admin-theme .all-challenges h2::after,
+body.admin-theme .joined-challenges h2::after {
+  background: var(--admin-primary) !important;
+}
+
+body.admin-theme .post {
+  border: 1px solid var(--admin-light) !important;
+  background: var(--admin-white) !important;
+}
+
+body.admin-theme .post::before {
+  background: linear-gradient(90deg, var(--admin-primary), var(--admin-accent), var(--admin-secondary)) !important;
+}
+
+/* Left borders */
+body.admin-theme .joined-races-section li::before,
+body.admin-theme .joined-challenges li::before {
+  background: var(--admin-secondary) !important;
+}
+
+body.admin-theme .joined-races-section li:hover::before,
+body.admin-theme .joined-challenges li:hover::before {
+  background: var(--admin-accent) !important;
+}
+
+/* Form elements */
+body.admin-theme .running-plan-input,
+body.admin-theme .running-plan-textarea {
+  border: 2px solid var(--admin-light) !important;
+}
+
+body.admin-theme .running-plan-input:focus,
+body.admin-theme .running-plan-textarea:focus {
+  border-color: var(--admin-primary) !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15) !important;
+}
+
+body.admin-theme .running-plan-form {
+  background: var(--admin-white) !important;
+  border: 2px solid var(--admin-light) !important;
+}
+
+/* Status elements */
+body.admin-theme .race-status span,
+body.admin-theme .challenge-status span {
+  background: rgba(37, 99, 235, 0.2) !important;
+  border: 1px solid rgba(37, 99, 235, 0.3) !important;
+}
+
+/* Comments */
+body.admin-theme .comment {
+  background: var(--admin-white) !important;
+  border: 1px solid var(--admin-light) !important;
+}
+
+body.admin-theme .comment-author strong {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .add-comment-form {
+  background: var(--admin-gray) !important;
+  border: 2px solid var(--admin-light) !important;
+}
+
+/* Joined states */
+body.admin-theme .join-button.joined {
+  background: var(--success-color) !important;
+}
+
+/* Background */
+body.admin-theme {
+  background: var(--admin-gray) !important;
+}
+
+body.admin-theme .races-container,
+body.admin-theme .challenges-container {
+  background: var(--admin-gray) !important;
+}
+
+/* SPECIFIČNO SAMO ZA KREIRANJE IZAZOVA/TRKA - PLAVE BOJE */
 .running-plan-container {
     width: 90%;
     max-width: 500px;
-    margin: 50px auto 20px; /* Povećan margin-top da se ne preklapa sa Navbarom */
+    margin: 50px auto 20px;
     padding: 25px;
-    background: #FEF9E1;
+    background: #f8fafc !important; /* PLAVA UMESTO NARANDŽASTE */
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(193, 70, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(29, 78, 216, 0.2) !important; /* PLAVA SENKA */
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-left: 5px solid #FF9D23;
-    border-right: 5px solid #FF9D23;
+    border-left: 5px solid #1d4ed8 !important; /* PLAV BORDER */
+    border-right: 5px solid #1d4ed8 !important; /* PLAV BORDER */
 }
 
 .running-plan-container h2 {
     text-align: center;
-    color: #FF9D23;
+    color: #1d4ed8 !important; /* PLAV NASLOV */
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -32,17 +200,17 @@
     width: 100%;
     padding: 12px;
     margin: 10px 0;
-    border: 2px solid #C14600;
+    border: 2px solid #1e3a8a !important; /* PLAV BORDER */
     border-radius: 8px;
     font-size: 16px;
-    background: #E5D0AC;
+    background: #ffffff !important; /* BELA POZADINA */
     transition: all 0.3s ease;
 }
 
 .running-plan-input:focus, .running-plan-textarea:focus {
     outline: none;
-    border-color: #FF9D23;
-    box-shadow: 0 0 8px rgba(255, 157, 35, 0.5);
+    border-color: #3b82f6 !important; /* PLAV FOCUS */
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5) !important; /* PLAVA SENKA */
 }
 
 .running-plan-textarea {
@@ -51,7 +219,7 @@
 }
 
 .running-plan-button {
-    background: linear-gradient(45deg, #FF9D23, #E5D0AC, #FF9D23);
+    background: linear-gradient(45deg, #1d4ed8, #3b82f6, #1d4ed8) !important; /* PLAV GRADIJENT */
     color: white;
     border: none;
     padding: 12px;
@@ -66,7 +234,71 @@
 }
 
 .running-plan-button:hover {
-    background: linear-gradient(45deg, #C14600, #FF9D23, #C14600);
-    box-shadow: 0 4px 10px rgba(193, 70, 0, 0.5);
+    background: linear-gradient(45deg, #1e3a8a, #1d4ed8, #1e3a8a) !important; /* PLAV HOVER */
+    box-shadow: 0 4px 10px rgba(29, 78, 216, 0.5) !important; /* PLAVA SENKA */
 }
 
+/* DODAJEM I ZA SVE FORME KREIRANJA IZAZOVA/TRKA */
+.create-challenge-container,
+.create-race-container,
+.challenge-form-container,
+.race-form-container {
+    background: #f8fafc !important;
+    border-left: 5px solid #1d4ed8 !important;
+    border-right: 5px solid #1d4ed8 !important;
+    box-shadow: 0 4px 15px rgba(29, 78, 216, 0.2) !important;
+}
+
+.create-challenge-container h2,
+.create-race-container h2,
+.challenge-form-container h2,
+.race-form-container h2 {
+    color: #1d4ed8 !important;
+}
+
+.create-challenge-form input,
+.create-challenge-form textarea,
+.create-challenge-form select,
+.create-race-form input,
+.create-race-form textarea,
+.create-race-form select,
+.challenge-form input,
+.challenge-form textarea,
+.challenge-form select,
+.race-form input,
+.race-form textarea,
+.race-form select {
+    border: 2px solid #1e3a8a !important;
+    background: #ffffff !important;
+}
+
+.create-challenge-form input:focus,
+.create-challenge-form textarea:focus,
+.create-challenge-form select:focus,
+.create-race-form input:focus,
+.create-race-form textarea:focus,
+.create-race-form select:focus,
+.challenge-form input:focus,
+.challenge-form textarea:focus,
+.challenge-form select:focus,
+.race-form input:focus,
+.race-form textarea:focus,
+.race-form select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5) !important;
+}
+
+.create-challenge-form button,
+.create-race-form button,
+.challenge-form button,
+.race-form button {
+    background: linear-gradient(45deg, #1d4ed8, #3b82f6, #1d4ed8) !important;
+}
+
+.create-challenge-form button:hover,
+.create-race-form button:hover,
+.challenge-form button:hover,
+.race-form button:hover {
+    background: linear-gradient(45deg, #1e3a8a, #1d4ed8, #1e3a8a) !important;
+    box-shadow: 0 4px 10px rgba(29, 78, 216, 0.5) !important;
+}

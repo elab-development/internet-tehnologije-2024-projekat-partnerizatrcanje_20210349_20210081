@@ -1,146 +1,811 @@
-.challenges-container {
-    display: flex;
-    gap: 30px;
-    justify-content: space-between;
-    margin-top: 30px;
-    align-items: flex-start;
-    flex-wrap: wrap;
+/* KREIRANJE IZAZOVA/TRKA - POPRAVKA FORME */
+
+/* Glavni kontejner forme */
+.challenge-form-container,
+.race-form-container,
+.create-challenge-container,
+.create-race-container {
+  max-width: 600px;
+  margin: 60px auto 40px;
+  padding: 40px;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(29, 78, 216, 0.1);
+  border: 2px solid #e0f2fe;
 }
 
-/* Sekcije */
-.all-challenges, 
-.joined-challenges {
-    padding: 20px;
-    border-radius: 12px;
-    background-color: #FEF9E1;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+/* Admin tema override */
+body.admin-theme .challenge-form-container,
+body.admin-theme .race-form-container,
+body.admin-theme .create-challenge-container,
+body.admin-theme .create-race-container {
+  background: var(--admin-white) !important;
+  border: 2px solid var(--admin-border) !important;
+  box-shadow: 0 8px 32px rgba(29, 78, 216, 0.1) !important;
 }
 
-.all-challenges {
-    flex: 1 1 68%;
-    min-width: 320px;
+/* Naslov forme */
+.challenge-form-container h2,
+.race-form-container h2,
+.create-challenge-container h2,
+.create-race-container h2 {
+  color: #1d4ed8;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.joined-challenges {
-    flex: 1 1 28%;
-    min-width: 280px;
+/* Admin tema naslov */
+body.admin-theme .challenge-form-container h2,
+body.admin-theme .race-form-container h2,
+body.admin-theme .create-challenge-container h2,
+body.admin-theme .create-race-container h2 {
+  color: var(--admin-primary) !important;
 }
 
-/* Naslovi sekcija */
-.all-challenges h2, 
-.joined-challenges h2 {
-    font-size: 1.6rem;
-    color: #C14600;
-    margin-bottom: 15px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+/* Forma */
+.challenge-form,
+.race-form,
+.create-challenge-form,
+.create-race-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Lista izazova */
-.challenge-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 20px;
+/* Input polja - UKLONI SVE NARANDŽASTE BOJE */
+.challenge-form input,
+.challenge-form textarea,
+.challenge-form select,
+.race-form input,
+.race-form textarea,
+.race-form select,
+.create-challenge-form input,
+.create-challenge-form textarea,
+.create-challenge-form select,
+.create-race-form input,
+.create-race-form textarea,
+.create-race-form select,
+input[placeholder*="izazov"],
+input[placeholder*="Naziv"],
+input[placeholder*="Opis"],
+input[placeholder*="distanc"],
+input[placeholder*="Trajanje"],
+input[placeholder*="Nagrada"],
+textarea[placeholder*="izazov"],
+textarea[placeholder*="Opis"] {
+  width: 100% !important;
+  padding: 15px !important;
+  border: 2px solid #bfdbfe !important;
+  border-radius: 10px !important;
+  font-size: 16px !important;
+  background: #ffffff !important;
+  transition: all 0.3s ease !important;
+  font-family: inherit !important;
+  color: #1f2937 !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
-/* Kartice izazova */
-.challenge-card {
-    background-color: #FF9D23;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: box-shadow 0.3s ease, transform 0.25s ease;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: auto;
-    min-height: 230px;
-    color: #fff;
+/* Focus state - TAMNO PLAVA */
+.challenge-form input:focus,
+.challenge-form textarea:focus,
+.challenge-form select:focus,
+.race-form input:focus,
+.race-form textarea:focus,
+.race-form select:focus,
+.create-challenge-form input:focus,
+.create-challenge-form textarea:focus,
+.create-challenge-form select:focus,
+.create-race-form input:focus,
+.create-race-form textarea:focus,
+.create-race-form select:focus,
+input[placeholder*="izazov"]:focus,
+input[placeholder*="Naziv"]:focus,
+input[placeholder*="Opis"]:focus,
+input[placeholder*="distanc"]:focus,
+input[placeholder*="Trajanje"]:focus,
+input[placeholder*="Nagrada"]:focus,
+textarea[placeholder*="izazov"]:focus,
+textarea[placeholder*="Opis"]:focus {
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
+  background: #f8fafc !important;
 }
 
-.challenge-card:hover {
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    transform: translateY(-6px);
+/* Admin tema input polja */
+body.admin-theme .challenge-form input,
+body.admin-theme .challenge-form textarea,
+body.admin-theme .challenge-form select,
+body.admin-theme .race-form input,
+body.admin-theme .race-form textarea,
+body.admin-theme .race-form select,
+body.admin-theme input[placeholder*="izazov"],
+body.admin-theme input[placeholder*="Naziv"],
+body.admin-theme input[placeholder*="Opis"],
+body.admin-theme input[placeholder*="distanc"],
+body.admin-theme input[placeholder*="Trajanje"],
+body.admin-theme input[placeholder*="Nagrada"],
+body.admin-theme textarea[placeholder*="izazov"],
+body.admin-theme textarea[placeholder*="Opis"] {
+  border: 2px solid var(--admin-border) !important;
+  background: var(--admin-white) !important;
 }
 
-.challenge-card h3 {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 8px;
+body.admin-theme .challenge-form input:focus,
+body.admin-theme .challenge-form textarea:focus,
+body.admin-theme .challenge-form select:focus,
+body.admin-theme .race-form input:focus,
+body.admin-theme .race-form textarea:focus,
+body.admin-theme .race-form select:focus,
+body.admin-theme input[placeholder*="izazov"]:focus,
+body.admin-theme input[placeholder*="Naziv"]:focus,
+body.admin-theme input[placeholder*="Opis"]:focus,
+body.admin-theme input[placeholder*="distanc"]:focus,
+body.admin-theme input[placeholder*="Trajanje"]:focus,
+body.admin-theme input[placeholder*="Nagrada"]:focus,
+body.admin-theme textarea[placeholder*="izazov"]:focus,
+body.admin-theme textarea[placeholder*="Opis"]:focus {
+  border-color: var(--admin-primary) !important;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
 }
 
-.challenge-card p {
-    flex-grow: 1;
-    font-size: 0.95rem;
-    line-height: 1.4;
+/* Textarea specifično */
+.challenge-form textarea,
+.race-form textarea,
+.create-challenge-form textarea,
+.create-race-form textarea,
+textarea[placeholder*="izazov"],
+textarea[placeholder*="Opis"] {
+  min-height: 100px !important;
+  resize: vertical !important;
 }
 
-/* Dugmad */
-.join-button {
-    margin-top: auto;
-    padding: 10px 20px;
-    background-color: #C14600;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    text-align: center;
+/* Date input */
+input[type="date"] {
+  padding: 15px !important;
+  border: 2px solid #bfdbfe !important;
+  border-radius: 10px !important;
+  font-size: 16px !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
 }
 
-.join-button:hover {
-    background-color: #FF9D23;
-    transform: scale(1.05);
+input[type="date"]:focus {
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
 }
 
-.join-button.disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    opacity: 0.7;
+/* Submit dugme */
+.challenge-form button,
+.race-form button,
+.create-challenge-form button,
+.create-race-form button,
+button[type="submit"] {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 15px 30px !important;
+  border-radius: 10px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3) !important;
+  margin-top: 20px !important;
 }
 
-/* Pridruženi izazovi lista */
-.joined-challenges ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin: 0;
+.challenge-form button:hover,
+.race-form button:hover,
+.create-challenge-form button:hover,
+.create-race-form button:hover,
+button[type="submit"]:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(29, 78, 216, 0.4) !important;
 }
 
-.joined-challenges li {
-    background-color: #E5D0AC;
-    margin-bottom: 12px;
-    padding: 12px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+/* Admin tema dugme */
+body.admin-theme .challenge-form button,
+body.admin-theme .race-form button,
+body.admin-theme .create-challenge-form button,
+body.admin-theme .create-race-form button,
+body.admin-theme button[type="submit"] {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
 }
 
-.leave-button {
-    margin-top: 8px;
-    padding: 10px 20px;
-    background-color: #FF9D23;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    align-self: flex-start;
+body.admin-theme .challenge-form button:hover,
+body.admin-theme .race-form button:hover,
+body.admin-theme .create-challenge-form button:hover,
+body.admin-theme .create-race-form button:hover,
+body.admin-theme button[type="submit"]:hover {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
 }
 
-.leave-button:hover {
-    background-color: #C14600;
-    transform: scale(1.05);
+/* UKLONI SVE NARANDŽASTE OVERRIDE-OVE */
+.challenge-form *,
+.race-form *,
+.create-challenge-form *,
+.create-race-form * {
+  border-color: #bfdbfe !important;
+}
+
+.challenge-form *:focus,
+.race-form *:focus,
+.create-challenge-form *:focus,
+.create-race-form *:focus {
+  border-color: #1d4ed8 !important;
+}
+
+/* Ukloni sve narandžaste boje iz inline stilova */
+*[style*="#FF9D23"] {
+  border-color: #bfdbfe !important;
+}
+
+*[style*="#C14600"] {
+  border-color: #bfdbfe !important;
+}
+
+*[style*="#FF6B35"] {
+  border-color: #bfdbfe !important;
+}
+
+*[style*="orange"] {
+  border-color: #bfdbfe !important;
 }
 
 /* Responsive */
-@media (max-width: 900px) {
-    .challenges-container {
-        flex-direction: column;
-    }
-    .all-challenges, .joined-challenges {
-        width: 100%;
-    }
+@media (max-width: 768px) {
+  .challenge-form-container,
+  .race-form-container,
+  .create-challenge-container,
+  .create-race-container {
+    margin: 20px;
+    padding: 25px;
+  }
+  
+  .challenge-form-container h2,
+  .race-form-container h2,
+  .create-challenge-container h2,
+  .create-race-container h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Poboljšani Challenges.css sa modernim dizajnom */
+.challenges-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 30px 50px 50px 50px;
+  min-height: 100vh;
+  background: #FFF8E1;
+  gap: 30px;
+}
+
+/* Sekcije sa glassmorphism efektom */
+.all-challenges, .joined-challenges {
+  background: rgba(229, 208, 172, 0.9);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(193, 70, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.all-challenges:hover, .joined-challenges:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 6px 20px rgba(193, 70, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.all-challenges {
+  flex: 1;
+  max-width: 65%;
+}
+
+.joined-challenges {
+  flex: 0.6;
+  max-width: 35%;
+}
+
+/* Naslovi */
+.all-challenges h2, .joined-challenges h2 {
+  color: #C14600;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.all-challenges h2::after, .joined-challenges h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #C14600;
+  border-radius: 2px;
+}
+
+/* Grid layout za izazove */
+.challenge-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  padding-bottom: 20px;
+}
+
+/* Modernije kartice */
+.challenge-card {
+  background: #FF9D23;
+  color: white;
+  padding: 25px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 
+    0 8px 25px rgba(255, 157, 35, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.challenge-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  transform: scale(0);
+  transition: transform 0.6s ease;
+}
+
+.challenge-card:hover::before {
+  transform: scale(1);
+}
+
+.challenge-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 15px 40px rgba(255, 157, 35, 0.4),
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.challenge-card h3 {
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.challenge-card p {
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  opacity: 0.9;
+  position: relative;
+  z-index: 2;
+  flex-grow: 1;
+}
+
+/* Poboljšane informacije o izazovu */
+.challenge-details {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-grow: 1;
+}
+
+.challenge-details div {
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.challenge-details strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+/* Status badges */
+.challenge-status {
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.challenge-status span {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Poboljšana dugmad */
+.join-button, .leave-button {
+  background: #C14600;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 
+    0 4px 15px rgba(193, 70, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.join-button::before, .leave-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.5s ease;
+}
+
+.join-button:hover::before, .leave-button:hover::before {
+  left: 100%;
+}
+
+.join-button:hover, .leave-button:hover {
+  background: #FF6B35;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(193, 70, 0, 0.5),
+    0 3px 12px rgba(0, 0, 0, 0.3);
+}
+
+.join-button:active, .leave-button:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 8px rgba(193, 70, 0, 0.3),
+    0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Stanja dugmadi */
+.join-button.disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: 
+    0 2px 8px rgba(108, 117, 125, 0.3),
+    0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.join-button.disabled:hover {
+  background: #6c757d;
+  transform: none;
+}
+
+/* Pridruženi izazovi - poboljšana lista */
+.joined-challenges ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #C14600 transparent;
+}
+
+/* Custom scrollbar za webkit */
+.joined-challenges ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.joined-challenges ul::-webkit-scrollbar-track {
+  background: rgba(193, 70, 0, 0.1);
+  border-radius: 3px;
+}
+
+.joined-challenges ul::-webkit-scrollbar-thumb {
+  background: #C14600;
+  border-radius: 3px;
+}
+
+.joined-challenges ul::-webkit-scrollbar-thumb:hover {
+  background: #FF6B35;
+}
+
+.joined-challenges li {
+  background: #FF9D23;
+  color: white;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 16px;
+  box-shadow: 
+    0 6px 20px rgba(255, 157, 35, 0.25),
+    0 3px 10px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  transform-origin: left center;
+}
+
+/* Hover animacija sa scaling */
+.joined-challenges li:hover {
+  transform: translateX(8px) scale(1.02);
+  box-shadow: 
+    0 10px 30px rgba(255, 157, 35, 0.35),
+    0 5px 15px rgba(0, 0, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Animirani left border */
+.joined-challenges li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  background: #C14600;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.joined-challenges li:hover::before {
+  width: 8px;
+  background: #FF6B35;
+}
+
+/* Challenge header sa ikonama */
+.joined-challenge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.joined-challenge-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  flex: 1;
+  line-height: 1.3;
+}
+
+/* Challenge status badge */
+.joined-challenge-status {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 10px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Challenge details grid */
+.joined-challenge-details {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 12px;
+  margin: 12px 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.85rem;
+}
+
+.joined-challenge-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 2px 0;
+}
+
+.joined-challenge-details-row:last-child {
+  margin-bottom: 0;
+}
+
+.joined-challenge-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.joined-challenge-value {
+  color: white;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Prize highlight */
+.joined-challenge-prize {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin: 8px 0;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.joined-challenge-prize::before {
+  content: '🏆 ';
+  margin-right: 4px;
+}
+
+/* Leave button - redesign */
+.leave-button {
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 3px 10px rgba(220, 53, 69, 0.3),
+    0 1px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.leave-button:hover {
+  background: rgba(220, 53, 69, 1);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 5px 15px rgba(220, 53, 69, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.leave-button:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 5px rgba(220, 53, 69, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* No challenges state */
+.no-joined-challenges {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 2px dashed rgba(193, 70, 0, 0.3);
+  margin: 20px 0;
+}
+
+.no-joined-challenges-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.no-joined-challenges-text {
+  font-style: italic;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.no-joined-challenges-hint {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* Loading a error stanji */
+.challenges-container > div[style*="textAlign: center"] {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Responsivnost */
+@media (max-width: 1200px) {
+  .challenges-container {
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .all-challenges, .joined-challenges {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .challenge-list {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .challenges-container {
+    padding: 20px;
+  }
+  
+  .challenge-list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .challenge-card {
+    padding: 20px;
+    min-height: 280px;
+  }
+  
+  .all-challenges h2, .joined-challenges h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .challenges-container {
+    padding: 15px;
+  }
+  
+  .all-challenges, .joined-challenges {
+    padding: 20px;
+    border-radius: 15px;
+  }
+  
+  .challenge-card {
+    padding: 18px;
+    min-height: 260px;
+  }
+  
+  .join-button, .leave-button {
+    padding: 10px 20px;
+    font-size: 0.8rem;
+  }
 }

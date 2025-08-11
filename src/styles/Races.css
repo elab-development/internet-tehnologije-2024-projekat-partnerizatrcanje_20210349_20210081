@@ -1,3 +1,282 @@
+/* KREIRANJE IZAZOVA/TRKA - POPRAVKA FORME */
+
+/* Glavni kontejner forme */
+.challenge-form-container,
+.race-form-container,
+.create-challenge-container,
+.create-race-container {
+  max-width: 600px;
+  margin: 60px auto 40px;
+  padding: 40px;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(29, 78, 216, 0.1);
+  border: 2px solid #e0f2fe;
+}
+
+/* Admin tema override */
+body.admin-theme .challenge-form-container,
+body.admin-theme .race-form-container,
+body.admin-theme .create-challenge-container,
+body.admin-theme .create-race-container {
+  background: var(--admin-white) !important;
+  border: 2px solid var(--admin-border) !important;
+  box-shadow: 0 8px 32px rgba(29, 78, 216, 0.1) !important;
+}
+
+/* Naslov forme */
+.challenge-form-container h2,
+.race-form-container h2,
+.create-challenge-container h2,
+.create-race-container h2 {
+  color: #1d4ed8;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Admin tema naslov */
+body.admin-theme .challenge-form-container h2,
+body.admin-theme .race-form-container h2,
+body.admin-theme .create-challenge-container h2,
+body.admin-theme .create-race-container h2 {
+  color: var(--admin-primary) !important;
+}
+
+/* Forma */
+.challenge-form,
+.race-form,
+.create-challenge-form,
+.create-race-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Input polja - UKLONI SVE NARANDŽASTE BOJE */
+.challenge-form input,
+.challenge-form textarea,
+.challenge-form select,
+.race-form input,
+.race-form textarea,
+.race-form select,
+.create-challenge-form input,
+.create-challenge-form textarea,
+.create-challenge-form select,
+.create-race-form input,
+.create-race-form textarea,
+.create-race-form select,
+input[placeholder*="izazov"],
+input[placeholder*="Naziv"],
+input[placeholder*="Opis"],
+input[placeholder*="distanc"],
+input[placeholder*="Trajanje"],
+input[placeholder*="Nagrada"],
+textarea[placeholder*="izazov"],
+textarea[placeholder*="Opis"] {
+  width: 100% !important;
+  padding: 15px !important;
+  border: 2px solid #bfdbfe !important;
+  border-radius: 10px !important;
+  font-size: 16px !important;
+  background: #ffffff !important;
+  transition: all 0.3s ease !important;
+  font-family: inherit !important;
+  color: #1f2937 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Focus state - TAMNO PLAVA */
+.challenge-form input:focus,
+.challenge-form textarea:focus,
+.challenge-form select:focus,
+.race-form input:focus,
+.race-form textarea:focus,
+.race-form select:focus,
+.create-challenge-form input:focus,
+.create-challenge-form textarea:focus,
+.create-challenge-form select:focus,
+.create-race-form input:focus,
+.create-race-form textarea:focus,
+.create-race-form select:focus,
+input[placeholder*="izazov"]:focus,
+input[placeholder*="Naziv"]:focus,
+input[placeholder*="Opis"]:focus,
+input[placeholder*="distanc"]:focus,
+input[placeholder*="Trajanje"]:focus,
+input[placeholder*="Nagrada"]:focus,
+textarea[placeholder*="izazov"]:focus,
+textarea[placeholder*="Opis"]:focus {
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
+  background: #f8fafc !important;
+}
+
+/* Admin tema input polja */
+body.admin-theme .challenge-form input,
+body.admin-theme .challenge-form textarea,
+body.admin-theme .challenge-form select,
+body.admin-theme .race-form input,
+body.admin-theme .race-form textarea,
+body.admin-theme .race-form select,
+body.admin-theme input[placeholder*="izazov"],
+body.admin-theme input[placeholder*="Naziv"],
+body.admin-theme input[placeholder*="Opis"],
+body.admin-theme input[placeholder*="distanc"],
+body.admin-theme input[placeholder*="Trajanje"],
+body.admin-theme input[placeholder*="Nagrada"],
+body.admin-theme textarea[placeholder*="izazov"],
+body.admin-theme textarea[placeholder*="Opis"] {
+  border: 2px solid var(--admin-border) !important;
+  background: var(--admin-white) !important;
+}
+
+body.admin-theme .challenge-form input:focus,
+body.admin-theme .challenge-form textarea:focus,
+body.admin-theme .challenge-form select:focus,
+body.admin-theme .race-form input:focus,
+body.admin-theme .race-form textarea:focus,
+body.admin-theme .race-form select:focus,
+body.admin-theme input[placeholder*="izazov"]:focus,
+body.admin-theme input[placeholder*="Naziv"]:focus,
+body.admin-theme input[placeholder*="Opis"]:focus,
+body.admin-theme input[placeholder*="distanc"]:focus,
+body.admin-theme input[placeholder*="Trajanje"]:focus,
+body.admin-theme input[placeholder*="Nagrada"]:focus,
+body.admin-theme textarea[placeholder*="izazov"]:focus,
+body.admin-theme textarea[placeholder*="Opis"]:focus {
+  border-color: var(--admin-primary) !important;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
+}
+
+/* Textarea specifično */
+.challenge-form textarea,
+.race-form textarea,
+.create-challenge-form textarea,
+.create-race-form textarea,
+textarea[placeholder*="izazov"],
+textarea[placeholder*="Opis"] {
+  min-height: 100px !important;
+  resize: vertical !important;
+}
+
+/* Date input */
+input[type="date"] {
+  padding: 15px !important;
+  border: 2px solid #bfdbfe !important;
+  border-radius: 10px !important;
+  font-size: 16px !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+input[type="date"]:focus {
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
+}
+
+/* Submit dugme */
+.challenge-form button,
+.race-form button,
+.create-challenge-form button,
+.create-race-form button,
+button[type="submit"] {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 15px 30px !important;
+  border-radius: 10px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3) !important;
+  margin-top: 20px !important;
+}
+
+.challenge-form button:hover,
+.race-form button:hover,
+.create-challenge-form button:hover,
+.create-race-form button:hover,
+button[type="submit"]:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(29, 78, 216, 0.4) !important;
+}
+
+/* Admin tema dugme */
+body.admin-theme .challenge-form button,
+body.admin-theme .race-form button,
+body.admin-theme .create-challenge-form button,
+body.admin-theme .create-race-form button,
+body.admin-theme button[type="submit"] {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
+}
+
+body.admin-theme .challenge-form button:hover,
+body.admin-theme .race-form button:hover,
+body.admin-theme .create-challenge-form button:hover,
+body.admin-theme .create-race-form button:hover,
+body.admin-theme button[type="submit"]:hover {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
+}
+
+/* UKLONI SVE NARANDŽASTE OVERRIDE-OVE */
+.challenge-form *,
+.race-form *,
+.create-challenge-form *,
+.create-race-form * {
+  border-color: #bfdbfe !important;
+}
+
+.challenge-form *:focus,
+.race-form *:focus,
+.create-challenge-form *:focus,
+.create-race-form *:focus {
+  border-color: #1d4ed8 !important;
+}
+
+/* Ukloni sve narandžaste boje iz inline stilova */
+*[style*="#FF9D23"] {
+  border-color: #bfdbfe !important;
+}
+
+*[style*="#C14600"] {
+  border-color: #bfdbfe !important;
+}
+
+*[style*="#FF6B35"] {
+  border-color: #bfdbfe !important;
+}
+
+*[style*="orange"] {
+  border-color: #bfdbfe !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .challenge-form-container,
+  .race-form-container,
+  .create-challenge-container,
+  .create-race-container {
+    margin: 20px;
+    padding: 25px;
+  }
+  
+  .challenge-form-container h2,
+  .race-form-container h2,
+  .create-challenge-container h2,
+  .create-race-container h2 {
+    font-size: 1.5rem;
+  }
+}
+
 /* Poboljšani Races.css sa modernim dizajnom */
 .races-container {
   display: flex;

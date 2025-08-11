@@ -107,9 +107,24 @@ const Races = () => {
       const responseData = await response.json();
 
       if (response.ok) {
-        // Ukloni trku iz pridruženih trka
-        const updatedRaces = joinedRaces.filter(r => r.id !== raceId);
-        setJoinedRaces(updatedRaces);
+        // Osvežи sve trke
+        const updatedResponse = await fetch('http://localhost:8000/api/races', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        });
+
+        if (updatedResponse.ok) {
+          const updatedRacesData = await updatedResponse.json();
+          setAllRaces(updatedRacesData);
+          
+          // Ažuriraj pridružene trke
+          const userJoinedRaces = updatedRacesData.filter(race => race.is_user_joined);
+          setJoinedRaces(userJoinedRaces);
+        }
+
         alert('Uspešno ste napustili trku.');
       } else {
         alert(responseData.message || 'Greška pri napuštanju trke.');
@@ -156,17 +171,42 @@ const Races = () => {
     }
   };
 
-  // Proveri da li je vreme za prijavu isteklo
-  const isRegistrationExpired = (raceDate, endTime) => {
-    if (!raceDate || !endTime) return false;
-    
-    try {
-      const now = new Date();
-      const raceEndDateTime = new Date(`${raceDate}T${endTime}`);
-      return now > raceEndDateTime;
-    } catch (error) {
-      return false;
+  // POBOLJŠANA LOGIKA ZA STATUS TRKE
+  const getRaceStatus = (race) => {
+    if (!race.race_date) {
+      return { status: 'NEDEFINIRANO', color: '#6c757d', icon: '❓' };
     }
+
+    const now = new Date();
+    const raceDate = new Date(race.race_date);
+
+    // Proveri da li je backend poslao is_registration_expired
+    if (race.hasOwnProperty('is_registration_expired')) {
+      if (race.is_registration_expired) {
+        return { status: 'VREME ZA PRIJAVU ISTEKLO', color: '#dc3545', icon: '⏰' };
+      } else {
+        return { status: 'OTVORENO ZA PRIJAVE', color: '#28a745', icon: '✅' };
+      }
+    }
+
+    // Fallback logika ako backend ne šalje is_registration_expired
+    if (now > raceDate) {
+      return { status: 'ZAVRŠENA', color: '#dc3545', icon: '🏁' };
+    } else {
+      return { status: 'OTVORENO ZA PRIJAVE', color: '#28a745', icon: '✅' };
+    }
+  };
+
+  // Proveri da li je vreme za prijavu isteklo - koristi backend podatke ili fallback
+  const isRegistrationExpired = (race) => {
+    if (race.hasOwnProperty('is_registration_expired')) {
+      return race.is_registration_expired;
+    }
+    
+    // Fallback logika
+    const now = new Date();
+    const raceDate = new Date(race.race_date);
+    return now > raceDate;
   };
 
   // Check if race is already joined - koristi backend podatke
@@ -207,54 +247,56 @@ const Races = () => {
           </div>
         ) : (
           <div className="race-list">
-            {allRaces.map((race) => (
-              <div className="race-card" key={race.id}>
-                <h3>{race.name}</h3>
-                <p>{race.description}</p>
-                
-                {/* Informacije o trci */}
-                <div className="race-details" style={{ fontSize: '0.9em', color: '#666', margin: '10px 0' }}>
-                  <div><strong>Datum trke:</strong> {formatDate(race.race_date)}</div>
-                  <div><strong>Vreme prijave:</strong> {formatTime(race.start_time)} - {formatTime(race.end_time)}</div>
-                  <div><strong>Distanca:</strong> {race.distance} km</div>
-                  <div><strong>Učesnici:</strong> {race.participants_count || 0}/{race.max_participants || 'N/A'}</div>
-                  {race.prize && (
-                    <div><strong>Nagrada:</strong> {race.prize}</div>
-                  )}
-                </div>
+            {allRaces.map((race) => {
+              const statusInfo = getRaceStatus(race);
+              
+              return (
+                <div className="race-card" key={race.id}>
+                  <h3>{race.name}</h3>
+                  <p>{race.description}</p>
+                  
+                  {/* Informacije o trci */}
+                  <div className="race-details" style={{ fontSize: '0.9em', color: '#666', margin: '10px 0' }}>
+                    <div><strong>Datum trke:</strong> {formatDate(race.race_date)}</div>
+                    <div><strong>Vreme prijave:</strong> {formatTime(race.start_time)} - {formatTime(race.end_time)}</div>
+                    <div><strong>Distanca:</strong> {race.distance} km</div>
+                    <div><strong>Učesnici:</strong> {race.participants_count || 0}/{race.max_participants || 'N/A'}</div>
+                    {race.prize && (
+                      <div><strong>Nagrada:</strong> {race.prize}</div>
+                    )}
+                  </div>
 
-                {/* Status prijave */}
-                <div className="race-status" style={{ fontSize: '0.85em', marginBottom: '10px' }}>
-                  {isRegistrationExpired(race.race_date, race.end_time) ? (
-                    <span style={{ color: '#dc3545', fontWeight: 'bold' }}>⏰ VREME ZA PRIJAVU ISTEKLO</span>
+                  {/* POBOLJŠAN STATUS PRIJAVE */}
+                  <div className="race-status" style={{ fontSize: '0.85em', marginBottom: '10px' }}>
+                    <span style={{ color: statusInfo.color, fontWeight: 'bold' }}>
+                      {statusInfo.icon} {statusInfo.status}
+                    </span>
+                  </div>
+
+                  {/* POBOLJŠANA LOGIKA ZA DUGMAD */}
+                  {isRaceJoined(race) ? (
+                    <button className="join-button joined" disabled>
+                      Pridružen
+                    </button>
+                  ) : isRegistrationExpired(race) ? (
+                    <button className="join-button" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                      Vreme isteklo
+                    </button>
+                  ) : race.participants_count >= race.max_participants ? (
+                    <button className="join-button" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                      Popunjena
+                    </button>
                   ) : (
-                    <span style={{ color: '#28a745', fontWeight: 'bold' }}>✅ OTVORENO ZA PRIJAVE</span>
+                    <button
+                      onClick={() => handleJoinRace(race.id)}
+                      className="join-button"
+                    >
+                      Pridruži se
+                    </button>
                   )}
                 </div>
-
-                {/* Dugmad */}
-                {isRaceJoined(race) ? (
-                  <button className="join-button joined" disabled>
-                    Pridružen
-                  </button>
-                ) : isRegistrationExpired(race.race_date, race.end_time) ? (
-                  <button className="join-button" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
-                    Vreme isteklo
-                  </button>
-                ) : race.participants_count >= race.max_participants ? (
-                  <button className="join-button" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
-                    Popunjena
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleJoinRace(race.id)}
-                    className="join-button"
-                  >
-                    Pridruži se
-                  </button>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -274,55 +316,59 @@ const Races = () => {
           </div>
         ) : (
           <ul>
-            {joinedRaces.map((race) => (
-              <li key={race.id}>
-                <div className="joined-race-header">
-                  <div className="joined-race-title">{race.name}</div>
-                  <div className="joined-race-status">
-                    {isRegistrationExpired(race.race_date, race.end_time) ? 'ISTEKLO' : 'AKTIVNO'}
+            {joinedRaces.map((race) => {
+              const statusInfo = getRaceStatus(race);
+              
+              return (
+                <li key={race.id}>
+                  <div className="joined-race-header">
+                    <div className="joined-race-title">{race.name}</div>
+                    <div className="joined-race-status">
+                      {statusInfo.status}
+                    </div>
                   </div>
-                </div>
-                
-                <div className="joined-race-details">
-                  <div className="joined-race-details-row">
-                    <span className="joined-race-label">Datum trke:</span>
-                    <span className="joined-race-value">{formatDate(race.race_date)}</span>
+                  
+                  <div className="joined-race-details">
+                    <div className="joined-race-details-row">
+                      <span className="joined-race-label">Datum trke:</span>
+                      <span className="joined-race-value">{formatDate(race.race_date)}</span>
+                    </div>
+                    <div className="joined-race-details-row">
+                      <span className="joined-race-label">Distanca:</span>
+                      <span className="joined-race-value">{race.distance} km</span>
+                    </div>
+                    <div className="joined-race-details-row">
+                      <span className="joined-race-label">Vreme prijave:</span>
+                      <span className="joined-race-value">{formatTime(race.start_time)} - {formatTime(race.end_time)}</span>
+                    </div>
+                    <div className="joined-race-details-row">
+                      <span className="joined-race-label">Učesnici:</span>
+                      <span className="joined-race-value">{race.participants_count}/{race.max_participants}</span>
+                    </div>
                   </div>
-                  <div className="joined-race-details-row">
-                    <span className="joined-race-label">Distanca:</span>
-                    <span className="joined-race-value">{race.distance} km</span>
-                  </div>
-                  <div className="joined-race-details-row">
-                    <span className="joined-race-label">Vreme prijave:</span>
-                    <span className="joined-race-value">{formatTime(race.start_time)} - {formatTime(race.end_time)}</span>
-                  </div>
-                  <div className="joined-race-details-row">
-                    <span className="joined-race-label">Učesnici:</span>
-                    <span className="joined-race-value">{race.participants_count}/{race.max_participants}</span>
-                  </div>
-                </div>
-                
-                {race.prize && (
-                  <div className="joined-race-prize">
-                    Nagrada: {race.prize}
-                  </div>
-                )}
-                
-                {/* Status za pridružene trke */}
-                {isRegistrationExpired(race.race_date, race.end_time) && (
-                  <div className="joined-race-expired">
-                    Vreme za prijavu isteklo
-                  </div>
-                )}
-                
-                <button
-                  onClick={() => handleLeaveRace(race.id)}
-                  className="leave-button"
-                >
-                  Napusti trku
-                </button>
-              </li>
-            ))}
+                  
+                  {race.prize && (
+                    <div className="joined-race-prize">
+                      Nagrada: {race.prize}
+                    </div>
+                  )}
+                  
+                  {/* Status za pridružene trke */}
+                  {isRegistrationExpired(race) && (
+                    <div className="joined-race-expired">
+                      Vreme za prijavu isteklo
+                    </div>
+                  )}
+                  
+                  <button
+                    onClick={() => handleLeaveRace(race.id)}
+                    className="leave-button"
+                  >
+                    Napusti trku
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
