@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Challenge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ChallengeController extends Controller
 {
-    // Prikaz svih izazova
-     public function index()
+    // Prikaz svih izazova sa ispravnom logikom za status
+    public function index()
     {
         try {
             $currentUser = Auth::user(); // Trenutno ulogovani korisnik
@@ -22,6 +23,26 @@ class ChallengeController extends Controller
                     $isUserJoined = $currentUser ? 
                         $challenge->participants->contains('id', $currentUser->id) : false;
                     
+                    // ISPRAVKA - tri različita statusa na osnovu datuma
+                    $now = \Carbon\Carbon::now();
+                    $startDate = \Carbon\Carbon::parse($challenge->start_date);
+                    $endDate = \Carbon\Carbon::parse($challenge->end_date);
+                    
+                    // Određuj status na osnovu datuma
+                    if ($now->lt($startDate)) {
+                        // Izazov još nije počeo - USKORO
+                        $isActive = true; // Frontend će prikazati kao USKORO
+                        $status = 'upcoming';
+                    } elseif ($now->gte($startDate) && $now->lte($endDate)) {
+                        // Izazov je u toku - AKTIVAN
+                        $isActive = true;
+                        $status = 'active';
+                    } else {
+                        // Izazov je završen - ZAVRŠEN
+                        $isActive = false;
+                        $status = 'finished';
+                    }
+                    
                     return [
                         'id' => $challenge->id,
                         'name' => $challenge->name,
@@ -32,16 +53,22 @@ class ChallengeController extends Controller
                         'end_date' => $challenge->end_date,
                         'prize' => $challenge->prize,
                         'creator' => $challenge->creator,
-                        'participants' => $challenge->participants, // Dodano za frontend
+                        'participants' => $challenge->participants,
                         'participants_count' => $challenge->participants->count(),
-                        'is_active' => $challenge->isActive(),
-                        'is_user_joined' => $isUserJoined, // NOVO - da li je user pridružen
+                        'is_active' => $isActive, 
+                        'status' => $status, // upcoming|active|finished
+                        'is_user_joined' => $isUserJoined,
                         'created_at' => $challenge->created_at,
                     ];
                 });
 
             return response()->json($challenges, 200);
         } catch (\Exception $e) {
+            Log::error('Failed to fetch challenges', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return response()->json([
                 'error' => 'Failed to fetch challenges',
                 'message' => $e->getMessage()
@@ -53,15 +80,46 @@ class ChallengeController extends Controller
     public function show($id)
     {
         try {
-            $challenge = Challenge::with(['creator:id,name,surname', 'participants:id,name,surname'])
+            $challenge = Challenge::with(['creator:id,name,surname', 'participants:id,name,surname,email'])
                 ->find($id);
 
             if (!$challenge) {
                 return response()->json(['message' => 'Izazov nije pronađen'], 404);
             }
 
-            return response()->json($challenge, 200);
+            $currentUser = Auth::user();
+            $isUserJoined = $currentUser ? 
+                $challenge->participants->contains('id', $currentUser->id) : false;
+
+            // Dodaj status informacije
+            $now = \Carbon\Carbon::now();
+            $startDate = \Carbon\Carbon::parse($challenge->start_date);
+            $endDate = \Carbon\Carbon::parse($challenge->end_date);
+            
+            if ($now->lt($startDate)) {
+                $status = 'upcoming';
+                $canJoin = true;
+            } elseif ($now->gte($startDate) && $now->lte($endDate)) {
+                $status = 'active';
+                $canJoin = true;
+            } else {
+                $status = 'finished';
+                $canJoin = false;
+            }
+
+            $challengeData = $challenge->toArray();
+            $challengeData['status'] = $status;
+            $challengeData['can_join'] = $canJoin;
+            $challengeData['is_user_joined'] = $isUserJoined;
+            $challengeData['participants_count'] = $challenge->participants->count();
+
+            return response()->json($challengeData, 200);
         } catch (\Exception $e) {
+            Log::error('Failed to fetch challenge', [
+                'challenge_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
             return response()->json([
                 'error' => 'Failed to fetch challenge',
                 'message' => $e->getMessage()
@@ -104,15 +162,32 @@ class ChallengeController extends Controller
 
             $challenge->load('creator:id,name,surname');
 
+            Log::info('Challenge created successfully', [
+                'challenge_id' => $challenge->id,
+                'name' => $challenge->name,
+                'created_by' => Auth::id()
+            ]);
+
             return response()->json([
                 'message' => 'Izazov je uspešno kreiran.',
                 'challenge' => $challenge,
             ], 201);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
+            Log::error('Failed to create challenge', [
+                'error' => $e->getMessage(),
+                'request_data' => $request->all(),
+                'user_id' => Auth::id()
+            ]);
+            
             return response()->json([
                 'error' => 'Failed to create challenge',
-                'message' => $e->getMessage()
+                'message' => 'Došlo je do greške prilikom kreiranja izazova.'
             ], 500);
         }
     }
@@ -154,15 +229,32 @@ class ChallengeController extends Controller
             $challenge->update($validated);
             $challenge->load('creator:id,name,surname');
 
+            Log::info('Challenge updated successfully', [
+                'challenge_id' => $challenge->id,
+                'updated_by' => Auth::id(),
+                'changes' => $validated
+            ]);
+
             return response()->json([
                 'message' => 'Izazov je uspešno ažuriran.',
                 'challenge' => $challenge,
             ], 200);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
+            Log::error('Failed to update challenge', [
+                'challenge_id' => $id,
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id()
+            ]);
+            
             return response()->json([
                 'error' => 'Failed to update challenge',
-                'message' => $e->getMessage()
+                'message' => 'Došlo je do greške prilikom ažuriranja izazova.'
             ], 500);
         }
     }
@@ -182,18 +274,34 @@ class ChallengeController extends Controller
                 return response()->json(['message' => 'Nemate dozvolu za brisanje ovog izazova.'], 403);
             }
 
+            $challengeName = $challenge->name;
+            $participantsCount = $challenge->participants->count();
+
             // Obriši sve veze sa učesnicima
             $challenge->participants()->detach();
             
             // Obriši izazov
             $challenge->delete();
 
+            Log::info('Challenge deleted successfully', [
+                'challenge_id' => $id,
+                'challenge_name' => $challengeName,
+                'participants_count' => $participantsCount,
+                'deleted_by' => Auth::id()
+            ]);
+
             return response()->json(['message' => 'Izazov je uspešno obrisan.'], 200);
 
         } catch (\Exception $e) {
+            Log::error('Failed to delete challenge', [
+                'challenge_id' => $id,
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id()
+            ]);
+            
             return response()->json([
                 'error' => 'Failed to delete challenge',
-                'message' => $e->getMessage()
+                'message' => 'Došlo je do greške prilikom brisanja izazova.'
             ], 500);
         }
     }
@@ -210,9 +318,18 @@ class ChallengeController extends Controller
 
             $user = Auth::user();
 
-            // Proveri da li je izazov aktivan
-            if (!$challenge->isActive()) {
-                return response()->json(['message' => 'Izazov nije trenutno aktivan.'], 400);
+            // Proveri status izazova
+            $now = \Carbon\Carbon::now();
+            $startDate = \Carbon\Carbon::parse($challenge->start_date);
+            $endDate = \Carbon\Carbon::parse($challenge->end_date);
+
+            // Proveri da li je izazov dostupan za pridruživanje
+            if ($now->lt($startDate)) {
+                return response()->json(['message' => 'Izazov još nije počeo. Možete se pridružiti kada počne.'], 400);
+            }
+            
+            if ($now->gt($endDate)) {
+                return response()->json(['message' => 'Izazov je završen i više nije moguće pridruživanje.'], 400);
             }
 
             // Proveri da li je korisnik već pridružen
@@ -223,18 +340,33 @@ class ChallengeController extends Controller
             // Pridruži korisnika
             $challenge->participants()->attach($user->id, [
                 'distance_completed' => 0,
-                'completed_at' => null
+                'completed_at' => null,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            Log::info('User joined challenge successfully', [
+                'challenge_id' => $challenge->id,
+                'challenge_name' => $challenge->name,
+                'user_id' => $user->id,
+                'user_email' => $user->email
             ]);
 
             return response()->json([
                 'message' => 'Uspešno ste se pridružili izazovu!',
-                'challenge' => $challenge->load('participants')
+                'challenge' => $challenge->load('participants:id,name,surname,email')
             ], 200);
 
         } catch (\Exception $e) {
+            Log::error('Failed to join challenge', [
+                'challenge_id' => $id,
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+            
             return response()->json([
                 'error' => 'Failed to join challenge',
-                'message' => $e->getMessage()
+                'message' => 'Došlo je do greške prilikom pridruživanja izazovu.'
             ], 500);
         }
     }
@@ -259,14 +391,27 @@ class ChallengeController extends Controller
             // Ukloni korisnika
             $challenge->participants()->detach($user->id);
 
+            Log::info('User left challenge successfully', [
+                'challenge_id' => $challenge->id,
+                'challenge_name' => $challenge->name,
+                'user_id' => $user->id,
+                'user_email' => $user->email
+            ]);
+
             return response()->json([
                 'message' => 'Uspešno ste napustili izazov.',
             ], 200);
 
         } catch (\Exception $e) {
+            Log::error('Failed to leave challenge', [
+                'challenge_id' => $id,
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+            
             return response()->json([
                 'error' => 'Failed to leave challenge',
-                'message' => $e->getMessage()
+                'message' => 'Došlo je do greške prilikom napuštanja izazova.'
             ], 500);
         }
     }
@@ -290,24 +435,145 @@ class ChallengeController extends Controller
             }
 
             $validated = $request->validate([
-                'distance_completed' => 'required|numeric|min:0',
+                'distance_completed' => 'required|numeric|min:0|max:' . ($challenge->target_distance * 2), // Maksimalno duplo od ciljne distance
             ]);
+
+            $distanceCompleted = $validated['distance_completed'];
+            $isCompleted = $distanceCompleted >= $challenge->target_distance;
 
             // Ažuriraj progres
             $challenge->participants()->updateExistingPivot($user->id, [
-                'distance_completed' => $validated['distance_completed'],
-                'completed_at' => $validated['distance_completed'] >= $challenge->target_distance ? now() : null
+                'distance_completed' => $distanceCompleted,
+                'completed_at' => $isCompleted ? now() : null,
+                'updated_at' => now()
+            ]);
+
+            Log::info('Challenge progress updated', [
+                'challenge_id' => $challenge->id,
+                'user_id' => $user->id,
+                'distance_completed' => $distanceCompleted,
+                'target_distance' => $challenge->target_distance,
+                'is_completed' => $isCompleted
             ]);
 
             return response()->json([
                 'message' => 'Progres je uspešno ažuriran.',
-                'completed' => $validated['distance_completed'] >= $challenge->target_distance
+                'distance_completed' => $distanceCompleted,
+                'target_distance' => $challenge->target_distance,
+                'progress_percentage' => round(($distanceCompleted / $challenge->target_distance) * 100, 2),
+                'completed' => $isCompleted
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Failed to update challenge progress', [
+                'challenge_id' => $id,
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'error' => 'Failed to update progress',
+                'message' => 'Došlo je do greške prilikom ažuriranja progresa.'
+            ], 500);
+        }
+    }
+
+    // NOVA METODA: Dohvatanje svih učesnika izazova
+    public function getParticipants($id)
+    {
+        try {
+            $challenge = Challenge::with(['participants:id,name,surname,email'])->find($id);
+
+            if (!$challenge) {
+                return response()->json(['message' => 'Izazov nije pronađen'], 404);
+            }
+
+            $participants = $challenge->participants->map(function ($participant) {
+                return [
+                    'id' => $participant->id,
+                    'name' => $participant->name,
+                    'surname' => $participant->surname,
+                    'email' => $participant->email,
+                    'distance_completed' => $participant->pivot->distance_completed ?? 0,
+                    'completed_at' => $participant->pivot->completed_at,
+                    'joined_at' => $participant->pivot->created_at
+                ];
+            });
+
+            return response()->json([
+                'challenge' => [
+                    'id' => $challenge->id,
+                    'name' => $challenge->name,
+                    'target_distance' => $challenge->target_distance
+                ],
+                'participants' => $participants,
+                'total_participants' => $participants->count()
             ], 200);
 
         } catch (\Exception $e) {
+            Log::error('Failed to fetch challenge participants', [
+                'challenge_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
             return response()->json([
-                'error' => 'Failed to update progress',
-                'message' => $e->getMessage()
+                'error' => 'Failed to fetch participants',
+                'message' => 'Došlo je do greške prilikom dohvatanja učesnika.'
+            ], 500);
+        }
+    }
+
+    // NOVA METODA: Dohvatanje leaderboard-a za izazov
+    public function getLeaderboard($id)
+    {
+        try {
+            $challenge = Challenge::with(['participants:id,name,surname'])->find($id);
+
+            if (!$challenge) {
+                return response()->json(['message' => 'Izazov nije pronađen'], 404);
+            }
+
+            $leaderboard = $challenge->participants
+                ->sortByDesc('pivot.distance_completed')
+                ->take(10) // Top 10
+                ->values()
+                ->map(function ($participant, $index) use ($challenge) {
+                    return [
+                        'rank' => $index + 1,
+                        'id' => $participant->id,
+                        'name' => $participant->name . ' ' . $participant->surname,
+                        'distance_completed' => $participant->pivot->distance_completed ?? 0,
+                        'progress_percentage' => $challenge->target_distance > 0 
+                            ? round(($participant->pivot->distance_completed / $challenge->target_distance) * 100, 2)
+                            : 0,
+                        'completed_at' => $participant->pivot->completed_at,
+                        'is_completed' => ($participant->pivot->distance_completed ?? 0) >= $challenge->target_distance
+                    ];
+                });
+
+            return response()->json([
+                'challenge' => [
+                    'id' => $challenge->id,
+                    'name' => $challenge->name,
+                    'target_distance' => $challenge->target_distance
+                ],
+                'leaderboard' => $leaderboard
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch challenge leaderboard', [
+                'challenge_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'error' => 'Failed to fetch leaderboard',
+                'message' => 'Došlo je do greške prilikom dohvatanja leaderboard-a.'
             ], 500);
         }
     }
