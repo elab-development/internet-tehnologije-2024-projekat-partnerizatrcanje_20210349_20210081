@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Post from "./Post";
+import useApi from "../hooks/useApi"; // Import custom hook
 import "../styles/Feed.css";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [pagination, setPagination] = useState({
     current_page: 1,
     last_page: 1,
@@ -21,11 +20,21 @@ const Feed = () => {
   const userRole = user.role || 'guest';
   const isGuest = userRole === 'guest';
 
-  // Funkcija za dohvatanje postova sa servera
+  // Custom hook za glavni feed API poziv
+  const { 
+    data: feedData, 
+    loading, 
+    error: apiError, 
+    fetchData 
+  } = useApi(); // Ne prosleđujemo URL jer ćemo koristiti fetchData manualno
+
+  const [error, setError] = useState("");
+
+  // Funkcija za dohvatanje postova sa servera koristeći custom hook
   const fetchPosts = async (page = 1, append = false) => {
     try {
       if (!append) {
-        setLoading(true);
+        // Početno učitavanje se već handluje preko loading state-a iz hook-a
       } else {
         setLoadingMore(true);
       }
@@ -45,66 +54,57 @@ const Feed = () => {
       
       console.log("Making API call with headers:", headers, "isGuest:", isGuest); // Debug
       
-      const response = await fetch(`http://localhost:8000/api/feed?page=${page}`, {
-        method: "GET",
-        headers: headers
-      });
-
-      console.log("Response status:", response.status); // Debug
-
-      if (!response.ok) {
-        if (response.status === 401 && !isGuest) {
-          // Samo za autentifikovane korisnike - preusmeri na login
-          localStorage.removeItem("auth_token");
-          localStorage.removeItem("user");
-          window.location.href = "/login";
-          return;
+      // Koristi fetchData iz custom hook-a
+      const data = await fetchData(
+        `http://localhost:8000/api/feed?page=${page}`,
+        {
+          method: "GET",
+          headers: headers
         }
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      );
 
-      const data = await response.json();
-      console.log("Feed data:", data); // Debug
-      console.log("Pagination info:", {
-        current_page: data.current_page,
-        last_page: data.last_page,
-        total: data.total,
-        from: data.from,
-        to: data.to
-      }); // Debug pagination
-
-      // Laravel pagination struktura
-      if (data.data) {
-        console.log("Posts data:", data.data); // Debug posts
-        console.log("First post ID:", data.data[0]?.id, "Last post ID:", data.data[data.data.length - 1]?.id); // Debug IDs
-        
-        // Dodaj postove na postojeće ili zameni
-        if (append) {
-          setPosts(prevPosts => [...prevPosts, ...data.data]);
-        } else {
-          setPosts(data.data);
-        }
-        
-        // Ažuriraj pagination info
-        setPagination({
+      if (data) {
+        console.log("Feed data:", data); // Debug
+        console.log("Pagination info:", {
           current_page: data.current_page,
           last_page: data.last_page,
-          per_page: data.per_page || 15,
           total: data.total,
           from: data.from,
           to: data.to
-        });
-      } else {
-        // Fallback ako nema pagination wrapper-a
-        setPosts(append ? prevPosts => [...prevPosts, ...data] : data);
-      }
+        }); // Debug pagination
 
-      setError("");
+        // Laravel pagination struktura
+        if (data.data) {
+          console.log("Posts data:", data.data); // Debug posts
+          console.log("First post ID:", data.data[0]?.id, "Last post ID:", data.data[data.data.length - 1]?.id); // Debug IDs
+          
+          // Dodaj postove na postojeće ili zameni
+          if (append) {
+            setPosts(prevPosts => [...prevPosts, ...data.data]);
+          } else {
+            setPosts(data.data);
+          }
+          
+          // Ažuriraj pagination info
+          setPagination({
+            current_page: data.current_page,
+            last_page: data.last_page,
+            per_page: data.per_page || 15,
+            total: data.total,
+            from: data.from,
+            to: data.to
+          });
+        } else {
+          // Fallback ako nema pagination wrapper-a
+          setPosts(append ? prevPosts => [...prevPosts, ...data] : data);
+        }
+
+        setError("");
+      }
     } catch (error) {
       console.error("Greška pri dohvatanju postova:", error);
       setError("Greška pri učitavanju postova. Molimo pokušajte ponovo.");
     } finally {
-      setLoading(false);
       setLoadingMore(false);
     }
   };
@@ -113,6 +113,13 @@ const Feed = () => {
   useEffect(() => {
     fetchPosts(1);
   }, []);
+
+  // Handle API error from custom hook
+  useEffect(() => {
+    if (apiError) {
+      setError("Greška pri učitavanju postova. Molimo pokušajte ponovo.");
+    }
+  }, [apiError]);
 
   // Funkcija za učitavanje više postova (Load More)
   const loadMorePosts = () => {
@@ -140,6 +147,12 @@ const Feed = () => {
     fetchPosts(1, false);
   };
 
+  // Custom hook za dodavanje komentara
+  const { 
+    post: addCommentRequest, 
+    loading: commentLoading 
+  } = useApi();
+
   // Funkcija za dodavanje komentara u određeni post (samo registrovani korisnici)
   const addComment = async (postId, commentContent) => {
     // Guest korisnici ne mogu dodavati komentare
@@ -149,24 +162,12 @@ const Feed = () => {
     }
 
     try {
-      const token = localStorage.getItem("auth_token");
-      
-      const response = await fetch("http://localhost:8000/api/comments", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          post_id: postId,
-          content: commentContent
-        })
+      const newComment = await addCommentRequest({
+        post_id: postId,
+        content: commentContent
       });
 
-      if (response.ok) {
-        const newComment = await response.json();
-        
+      if (newComment) {
         // Ažuriraj postove sa novim komentarom
         setPosts(prevPosts => 
           prevPosts.map(post => {
@@ -179,33 +180,37 @@ const Feed = () => {
             return post;
           })
         );
-      } else {
-        console.error("Greška pri dodavanju komentara");
-        alert("Greška pri dodavanju komentara");
       }
     } catch (error) {
-      console.error("Greška:", error);
+      console.error("Greška pri dodavanju komentara:", error);
       alert("Greška pri dodavanju komentara");
     }
   };
+
+  // Custom hook za pridruživanje planu
+  const { 
+    post: joinPlanRequest, 
+    loading: joinLoading 
+  } = useApi();
 
   // Funkcija za pridruživanje planu trčanja
   const joinPlan = async (postId) => {
     try {
       const token = localStorage.getItem("auth_token");
       
-      const response = await fetch(`http://localhost:8000/api/posts/${postId}/join`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "Accept": "application/json"
+      const data = await fetchData(
+        `http://localhost:8000/api/posts/${postId}/join`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }
         }
-      });
+      );
 
-      if (response.ok) {
-        const data = await response.json();
-        
+      if (data) {
         // Ažuriraj post sa novim brojem učesnika
         setPosts(prevPosts => 
           prevPosts.map(post => {
@@ -221,9 +226,6 @@ const Feed = () => {
         );
         
         alert("Uspešno ste se pridružili planu!");
-      } else {
-        const errorData = await response.json();
-        alert("Greška: " + (errorData.message || "Ne možete se pridružiti planu"));
       }
     } catch (error) {
       console.error("Greška pri pridruživanju planu:", error);
