@@ -71,7 +71,6 @@ class RaceController extends Controller
             ], 500);
         }
     }
-
     // Kreiranje trke (samo admin)
     public function store(Request $request)
     {
@@ -123,97 +122,6 @@ class RaceController extends Controller
             ], 500);
         }
     }
-
-    // Ažuriranje trke (samo admin organizator)
-    public function update(Request $request, $id)
-    {
-        try {
-            $race = Race::find($id);
-
-            if (!$race) {
-                return response()->json(['message' => 'Trka nije pronađena'], 404);
-            }
-
-            // Proveri da li je korisnik admin i organizator trke
-            if (Auth::user()->role !== 'admin' || $race->organizer_id !== Auth::id()) {
-                return response()->json(['message' => 'Nemate dozvolu za ažuriranje ove trke.'], 403);
-            }
-
-            $validated = $request->validate([
-                'name' => 'sometimes|string|max:255',
-                'description' => 'sometimes|string',
-                'race_date' => 'sometimes|date',
-                'start_time' => 'sometimes|date_format:H:i',
-                'end_time' => 'sometimes|date_format:H:i',
-                'distance' => 'sometimes|numeric|min:0.1',
-                'max_participants' => 'sometimes|integer|min:1',
-                'prize' => 'sometimes|nullable|string|max:255',
-            ]);
-
-            // Ažuriraj vremena ako su prosleđena
-            if (isset($validated['race_date']) || isset($validated['start_time']) || isset($validated['end_time'])) {
-                $raceDate = isset($validated['race_date']) 
-                    ? \Carbon\Carbon::parse($validated['race_date'])
-                    : $race->race_date;
-
-                if (isset($validated['start_time'])) {
-                    $validated['start_time'] = $raceDate->copy()->setTimeFromTimeString($validated['start_time']);
-                }
-
-                if (isset($validated['end_time'])) {
-                    $validated['end_time'] = $raceDate->copy()->setTimeFromTimeString($validated['end_time']);
-                }
-
-                $validated['race_date'] = $raceDate;
-            }
-
-            $race->update($validated);
-            $race->load('organizer:id,name,surname');
-
-            return response()->json([
-                'message' => 'Trka je uspešno ažurirana.',
-                'race' => $race,
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Failed to update race',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    // Brisanje trke (samo admin organizator)
-    public function destroy($id)
-    {
-        try {
-            $race = Race::find($id);
-
-            if (!$race) {
-                return response()->json(['message' => 'Trka nije pronađena'], 404);
-            }
-
-            // Proveri da li je korisnik admin i organizator trke
-            if (Auth::user()->role !== 'admin' || $race->organizer_id !== Auth::id()) {
-                return response()->json(['message' => 'Nemate dozvolu za brisanje ove trke.'], 403);
-            }
-
-            // Obriši sve veze sa učesnicima
-            $race->participants()->detach();
-            
-            // Obriši trku
-            $race->delete();
-
-            return response()->json(['message' => 'Trka je uspešno obrisana.'], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Failed to delete race',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
-
     // Pridruživanje trci (user + admin) - AŽURIRANA METODA
     public function join(Request $request, $id)
     {
@@ -293,53 +201,6 @@ class RaceController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Failed to leave race',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    // Submit rezultata trke
-    public function submitResult(Request $request, $id)
-    {
-        try {
-            $race = Race::find($id);
-
-            if (!$race) {
-                return response()->json(['message' => 'Trka nije pronađena'], 404);
-            }
-
-            $user = Auth::user();
-
-            // Proveri da li je korisnik pridružen
-            $participation = $race->participants()->where('user_id', $user->id)->first();
-            if (!$participation) {
-                return response()->json(['message' => 'Niste pridruženi ovoj trci.'], 400);
-            }
-
-            // Proveri da li je trka aktivna
-            if (!$race->isActive()) {
-                return response()->json(['message' => 'Trka nije trenutno aktivna.'], 400);
-            }
-
-            $validated = $request->validate([
-                'finish_time' => 'required|date_format:H:i:s', // Format: HH:MM:SS
-            ]);
-
-            // Ažuriraj rezultat
-            $race->participants()->updateExistingPivot($user->id, [
-                'finish_time' => $validated['finish_time'],
-                'completed_at' => now(),
-                'result_submitted' => true
-            ]);
-
-            return response()->json([
-                'message' => 'Rezultat je uspešno submit-ovan!',
-                'finish_time' => $validated['finish_time']
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Failed to submit result',
                 'message' => $e->getMessage()
             ], 500);
         }

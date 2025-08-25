@@ -22,24 +22,18 @@ class Post extends Model
         'current_participants',
         'user_id'
     ];
-
     // Vlasnik plana trčanja
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-
     // Učesnici plana trčanja
     public function participants()
     {
         return $this->belongsToMany(User::class, 'post_user', 'post_id', 'user_id');
     }
-
-    
     public function comments(): HasMany {
         return $this->hasMany(Comment::class);
     }
-    
-
 }
 

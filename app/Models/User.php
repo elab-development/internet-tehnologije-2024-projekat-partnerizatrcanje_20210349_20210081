@@ -25,10 +25,10 @@ class User extends Authenticatable
     'password',
     'role',
     'is_active',
-    'profile_image', // Dodaj ovo
-    'height',        // Dodaj ovo
-    'weight',        // Dodaj ovo  
-    'description',   // Dodaj ovo
+    'profile_image', 
+    'height',        
+    'weight',          
+    'description',   
 ];
 
     /**
@@ -40,60 +40,40 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
-    /**
-     * Relacija: User ima više postova.
-     */
+    /*Relacija: User ima više postova.*/
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
-
-    /**
-     * Relacija: User ima više komentara.
-     */
+    /*Relacija: User ima više komentara.*/
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
-
-    /**
-     * Relacija: User učestvuje u više trka.
-     */
+    /*Relacija: User učestvuje u više trka.*/
     public function races(): BelongsToMany
     {
         return $this->belongsToMany(Race::class, 'user_race')->withTimestamps();
     }
-
-    /**
-     * Relacija: User učestvuje u više izazova.
-     */
+    /*Relacija: User učestvuje u više izazova.*/
     public function challenges(): BelongsToMany
     {
         return $this->belongsToMany(Challenge::class, 'user_challenge')->withTimestamps();
     }
 
-    /**
-     * Relacija: User ima više statističkih podataka o trčanju.
-     */
-  
-
+    /*Relacija: User ima više statističkih podataka o trčanju.*/
     public function runningStats()
     {
         return $this->hasOne(RunningStats::class);
     }
-    
     public function isAdmin()
     {
         return $this->role === 'admin';
     }
-
-
     public function isUser()
     {
         return $this->role === 'user';
     }
-
     public function isGuest()
     {
         return $this->role === 'guest';

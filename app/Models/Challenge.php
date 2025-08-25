@@ -28,12 +28,10 @@ class Challenge extends Model
                ->withPivot(['distance_completed', 'completed_at'])
                ->withTimestamps();
     }
-
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-
     public function isActive()
     {
         return now()->between($this->start_date, $this->end_date);

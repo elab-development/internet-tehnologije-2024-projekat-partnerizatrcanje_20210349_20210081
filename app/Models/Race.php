@@ -31,12 +31,10 @@ class Race extends Model
                ->withPivot(['finish_time', 'completed_at', 'result_submitted'])
                ->withTimestamps();
     }
-
     public function organizer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'organizer_id');
     }
-
     public function isActive()
     {
         $now = now();
@@ -51,26 +49,20 @@ class Race extends Model
         
         return $now->between($raceStart, $raceEnd);
     }
-
-    // AŽURIRANA METODA - proveri da li je deadline za prijavu prošao
     public function canJoin()
     {
         $now = now();
-        
         // Kombiniraj race_date sa end_time da dobiješ deadline za prijavu
         $registrationDeadline = $this->race_date->copy()->setTime(
             $this->end_time->hour, 
             $this->end_time->minute
         );
-        
         // Korisnik može da se prijavi ako:
         // 1. Nije prošao deadline za prijavu
         // 2. Ima mesta u trci
         return $now->isBefore($registrationDeadline) && 
                $this->participants()->count() < $this->max_participants;
     }
-
-    // NOVA METODA - proveri da li je deadline za prijavu prošao
     public function isRegistrationExpired()
     {
         $now = now();

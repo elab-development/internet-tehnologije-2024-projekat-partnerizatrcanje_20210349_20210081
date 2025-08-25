@@ -134,9 +134,7 @@ class FeedController extends Controller
         }
     }
 
-    /**
-     * Get posts from users that current user follows (if you have following system)
-     */
+    
     public function getFollowingFeed(Request $request)
     {
         try {
