@@ -149,43 +149,48 @@ const Feed = () => {
 
   // Custom hook za dodavanje komentara
   const { 
-    post: addCommentRequest, 
-    loading: commentLoading 
-  } = useApi();
+  post: addCommentRequest, 
+  loading: commentLoading 
+} = useApi('http://localhost:8000/api/comments', { manual: true });
 
   // Funkcija za dodavanje komentara u određeni post (samo registrovani korisnici)
   const addComment = async (postId, commentContent) => {
-    // Guest korisnici ne mogu dodavati komentare
-    if (isGuest) {
-      alert("Gost korisnici ne mogu dodavati komentare. Molimo registrujte se.");
-      return;
-    }
+  if (isGuest) {
+    alert("Gost korisnici ne mogu dodavati komentare. Molimo registrujte se.");
+    return;
+  }
 
-    try {
-      const newComment = await addCommentRequest({
-        post_id: postId,
-        content: commentContent
-      });
+  try {
+    const response = await addCommentRequest({
+      post_id: postId,
+      content: commentContent,
+    });
+    
+    // KLJUČNA IZMENA: Proveravamo da li odgovor postoji
+    // U zavisnosti od izmene na backendu, koristimo ili 'response' direktno
+    // ili 'response.comment' ako niste menjali backend.
+    // Ovaj kod radi za obe varijante.
+    const newComment = response.comment || response;
 
-      if (newComment) {
-        // Ažuriraj postove sa novim komentarom
-        setPosts(prevPosts => 
-          prevPosts.map(post => {
-            if (post.id === postId) {
-              return {
-                ...post,
-                comments: [...(post.comments || []), newComment.comment]
-              };
-            }
-            return post;
-          })
-        );
-      }
-    } catch (error) {
-      console.error("Greška pri dodavanju komentara:", error);
-      alert("Greška pri dodavanju komentara");
+    if (newComment && newComment.id) { // Proveravamo da li je komentar validan
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => {
+          if (post.id === postId) {
+            return {
+              ...post,
+              // Važno: Obezbediti da 'user' postoji na novom komentaru
+              comments: [...(post.comments || []), newComment],
+            };
+          }
+          return post;
+        })
+      );
     }
-  };
+  } catch (error) {
+    console.error("Greška pri dodavanju komentara:", error);
+    alert("Greška pri dodavanju komentara.");
+  }
+};
 
   // Custom hook za pridruživanje planu
   const { 

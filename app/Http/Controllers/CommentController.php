@@ -18,21 +18,21 @@ class CommentController extends Controller
     public function store(Request $request)
 {
     $validatedData = $request->validate([
-        'content' => 'required|string',
-        'post_id' => 'required|exists:posts,id', // Veza sa Post modelom
+        'post_id' => 'required|exists:posts,id',
+        'content' => 'required|string|max:1000',
     ]);
 
     $comment = Comment::create([
-        'content' => $validatedData['content'],
         'post_id' => $validatedData['post_id'],
-        'user_id' => auth()->id(), // Automatski postavlja ID trenutnog korisnika
+        'content' => $validatedData['content'],
+        'user_id' => auth()->id(),
     ]);
 
-    return response()->json([
-        'message' => 'Komentar uspešno kreiran',
-        'comment' => $comment
-    ], 201);
-    
+    // KLJUČNA IZMENA: Učitaj relaciju sa korisnikom
+    $comment->load('user');
+
+    // Vrati samo objekat komentara, frontend-u ne treba poruka
+    return response()->json($comment, 201);
 }
 
 

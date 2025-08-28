@@ -3,23 +3,25 @@ import { useState, useEffect } from 'react';
 
 const useApi = (url, options = {}) => {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Inicijalno je false
   const [error, setError] = useState(null);
+
+  // NOVA LINIJA: Izvlačimo 'manual' opciju
+  const { manual = false } = options;
 
   const fetchData = async (customUrl = url, customOptions = options) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const token = localStorage.getItem('auth_token');
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      
+
       const defaultHeaders = {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       };
-      
-      // Dodaj Authorization header samo ako nije guest
+
       if (user.role !== 'guest' && token) {
         defaultHeaders['Authorization'] = `Bearer ${token}`;
       }
@@ -42,25 +44,33 @@ const useApi = (url, options = {}) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      // Neki odgovori (npr. DELETE) možda nemaju telo
+      if (response.status === 204) {
+        setData(null);
+        return null;
+      }
+
       const result = await response.json();
       setData(result);
       return result;
     } catch (err) {
       setError(err.message);
       console.error('API Error:', err);
+      throw err; // Ponovo baci grešku da bi je uhvatio pozivalac
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (url) {
+    // PROMENA: Proveravamo i '!manual' fleg
+    if (url && !manual) {
       fetchData();
     }
-  }, [url]);
+  }, [url, manual]); // Dodajemo 'manual' u dependency array
 
   const refetch = () => fetchData();
-  
+
   const post = async (postData) => {
     return fetchData(url, {
       method: 'POST',
