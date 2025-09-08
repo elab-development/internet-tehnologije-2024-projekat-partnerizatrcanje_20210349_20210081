@@ -70,7 +70,7 @@ export default function Profile() {
         const userData = await response.json();
         setUser({
           ...userData,
-          profile_image_url: userData.profile_image_url || "https://via.placeholder.com/150"
+          profile_image_url: userData.profile_image_url || "https://placehold.co/150"
         });
         setSettingsForm({
           email: userData.email,

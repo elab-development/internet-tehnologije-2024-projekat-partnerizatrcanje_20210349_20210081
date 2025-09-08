@@ -101,8 +101,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    // Upload profile image
-    // app/Http/Controllers/UserController.php
 
 public function uploadProfileImage(Request $request, $id)
 {

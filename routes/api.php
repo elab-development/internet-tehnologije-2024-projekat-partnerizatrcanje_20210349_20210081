@@ -95,9 +95,7 @@ Route::middleware('auth:sanctum')->group(function () {
     })->name('api.test-auth');
     
     // Current user data
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    })->name('api.user');
+    Route::get('/user', [UserController::class, 'getCurrentUserProfile'])->name('api.user');
     
     // Guest account deletion
     Route::delete('/delete-guest-account', [AuthController::class, 'deleteGuestAccount']);
