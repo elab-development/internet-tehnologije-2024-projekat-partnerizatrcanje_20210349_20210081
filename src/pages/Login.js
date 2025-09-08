@@ -151,9 +151,6 @@ const Login = () => {
         <span onClick={() => navigate("/register")}>Registrujte se</span>
       </p>
 
-      <p>
-        <span onClick={() => setShowModal(true)}>Zaboravili ste lozinku?</span>
-      </p>
 
       <p>
         <button 

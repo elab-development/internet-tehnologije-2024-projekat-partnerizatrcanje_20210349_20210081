@@ -10,7 +10,7 @@ import Challenges from "./pages/Challenges";
 import Races from "./pages/Races";
 import MainLayout from "./components/MainLayout";
 import './styles/styles-main.css';
-
+import './styles/unified-responsive.css'; 
 const RoleGuard = ({ children, allowedRoles = [], fallbackMessage = null }) => {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const userRole = user.role || 'guest';

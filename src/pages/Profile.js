@@ -150,18 +150,17 @@ export default function Profile() {
     }
   };
 
-  const handleImageChange = async (e) => {
+const handleImageChange = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   // Validacija fajla
-  if (file.size > 2 * 1024 * 1024) {
+  if (file.size > 2 * 1024 * 1024) { // 2MB
     alert("Slika je prevelika. Maksimalna veličina je 2MB.");
     return;
   }
-
   if (!file.type.startsWith('image/')) {
-    alert("Molimo selektujte validnu sliku.");
+    alert("Molimo selektujte validnu sliku (jpeg, png, jpg, gif).");
     return;
   }
 
@@ -172,6 +171,7 @@ export default function Profile() {
     const formData = new FormData();
     formData.append('profile_image', file);
 
+    // KORISTIMO USER ID IZ STATE-A, KOJI JE VEĆ UČITAN
     const response = await fetch(`http://localhost:8000/api/user/${user.id}/upload-image`, {
       method: "POST",
       headers: {
@@ -184,29 +184,23 @@ export default function Profile() {
     if (response.ok) {
       const data = await response.json();
       
-      // AŽURIRAJ SLIKU SA CACHE BUSTING
+      // AŽURIRAMO STANJE - I TO JE SVE ŠTO JE POTREBNO
       setUser(prevUser => ({ 
         ...prevUser, 
-        profile_image_url: data.image_url + '?v=' + Date.now(),
-        profile_image: data.image_path
+        profile_image_url: data.image_url, // URL sa servera već ima cache busting
       }));
       
       setImageChanged(true);
       alert("Profilna slika je uspešno ažurirana!");
       
-      // FORSIRAJ RELOAD SLIKE
-      const imgElement = document.querySelector('.profile-image');
-      if (imgElement) {
-        imgElement.src = data.image_url + '?v=' + Date.now();
-      }
-      
+      // DEO ZA DIREKTNU MANIPULACIJU DOM-A JE OBRISAN
     } else {
       const errorData = await response.json();
       alert("Greška pri upload-u slike: " + (errorData.message || "Nepoznata greška"));
     }
   } catch (error) {
     console.error("Error uploading image:", error);
-    alert("Greška pri upload-u slike");
+    alert("Greška pri upload-u slike. Proverite konzolu za detalje.");
   } finally {
     setUploadingImage(false);
   }

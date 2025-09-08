@@ -102,7 +102,9 @@ class UserController extends Controller
     }
 
     // Upload profile image
-    public function uploadProfileImage(Request $request, $id)
+    // app/Http/Controllers/UserController.php
+
+public function uploadProfileImage(Request $request, $id)
 {
     try {
         $user = User::find($id);
@@ -111,8 +113,8 @@ class UserController extends Controller
             return response()->json(['error' => 'User not found'], 404);
         }
 
-        // Proverava da li je korisnik autentifikovan i da li pokušava da ažurira svoj profil
-        if ($request->user()->id != $id && $request->user()->role !== 'admin') {
+        // Proverava da li je korisnik autorizovan da menja ovu sliku
+        if ($request->user()->id != $id && !$request->user()->isAdmin()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -128,28 +130,23 @@ class UserController extends Controller
         // Sačuvaj novu sliku
         $imagePath = $request->file('profile_image')->store('profile_images', 'public');
         
-        // Ažuriraj korisnika
-        $user->update(['profile_image' => $imagePath]);
+        // Ažuriraj korisnika sa putanjom do nove slike
+        $user->profile_image = $imagePath;
+        $user->save();
 
-        // DODAJ CACHE BUSTING sa timestamp
+        // Generiši punu URL adresu sa "cache busting" parametrom
         $imageUrl = asset('storage/' . $imagePath) . '?v=' . time();
 
-        Log::info('Profile image uploaded successfully', [
-            'user_id' => $user->id,
-            'image_path' => $imagePath,
-            'image_url' => $imageUrl
-        ]);
+        Log::info('Profile image uploaded successfully for user_id: ' . $user->id);
 
         return response()->json([
             'message' => 'Profile image uploaded successfully',
-            'image_url' => $imageUrl,
-            'image_path' => $imagePath,
-            'user' => $user->fresh() // Vrati osvežene podatke
+            'user' => $user->fresh(), // Vraća sveže podatke o korisniku
+            'image_url' => $imageUrl, // Vraća novi URL
         ], 200);
 
     } catch (\Exception $e) {
-        Log::error('Profile image upload failed', [
-            'user_id' => $id,
+        Log::error('Profile image upload failed for user_id: ' . $id, [
             'error' => $e->getMessage()
         ]);
 
