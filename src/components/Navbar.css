@@ -98,6 +98,14 @@
   transition: opacity 0.3s ease;
 
 }
+.nav-links a:hover {
+  color: var(--secondary-color);
+  transition: all 0.3s ease;
+}
+
+
+
+
 
 
 
@@ -139,6 +147,10 @@
 
 }
 
+.logout-button:hover{
+  background-color: var(--danger-color-hover);
+  transition: all 0.3s ease;
+}
 
 
 /* Burger je sakriven na desktopu */

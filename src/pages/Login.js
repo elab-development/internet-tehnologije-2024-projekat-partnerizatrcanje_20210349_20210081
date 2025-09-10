@@ -148,7 +148,7 @@ const Login = () => {
 
       <p>
         Nemate nalog? 
-        <span onClick={() => navigate("/register")}>Registrujte se</span>
+        <span onClick={() => navigate("/register")}> Registrujte se</span>
       </p>
 
 
