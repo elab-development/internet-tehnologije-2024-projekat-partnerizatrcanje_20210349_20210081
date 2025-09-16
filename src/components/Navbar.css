@@ -1,0 +1,269 @@
+/* ================================================================ */
+
+/* KONAČAN KOD ZA NAVBAR - Jedan Red, Horizontalni Meni */
+
+/* ================================================================ */
+
+
+
+/* --- OSNOVNI STILOVI (Desktop prikaz iznad 990px) --- */
+
+
+
+.navbar {
+  /* Navbar je sada uvek deo toka unutar lepljivog headera */
+  position: relative; 
+  height: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Uklanjamo duple stilove koji su sada na .main-header */
+  background-color: transparent;
+  box-shadow: none; 
+  /* Z-index više nije potreban ovde */
+}
+
+
+
+.nav-container {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  width: 100%;
+
+  max-width: 1400px;
+  height: 100%;
+}
+
+
+
+.logo-container {
+
+  display: flex;
+
+  align-items: center;
+
+  flex-shrink: 0; /* Sprečava da se logo smanji */
+
+}
+
+.handprint { height: 60px; margin-right: 10px; }
+
+.logo { height: 150px; }
+
+
+
+/* Lista sa linkovima */
+
+.nav-links {
+
+  list-style: none;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 25px;
+
+  margin: 0 20px;
+
+  padding: 0;
+
+  flex-grow: 1; /* Dozvoljava linkovima da zauzmu prostor */
+
+  justify-content: center; /* Centriranje linkova */
+
+  overflow: hidden; /* Sprečava da linkovi "iscure" */
+
+}
+
+
+
+.nav-links a {
+
+  text-decoration: none;
+
+  font-weight: 500;
+
+  color: white;
+
+  white-space: nowrap; /* Sprečava prelamanje teksta linka */
+
+  transition: opacity 0.3s ease;
+
+}
+.nav-links a:hover {
+  color: var(--secondary-color);
+  transition: all 0.3s ease;
+}
+
+
+
+
+
+
+
+.controls-section {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+
+  flex-shrink: 0;
+
+}
+
+
+
+.user-section { display: flex; align-items: center; }
+
+
+
+.logout-button {
+
+  background-color: var(--danger-color);
+
+  color: white;
+
+  border: none;
+
+  padding: 8px 16px;
+
+  border-radius: 4px;
+
+  cursor: pointer;
+
+  font-weight: bold;
+
+  white-space: nowrap;
+
+}
+
+.logout-button:hover{
+  background-color: var(--danger-color-hover);
+  transition: all 0.3s ease;
+}
+
+
+/* Burger je sakriven na desktopu */
+
+.burger-menu {
+
+  display: none;
+
+}
+
+
+
+/* --- KONAČNO REŠENJE ZA RESPONZIVNOST (990px i manje) --- */
+
+
+
+@media (max-width: 990px) {
+
+  .navbar { height: 80px; }
+
+  .main-content.with-navbar { margin-top: 80px; }
+
+
+
+  .logo { height: 120px; }
+
+  .handprint { height: 50px; }
+
+  
+
+  /* Na mobilnom, linkovi su po default sakriveni */
+
+  .nav-links {
+
+    display: flex;
+
+    /* Tranzicija za gladak prelaz */
+
+    transition: width 0.4s ease, opacity 0.4s ease, margin 0.4s ease;
+
+    
+
+    /* Sakrivamo ih tako što im smanjujemo širinu i providnost */
+
+    width: 0;
+
+    opacity: 0;
+
+    overflow: hidden;
+
+  }
+
+  
+
+  /* KADA JE MENI AKTIVAN, linkovi postaju vidljivi */
+
+  .nav-links.active {
+
+    width: 92%; /* Dajemo im punu širinu da popune prostor */
+
+    opacity: 1;
+
+    overflow-x: auto; /* Omogućava horizontalno skrolovanje ako ne stanu */
+
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    top: 100%;
+    left: 0;
+    gap: 0;
+    row-gap: 10px;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+
+
+  /* Prikazujemo burger dugme */
+
+  .burger-menu {
+
+    display: block;
+
+    background: none;
+
+    border: none;
+
+    color: white;
+
+    font-size: 1.8rem;
+
+    cursor: pointer;
+
+    padding: 0;
+
+    line-height: 1; /* Osigurava da ikonica bude centrirana */
+
+  }
+
+  
+
+  /* Admin tema override za mobilni meni */
+
+  body.admin-theme .navbar {
+
+    background-color: var(--admin-primary);
+
+  }
+
+}

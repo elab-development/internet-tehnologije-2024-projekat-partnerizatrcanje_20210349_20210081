@@ -1,0 +1,440 @@
+
+/* Profilna stranica sa centralizovanim sadržajem */
+.profile-container {
+  max-width: 500px;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 30px;
+  background: #FEF9E1; /* Svetla pozadina */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  text-align: center;
+  position: relative;
+}
+
+/* Glavni header sa profilnom slikom i opisom */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;  /* Centriranje slika i opisa horizontalno */
+  margin-bottom: 20px;
+  flex-wrap: wrap; /* Za responzivnost na manjim ekranima */
+}
+
+/* Profilna slika */
+.profile-image-container {
+  position: relative;
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #C14600; /* Orange border */
+  cursor: pointer;
+  transition: transform 0.3s ease; /* Efekat pri hoveru */
+}
+
+.profile-image:hover {
+  transform: scale(1.05); /* Efekat zumiranja slike */
+}
+
+/* Skrivanje inputa za fajl, biće aktiviran dugmetom */
+.hidden-input {
+  display: none;
+}
+
+/* Dugme za promenu slike */
+.profile-image-button {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  background-color: #C14600; /* Tamnije narandžasto dugme */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.profile-image-button:hover {
+  background-color: #FF9D23; /* Svetlije narandžasta na hover */
+}
+
+/* Opis korisnika */
+.profile-description {
+  padding: 15px;
+  border-radius: 8px;
+  background: #E5D0AC; /* Pozadina opisa u svetloj bež boji */
+  cursor: pointer;
+  text-align: left;  /* Poravnava tekst sa leve strane */
+  font-size: 16px;
+  color: #333; /* Tamno sive boje za tekst */
+  transition: background-color 0.3s ease;
+  position: relative;
+  min-height: 80px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.profile-description:hover {
+  background-color: #FFE4BC; /* Suptilnija promena boje pri hoveru */
+}
+
+/* Textarea za unos opisa */
+.profile-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #FF9D23;
+  font-size: 16px;
+  background-color: #FFF;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* Sekcija sa informacijama o korisniku */
+.profile-info {
+  margin-top: 25px;
+}
+
+/* Svaka informacija o korisniku */
+.profile-field {
+  margin-bottom: 18px;
+  text-align: left;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Novi stil za nepromenljive vrednosti */
+.profile-field-value {
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #E5D0AC;
+  width: 100%;
+  font-size: 16px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.profile-field-value p {
+  margin: 0;
+  flex: 1;
+}
+
+/* Stil za editable područja */
+.profile-editable {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #E5D0AC;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  background-color: #FFF;
+  transition: border-color 0.3s ease;
+  min-height: 40px; /* Postavite minimalnu visinu */
+  display: flex;
+  align-items: center; /* Vertikalno poravnanje */
+  justify-content: space-between;
+}
+
+.profile-editable:hover {
+  border-color: #FF9D23;
+}
+
+/* Stil za input polja */
+.profile-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #FF9D23;
+  font-size: 16px;
+  background-color: #FFF;
+  transition: border-color 0.3s ease;
+  min-height: 40px; /* Postavite minimalnu visinu za input */
+}
+
+/* Stil za disabled input polja */
+.disabled-input {
+  background-color: #F0F0F0;
+  border-color: #E0E0E0;
+  color: #777;
+  cursor: not-allowed;
+}
+
+.input-helper {
+  display: block;
+  margin-top: 5px;
+  color: #777;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Stil za statički tekst */
+.profile-editable p {
+  margin: 0; /* Uklonite margine kako bi bilo ravno */
+  flex: 1;
+}
+
+/* Dugme za podešavanja */
+.profile-button {
+  padding: 12px 20px;
+  background: #C14600; /* Tamnija narandžasta umesto svetlog beža */
+  color: white; /* Beli tekst za bolji kontrast */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 200px;
+}
+
+.profile-button:hover {
+  background: #FF9D23; /* Svetlija narandžasta na hover */
+}
+
+/* Overlay za modalni prozor */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Novi stil za modal */
+.settings-modal {
+  background-color: #FEF9E1;
+  border-radius: 12px;
+  padding: 25px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.settings-modal h2 {
+  color: #C14600;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 22px;
+}
+
+/* Grupe elemenata u formi */
+.modal-group {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.modal-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: 500;
+}
+
+.modal-input {
+  width: 90%;
+  align-self: center;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #E5D0AC;
+  background-color: #FFFFFF;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-input:focus {
+  border-color: #FF9D23;
+  box-shadow: 0 0 0 2px rgba(255, 157, 35, 0.2);
+  outline: none;
+}
+
+/* Dugmad u modalnom prozoru */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  gap: 15px;
+}
+
+.cancel-button, .save-button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: 50%;
+}
+
+.cancel-button {
+  background-color: #E5D0AC;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #D9C496;
+}
+
+.save-button {
+  background-color: #C14600;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #FF9D23;
+}
+
+/* Bedževi kao medalje */
+.badges-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #E5D0AC;
+}
+
+.badges-title {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.badges-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.badge-item {
+  position: relative;
+  width: 100px;
+  height: 125px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: help;
+  transition: transform 0.3s ease;
+}
+
+.badge-item:hover {
+  transform: translateY(-5px);
+}
+
+.badge-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #FF9D23, #C14600);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+  border: 3px solid #E5D0AC;
+}
+
+.badge-icon::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  border: 2px solid #C14600;
+  opacity: 0.7;
+}
+
+.badge-icon::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #C14600;
+  border: 2px solid #E5D0AC;
+}
+
+.badge-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  max-width: 100px;
+}
+
+/* Tooltip sa opisom */
+.badge-item .badge-tooltip {
+  visibility: hidden;
+  width: 180px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.badge-item:hover .badge-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.confirmation-modal{
+  color: white;
+}
+
+.confirmation-actions{
+
+display: flex;
+gap: 20px;
+align-items:center;
+justify-content: center;
+}
+
+/* Media queries za responzivnost */
+@media (max-width: 576px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-description {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .profile-container {
+    padding: 20px 15px;
+  }
+
+}

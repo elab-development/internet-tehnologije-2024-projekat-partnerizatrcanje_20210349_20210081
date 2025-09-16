@@ -1,0 +1,6 @@
+<<<<<<< HEAD
+=======
+# https://www.robotstxt.org/robotstxt.html
+>>>>>>> origin/react-frontend
+User-agent: *
+Disallow:

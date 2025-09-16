@@ -1,0 +1,567 @@
+/* App.css - Complete file with MainLayout integration */
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #61656b;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===================================== */
+/* MAINLAYOUT STYLES - UPDATED VERSION  */
+/* ===================================== */
+
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content area adjustments */
+.main-content {
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+/* With navbar - add top margin for navbar height */
+.main-content.with-navbar {
+  margin-top: 120px; /* Navbar height only */
+}
+
+/* With breadcrumbs - NO additional spacing needed since breadcrumbs is in normal flow */
+.main-content.with-navbar.with-breadcrumbs {
+  margin-top: 120px; /* Same as with-navbar - breadcrumbs is part of normal flow */
+}
+
+/* No navbar - full height */
+.main-content.no-navbar {
+  margin-top: 0;
+  min-height: 100vh;
+}
+
+/* No breadcrumbs */
+.main-content.no-breadcrumbs {
+  /* No additional spacing needed */
+}
+
+/* Smooth transitions for theme changes */
+.main-layout * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Layout responsiveness */
+@media (max-width: 768px) {
+  .main-content.with-navbar {
+    margin-top: 100px; /* Adjusted for mobile navbar */
+  }
+  
+  .main-content.with-navbar.with-breadcrumbs {
+    margin-top: 100px; /* Same as with-navbar */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content.with-navbar {
+    margin-top: 80px; /* Further adjusted for small screens */
+  }
+  
+  .main-content.with-navbar.with-breadcrumbs {
+    margin-top: 80px; /* Same as with-navbar */
+  }
+}
+
+/* Theme transition effects */
+body.admin-theme .main-layout {
+  background: var(--admin-gray, #f1f5f9);
+}
+
+body:not(.admin-theme) .main-layout {
+  background: var(--background-color, #FFF8E1);
+}
+
+/* Loading overlay for theme transitions */
+.main-layout.theme-switching {
+  position: relative;
+}
+
+.main-layout.theme-switching::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.main-layout.theme-switching.loading::before {
+  opacity: 1;
+}
+
+/* ===================================== */
+/* BREADCRUMBS INTEGRATION ADJUSTMENTS  */
+/* ===================================== */
+
+/* Ensure breadcrumbs don't interfere with main content flow */
+.main-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Smooth scroll behavior when navigating */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Content padding for better spacing */
+.main-content > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===================================== */
+/* GLOBAL LAYOUT IMPROVEMENTS          */
+/* ===================================== */
+
+/* Prevent horizontal overflow */
+.main-layout,
+.main-content {
+  overflow-x: hidden;
+}
+
+/* Ensure proper box-sizing */
+.main-layout *,
+.main-layout *::before,
+.main-layout *::after {
+  box-sizing: border-box;
+}
+
+/* Focus states for accessibility */
+.main-layout a:focus,
+.main-layout button:focus,
+.main-layout input:focus,
+.main-layout textarea:focus,
+.main-layout select:focus {
+  outline: 2px solid var(--primary-color, #FF9D23);
+  outline-offset: 2px;
+}
+
+/* Admin theme focus states */
+body.admin-theme .main-layout a:focus,
+body.admin-theme .main-layout button:focus,
+body.admin-theme .main-layout input:focus,
+body.admin-theme .main-layout textarea:focus,
+body.admin-theme .main-layout select:focus {
+  outline-color: var(--admin-primary, #1d4ed8);
+}
+
+/* ===================================== */
+/* LOADING STATES                       */
+/* ===================================== */
+
+.main-content.loading {
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.main-content.loading::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 157, 35, 0.3);
+  border-top: 4px solid var(--primary-color, #FF9D23);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1000;
+}
+
+body.admin-theme .main-content.loading::after {
+  border-color: rgba(29, 78, 216, 0.3);
+  border-top-color: var(--admin-primary, #1d4ed8);
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ===================================== */
+/* PRINT STYLES                         */
+/* ===================================== */
+
+@media print {
+  .main-layout {
+    background: white !important;
+  }
+  
+  .main-content.with-navbar,
+  .main-content.with-navbar.with-breadcrumbs {
+    margin-top: 0 !important;
+  }
+  
+  /* Hide navigation elements when printing */
+  .navbar,
+  .breadcrumbs {
+    display: none !important;
+  }
+}
+
+/* ===================================== */
+/* HIGH CONTRAST MODE SUPPORT           */
+/* ===================================== */
+
+@media (prefers-contrast: high) {
+  .main-layout {
+    background: white !important;
+  }
+  
+  .main-content {
+    color: black !important;
+  }
+}
+
+/* ===================================== */
+/* REDUCED MOTION SUPPORT               */
+/* ===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .main-layout *,
+  .main-content,
+  .main-layout.theme-switching::before {
+    transition: none !important;/* App.css - Complete file with MainLayout integration */
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #61656b;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===================================== */
+/* MAINLAYOUT STYLES - UPDATED VERSION  */
+/* ===================================== */
+
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header section containing navbar and breadcrumbs */
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: inherit;
+}
+
+/* Main content area adjustments */
+.main-content {
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+/* With navbar - add top margin for navbar height */
+.main-content.with-navbar {
+  margin-top: 120px; /* Navbar height only */
+}
+
+/* With breadcrumbs - NO additional spacing needed since breadcrumbs is in normal flow */
+.main-content.with-navbar.with-breadcrumbs {
+  margin-top: 120px; /* Same as with-navbar - breadcrumbs is part of normal flow */
+}
+
+/* No navbar - full height */
+.main-content.no-navbar {
+  margin-top: 0;
+  min-height: 100vh;
+}
+
+/* No breadcrumbs */
+.main-content.no-breadcrumbs {
+  /* No additional spacing needed */
+}
+
+/* Smooth transitions for theme changes */
+.main-layout * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Layout responsiveness */
+@media (max-width: 768px) {
+  .main-content.with-navbar {
+    margin-top: 100px; /* Adjusted for mobile navbar */
+  }
+  
+  .main-content.with-navbar.with-breadcrumbs {
+    margin-top: 100px; /* Same as with-navbar */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content.with-navbar {
+    margin-top: 80px; /* Further adjusted for small screens */
+  }
+  
+  .main-content.with-navbar.with-breadcrumbs {
+    margin-top: 80px; /* Same as with-navbar */
+  }
+}
+
+/* Theme transition effects */
+body.admin-theme .main-layout {
+  background: var(--admin-gray, #f1f5f9);
+}
+
+body:not(.admin-theme) .main-layout {
+  background: var(--background-color, #FFF8E1);
+}
+
+/* Loading overlay for theme transitions */
+.main-layout.theme-switching {
+  position: relative;
+}
+
+.main-layout.theme-switching::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.main-layout.theme-switching.loading::before {
+  opacity: 1;
+}
+
+/* ===================================== */
+/* BREADCRUMBS INTEGRATION ADJUSTMENTS  */
+/* ===================================== */
+
+/* Ensure breadcrumbs don't interfere with main content flow */
+.main-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Smooth scroll behavior when navigating */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Content padding for better spacing */
+.main-content > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===================================== */
+/* GLOBAL LAYOUT IMPROVEMENTS          */
+/* ===================================== */
+
+/* Prevent horizontal overflow */
+.main-layout,
+.main-content {
+  overflow-x: hidden;
+}
+
+/* Ensure proper box-sizing */
+.main-layout *,
+.main-layout *::before,
+.main-layout *::after {
+  box-sizing: border-box;
+}
+
+/* Focus states for accessibility */
+.main-layout a:focus,
+.main-layout button:focus,
+.main-layout input:focus,
+.main-layout textarea:focus,
+.main-layout select:focus {
+  outline: 2px solid var(--primary-color, #FF9D23);
+  outline-offset: 2px;
+}
+
+/* Admin theme focus states */
+body.admin-theme .main-layout a:focus,
+body.admin-theme .main-layout button:focus,
+body.admin-theme .main-layout input:focus,
+body.admin-theme .main-layout textarea:focus,
+body.admin-theme .main-layout select:focus {
+  outline-color: var(--admin-primary, #1d4ed8);
+}
+
+/* ===================================== */
+/* LOADING STATES                       */
+/* ===================================== */
+
+.main-content.loading {
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.main-content.loading::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 157, 35, 0.3);
+  border-top: 4px solid var(--primary-color, #FF9D23);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1000;
+}
+
+body.admin-theme .main-content.loading::after {
+  border-color: rgba(29, 78, 216, 0.3);
+  border-top-color: var(--admin-primary, #1d4ed8);
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ===================================== */
+/* PRINT STYLES                         */
+/* ===================================== */
+
+@media print {
+  .main-layout {
+    background: white !important;
+  }
+  
+  .main-content.with-navbar,
+  .main-content.with-navbar.with-breadcrumbs {
+    margin-top: 0 !important;
+  }
+  
+  /* Hide navigation elements when printing */
+  .navbar,
+  .breadcrumbs {
+    display: none !important;
+  }
+}
+
+/* ===================================== */
+/* HIGH CONTRAST MODE SUPPORT           */
+/* ===================================== */
+
+@media (prefers-contrast: high) {
+  .main-layout {
+    background: white !important;
+  }
+  
+  .main-content {
+    color: black !important;
+  }
+}
+
+/* ===================================== */
+/* REDUCED MOTION SUPPORT               */
+/* ===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .main-layout *,
+  .main-content,
+  .main-layout.theme-switching::before {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}
+    animation: none !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}

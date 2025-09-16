@@ -1,0 +1,822 @@
+/* KOMPLETNA ADMIN TEMA CSS - dodaj na početak svakog CSS fajla */
+
+/* DEFAULT THEME - Narandžaste boje */
+:root {
+  --primary-color: #FF9D23;
+  --secondary-color: #C14600;
+  --accent-color: #FF6B35;
+  --background-color: #FFF8E1;
+  --surface-color: rgba(229, 208, 172, 0.9);
+  --text-color: white;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #FF9D23;
+}
+
+/* ADMIN THEME - Plave i bela */
+body.admin-theme {
+  --primary-color: #2563eb !important;      /* Plava */
+  --secondary-color: #1e40af !important;    /* Tamno plava */
+  --accent-color: #3b82f6 !important;       /* Svetlo plava */
+  --background-color: #f8fafc !important;   /* Svetlo siva/bela */
+  --surface-color: rgba(241, 245, 249, 0.9) !important; /* Svetlo plava/bela */
+  --text-color: white !important;
+  --success-color: #10b981 !important;      /* Zelena */
+  --danger-color: #ef4444 !important;       /* Crvena */
+  --warning-color: #f59e0b !important;      /* Žuta */
+}
+
+/* ADMIN specifične boje */
+body.admin-theme {
+  --admin-primary: #1d4ed8 !important;      /* Kraljevski plava */
+  --admin-secondary: #1e3a8a !important;    /* Tamno plava */
+  --admin-accent: #60a5fa !important;       /* Svetlo plava */
+  --admin-light: #e0f2fe !important;        /* Vrlo svetlo plava */
+  --admin-white: #ffffff !important;        /* Čista bela */
+  --admin-gray: #f1f5f9 !important;         /* Svetlo siva */
+  --admin-border: #bfdbfe !important;       /* Plavi border */
+}
+
+/* =================================== */
+/* NAVBAR - Admin tema */
+/* =================================== */
+body.admin-theme .navbar {
+  background-color: var(--admin-primary) !important;
+}
+
+body.admin-theme .navbar a {
+  color: white !important;
+}
+
+body.admin-theme .navbar a.active {
+  background-color: var(--admin-secondary) !important;
+}
+
+body.admin-theme .navbar a:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+body.admin-theme .logout-button {
+  background-color: var(--danger-color) !important;
+}
+
+body.admin-theme .logout-button:hover {
+  background-color: #dc2626 !important;
+}
+
+/* =================================== */
+/* FEED/HOME PAGE - Admin tema */
+/* =================================== */
+body.admin-theme .post {
+  background: var(--admin-white) !important;
+  border: 1px solid var(--admin-border) !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.08) !important;
+}
+
+body.admin-theme .post::before {
+  background: linear-gradient(90deg, var(--admin-primary), var(--admin-accent), var(--admin-secondary)) !important;
+}
+
+body.admin-theme .post:hover {
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15) !important;
+}
+
+body.admin-theme .post-header {
+  background: linear-gradient(135deg, var(--admin-gray) 0%, var(--admin-light) 100%) !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .post-author h3 {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .post-title {
+  color: var(--admin-secondary) !important;
+  background: linear-gradient(135deg, var(--admin-light) 0%, var(--admin-gray) 100%) !important;
+  border: 2px solid var(--admin-primary) !important;
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.2) !important;
+}
+
+body.admin-theme .post-description {
+  background: linear-gradient(135deg, var(--admin-gray) 0%, var(--admin-white) 100%) !important;
+  border-left: 3px solid var(--admin-accent) !important;
+}
+
+body.admin-theme .post-description h4 {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .post-details {
+  background: linear-gradient(135deg, var(--admin-light) 0%, var(--admin-gray) 100%) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .detail-item {
+  background: linear-gradient(135deg, var(--admin-white) 0%, var(--admin-gray) 100%) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .detail-item:hover {
+  border-color: var(--admin-accent) !important;
+}
+
+body.admin-theme .detail-value {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .post-actions {
+  background: linear-gradient(135deg, var(--admin-light) 0%, var(--admin-white) 100%) !important;
+  border-top: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .comment-toggle-button {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.3) !important;
+}
+
+body.admin-theme .comment-toggle-button:hover {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
+  box-shadow: 0 3px 10px rgba(29, 78, 216, 0.4) !important;
+}
+
+body.admin-theme .join-button {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
+}
+
+body.admin-theme .join-button:hover {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
+  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.4) !important;
+}
+
+body.admin-theme .join-button.joined {
+  background: var(--success-color) !important;
+}
+
+/* =================================== */
+/* COMMENTS - Admin tema */
+/* =================================== */
+body.admin-theme .comments-section {
+  background: linear-gradient(135deg, var(--admin-gray) 0%, var(--admin-light) 100%) !important;
+  border-top: 3px solid var(--admin-border) !important;
+}
+
+body.admin-theme .comment {
+  background: linear-gradient(135deg, var(--admin-white) 0%, var(--admin-gray) 100%) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .comment:hover {
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.12) !important;
+}
+
+body.admin-theme .comment-author strong {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .comment-date {
+  background: rgba(29, 78, 216, 0.05) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .no-comments {
+  background: rgba(29, 78, 216, 0.05) !important;
+  border: 2px dashed var(--admin-border) !important;
+}
+
+body.admin-theme .add-comment-form {
+  background: linear-gradient(135deg, var(--admin-light) 0%, var(--admin-gray) 100%) !important;
+  border: 2px solid var(--admin-border) !important;
+}
+
+body.admin-theme .add-comment-form textarea {
+  border: 2px solid var(--admin-border) !important;
+  background: linear-gradient(135deg, var(--admin-white) 0%, var(--admin-gray) 100%) !important;
+}
+
+body.admin-theme .add-comment-form textarea:focus {
+  border-color: var(--admin-accent) !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+}
+
+body.admin-theme .submit-comment-button {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3) !important;
+}
+
+body.admin-theme .submit-comment-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
+  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.4) !important;
+}
+
+/* =================================== */
+/* RACES PAGE - Admin tema */
+/* =================================== */
+body.admin-theme .races-container,
+body.admin-theme .challenges-container {
+  background: var(--admin-gray) !important;
+}
+
+body.admin-theme .races-section,
+body.admin-theme .joined-races-section,
+body.admin-theme .all-challenges,
+body.admin-theme .joined-challenges {
+  background: rgba(241, 245, 249, 0.9) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .races-section h2,
+body.admin-theme .joined-races-section h2,
+body.admin-theme .all-challenges h2,
+body.admin-theme .joined-challenges h2 {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .races-section h2::after,
+body.admin-theme .joined-races-section h2::after,
+body.admin-theme .all-challenges h2::after,
+body.admin-theme .joined-challenges h2::after {
+  background: var(--admin-primary) !important;
+}
+
+body.admin-theme .race-card,
+body.admin-theme .challenge-card {
+  background: var(--admin-primary) !important;
+  box-shadow: 0 8px 25px rgba(29, 78, 216, 0.3) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .race-card:hover,
+body.admin-theme .challenge-card:hover {
+  box-shadow: 0 15px 40px rgba(29, 78, 216, 0.4) !important;
+}
+
+body.admin-theme .race-details,
+body.admin-theme .challenge-details {
+  background: rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+body.admin-theme .joined-races-section li,
+body.admin-theme .joined-challenges li {
+  background: var(--admin-primary) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+body.admin-theme .joined-races-section li::before,
+body.admin-theme .joined-challenges li::before {
+  background: var(--admin-secondary) !important;
+}
+
+body.admin-theme .joined-races-section li:hover::before,
+body.admin-theme .joined-challenges li:hover::before {
+  background: var(--admin-accent) !important;
+}
+
+body.admin-theme .leave-button {
+  background: rgba(239, 68, 68, 0.9) !important;
+}
+
+body.admin-theme .leave-button:hover {
+  background: rgba(239, 68, 68, 1) !important;
+}
+
+/* =================================== */
+/* CREATE PLAN/FORMS - Admin tema */
+/* =================================== */
+body.admin-theme .running-plan-container {
+  background: var(--admin-gray) !important;
+}
+
+body.admin-theme .running-plan-container h2 {
+  color: var(--admin-primary) !important;
+}
+
+body.admin-theme .running-plan-form {
+  background: var(--admin-white) !important;
+  border: 2px solid var(--admin-border) !important;
+  box-shadow: 0 8px 32px rgba(29, 78, 216, 0.1) !important;
+}
+
+body.admin-theme .running-plan-input,
+body.admin-theme .running-plan-textarea {
+  border: 2px solid var(--admin-border) !important;
+  background: var(--admin-white) !important;
+}
+
+body.admin-theme .running-plan-input:focus,
+body.admin-theme .running-plan-textarea:focus {
+  border-color: var(--admin-primary) !important;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15) !important;
+}
+
+body.admin-theme .running-plan-button {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%) !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3) !important;
+}
+
+body.admin-theme .running-plan-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-primary) 100%) !important;
+  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.4) !important;
+}
+
+/* =================================== */
+/* FEED HEADER - Admin tema */
+/* =================================== */
+body.admin-theme .feed-header,
+body.admin-theme [style*="background: linear-gradient"][style*="#FF9D23"] {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-accent) 100%) !important;
+}
+
+/* =================================== */
+/* OVERRIDE SVE NARANDŽASTE BOJE */
+/* =================================== */
+body.admin-theme *[style*="#FF9D23"],
+body.admin-theme *[style*="#C14600"],
+body.admin-theme *[style*="#FF6B35"],
+body.admin-theme *[style*="#FFF8E1"] {
+  background-color: var(--admin-primary) !important;
+}
+
+body.admin-theme *[style*="color: #FF9D23"],
+body.admin-theme *[style*="color: #C14600"],
+body.admin-theme *[style*="color: #FF6B35"] {
+  color: var(--admin-primary) !important;
+}
+
+/* =================================== */
+/* DODATNI OVERRIDE ZA SVE ELEMENTE */
+/* =================================== */
+body.admin-theme .orange-element,
+body.admin-theme [class*="orange"],
+body.admin-theme [class*="FF9D23"],
+body.admin-theme [class*="C14600"] {
+  background-color: var(--admin-primary) !important;
+  color: white !important;
+}
+
+/* Status badges override */
+body.admin-theme .race-status span,
+body.admin-theme .challenge-status span {
+  background: rgba(29, 78, 216, 0.2) !important;
+  border: 1px solid rgba(29, 78, 216, 0.3) !important;
+}
+
+/* Background override */
+body.admin-theme {
+  background: var(--admin-gray) !important;
+}
+
+/* Osvezi dugme */
+body.admin-theme button[style*="#FF9D23"],
+body.admin-theme button[style*="#C14600"] {
+  background: var(--admin-primary) !important;
+}
+
+/* Tooltip override */
+body.admin-theme .participants-tooltip {
+  background: var(--admin-white) !important;
+  border: 2px solid var(--admin-primary) !important;
+}
+
+body.admin-theme .tooltip-header {
+  color: var(--admin-primary) !important;
+}
+
+/* Post Container */
+.post {
+  background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 15px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(193, 70, 0, 0.1);
+  position: relative;
+  max-width: 100%;
+}
+
+/* Narandžasti accent na vrhu */
+.post::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #C14600, #FF9D23, #FF6B35);
+  z-index: 1;
+}
+
+.post:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+}
+
+/* Post Header */
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px 10px 15px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #FEF9E1 100%);
+  border-bottom: 1px solid rgba(193, 70, 0, 0.1);
+  margin-top: 3px; /* Za spacing posle accent linije */
+}
+
+.post-author h3 {
+  color: #C14600;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.post-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* SAKRIJ creation date - dodaj display: none */
+.post-creation-date {
+  display: none;
+}
+
+/* Post Content */
+.post-content {
+  padding: 15px;
+}
+
+.post-title {
+  color: #8B4513;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #F4E6D1 100%);
+  border-radius: 6px;
+  border: 2px solid #C14600;
+  box-shadow: 0 2px 6px rgba(193, 70, 0, 0.2);
+}
+
+/* Plan Description */
+.post-description {
+  margin-bottom: 15px;
+  padding: 12px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #ffffff 100%);
+  border-radius: 6px;
+  border-left: 3px solid #FF9D23;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.post-description h4 {
+  color: #C14600;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.post-description p {
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Date Info - SAKRIJ KREIRAN sekciju */
+.post-date-info {
+  display: none;
+}
+
+/* Post Details Grid */
+.post-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 15px 0;
+  padding: 15px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #FEF9E1 100%);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 157, 35, 0.2);
+  box-shadow: inset 0 1px 3px rgba(193, 70, 0, 0.05);
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 157, 35, 0.15);
+}
+
+.detail-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+  border-color: rgba(255, 157, 35, 0.3);
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  color: #666;
+  margin-bottom: 6px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-weight: 700;
+  color: #C14600;
+  font-size: 1rem;
+}
+
+/* Post Actions - POVEĆAN SPACING */
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #ffffff 100%);
+  border-top: 1px solid rgba(193, 70, 0, 0.1);
+  gap: 12px;
+}
+
+.comment-toggle-button {
+  background: linear-gradient(135deg, #C14600 0%, #FF6B35 100%);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(193, 70, 0, 0.3);
+}
+
+.comment-toggle-button:hover {
+  background: linear-gradient(135deg, #FF6B35 0%, #FF9D23 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(193, 70, 0, 0.4);
+}
+
+.join-button {
+  background: linear-gradient(135deg, #FF9D23 0%, #FFB84D 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(255, 157, 35, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.join-button:hover {
+  background: linear-gradient(135deg, #FFB84D 0%, #FFC870 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(255, 157, 35, 0.4);
+}
+
+/* Comments Section */
+.comments-section {
+  padding: 25px;
+  background: linear-gradient(135deg, #fefefe 0%, #f8f9fa 100%);
+  border-top: 3px solid rgba(193, 70, 0, 0.15);
+  margin-top: 5px; /* Spacing od action buttona */
+}
+
+.existing-comments {
+  margin-bottom: 25px;
+}
+
+.comment {
+  background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+  border: 1px solid rgba(193, 70, 0, 0.1);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.comment:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+  transform: translateX(5px);
+}
+
+.comment-author {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(193, 70, 0, 0.1);
+}
+
+.comment-author strong {
+  color: #C14600;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.comment-date {
+  color: #999;
+  font-size: 0.85rem;
+  background: rgba(193, 70, 0, 0.05);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.comment-content {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.no-comments {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 30px;
+  background: rgba(193, 70, 0, 0.05);
+  border-radius: 10px;
+  border: 2px dashed rgba(193, 70, 0, 0.2);
+}
+
+/* Add Comment Form */
+.add-comment-form {
+  margin-top: 25px;
+  padding: 25px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #FEF9E1 100%);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 157, 35, 0.2);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.add-comment-form textarea {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid rgba(193, 70, 0, 0.2);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+}
+
+.add-comment-form textarea:focus {
+  outline: none;
+  border-color: #FF9D23;
+  box-shadow: 0 0 0 4px rgba(255, 157, 35, 0.15);
+  transform: scale(1.01);
+}
+
+.submit-comment-button {
+  background: linear-gradient(135deg, #C14600 0%, #FF6B35 100%);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(193, 70, 0, 0.3);
+}
+
+.submit-comment-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #FF6B35 0%, #FF9D23 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(193, 70, 0, 0.4);
+}
+
+.submit-comment-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Participants tooltip */
+.participants-item {
+  position: relative;
+  cursor: pointer;
+}
+
+.participants-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 2px solid #C14600;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  z-index: 1000;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.tooltip-header {
+  font-weight: bold;
+  color: #C14600;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
+}
+
+.participant-item {
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.participant-email {
+  color: #666;
+  font-size: 12px;
+}
+
+.no-participants {
+  color: #999;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Join button states */
+.join-button.joined {
+  background: #28a745;
+  cursor: default;
+}
+
+.join-button.full {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.join-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .post-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .post-meta {
+    align-items: flex-start;
+  }
+  
+  .post-details {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .post-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .comment-toggle-button,
+  .join-button {
+    width: 100%;
+    padding: 15px;
+  }
+}
+@media (max-width: 480px) {
+  .post {
+    margin: 0 10px 30px 10px;
+  }
+  
+  .post-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .post-title {
+    font-size: 1.3rem;
+    padding: 15px;
+  }
+  
+  .post-content,
+  .post-header,
+  .post-actions,
+  .comments-section {
+    padding: 20px;
+  }
+}
